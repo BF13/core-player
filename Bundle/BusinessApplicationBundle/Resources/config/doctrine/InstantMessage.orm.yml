@@ -1,0 +1,23 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\InstantMessage:
+  type: entity
+  repositoryClass: BF13\Bundle\BusinessApplicationBundle\Repository\InstantMessage
+  fields:
+    id:
+      type: integer
+      nullable: false
+      id: true
+      generator:
+        strategy: AUTO
+    from_user: 
+      type: string
+    to_user: 
+      type: string
+    subject:
+      type: string
+    content:
+      type: string(2000)
+    was_read: 
+      type: boolean
+    created_at: 
+      type: datetime
+    

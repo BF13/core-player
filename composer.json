@@ -1,0 +1,30 @@
+{
+    "name": "bf13/bf13",
+    "type": "symfony-bundle",
+    "description": "BF13 application",
+    "keywords": ["App core"],
+    "homepage": "http://bf13.github.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fouad YAMANI",
+            "email": "fyam@free.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.1,<2.3-dev",
+        "symfony/form": ">=2.1,<2.3-dev",
+        "symfony/security-bundle": ">=2.1,<2.3-dev"
+    },
+    "require-dev": {
+        "twig/twig": "*",
+        "doctrine/doctrine-bundle": "*",
+        "symfony/yaml": "2.1.*",
+        "symfony/validator": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "BF13\\": "/" }
+    }
+}

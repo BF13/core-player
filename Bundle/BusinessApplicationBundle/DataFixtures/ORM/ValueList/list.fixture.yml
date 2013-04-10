@@ -1,0 +1,16 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\ValueList:
+    list_0:
+        name: meta_relation_type
+        list_key: metarelationtype
+    list_1:
+        name: meta_attribute_type
+        list_key: metaattributetype
+    list_2:
+        name: ouinon
+        list_key: ouinon
+    list_3:
+        name: cardinality
+        list_key: cardinality
+    list_4:
+        name: autentication_service
+        list_key: autenticationservice

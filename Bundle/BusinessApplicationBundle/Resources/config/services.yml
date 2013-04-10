@@ -1,0 +1,95 @@
+parameters:
+    bf13.dom.repository.class: BF13\Component\DomainConnect\DomainRepository
+    
+    bf13.app.notification.class: BF13\Component\Notification\Notification
+    
+    bf13.app.form_generator.class: BF13\Component\Form\FormGenerator
+    bf13.app.datagrid_generator.class: BF13\Component\Datagrid\DatagridGenerator
+    
+    bf13.app.breadcrumb.class: BF13\Component\Breadcrumb\Breadcrumb
+    bf13.app.breadcrumb.listener.class: BF13\Component\Breadcrumb\ControllerListener
+    bf13.app.breadcrumb.extension.class: BF13\Component\Breadcrumb\TwigExtension\BreadcrumbExtension
+    bf13.app.breadcrumb.config: "%kernel.root_dir%/config/breadcrumb.yml"
+
+    bf13.app.label_list.class: BF13\Component\LabelList\LabelValue
+    bf13.app.twig.label_list_extension.class: BF13\Component\LabelList\TwigExtension\LabelValueExtension
+
+    bf13.app.value_list.class: BF13\Component\ValueList\ValueList
+    bf13.app.twig.value_list_extension.class: BF13\Component\ValueList\TwigExtension\ValueListExtension
+    bf13.app.form.value_list.class: BF13\Component\ValueList\FormType\ValueListType
+
+services:
+    bf13.dom.repository:
+        class: %bf13.dom.repository.class%
+        arguments:
+          - "@doctrine.orm.default_entity_manager"
+          - "@kernel"
+          
+    bf13.app.notification :
+        class: %bf13.app.notification.class%
+        arguments: 
+          - @session
+          - @bf13.dom.repository
+          - @security.context
+
+    bf13.app.breadcrumb :
+        class: %bf13.app.breadcrumb.class%
+        arguments: [%bf13.app.breadcrumb.config%]
+        
+    bf13.app.breadcrumb.listener :
+        class: %bf13.app.breadcrumb.listener.class%
+        arguments: [@bf13.app.breadcrumb]
+        tags:
+          - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+          
+    bf13.app.breadcrumb.extension:
+        class: %bf13.app.breadcrumb.extension.class%
+        arguments: [@bf13.app.breadcrumb]
+        tags:
+          - { name: twig.extension }
+          
+    bf13.app.form_generator:
+        class: %bf13.app.form_generator.class%
+        arguments:
+          - "@form.factory"
+          - "@doctrine.orm.default_entity_manager"
+          - "@kernel"
+          
+    bf13.app.datagrid_generator:
+        class: %bf13.app.datagrid_generator.class%
+        arguments:
+          - "@bf13.dom.repository"
+          - "@kernel"
+          
+    bf13.app.label_list:
+        class: %bf13.app.label_list.class%
+        arguments:
+          - "@doctrine.orm.default_entity_manager"
+          
+    bf13.app.value_list:
+        class: %bf13.app.value_list.class%
+        arguments:
+          - "@doctrine.orm.default_entity_manager"
+
+    bf13.app.twig.label_list_extension:
+        class: %bf13.app.twig.label_list_extension.class%
+        arguments:
+          - "@bf13.app.label_list"
+#          - true               # uncomment row to show key
+        tags:
+            - { name: twig.extension }
+            
+    bf13.app.form.value_list:
+        class: %bf13.app.form.value_list.class%
+        arguments:
+          - "@bf13.app.value_list"
+        tags:
+            - { name: form.type, alias: value_list }
+            
+    bf13.app.twig.value_list_extension:
+        class: %bf13.app.twig.value_list_extension.class%
+        arguments:
+          - "@bf13.app.value_list"
+        tags:
+            - { name: twig.extension }
+        

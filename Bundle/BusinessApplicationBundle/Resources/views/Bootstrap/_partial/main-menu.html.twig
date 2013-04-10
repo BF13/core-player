@@ -1,0 +1,27 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#">BusinessApplication</a>
+    <ul class="nav">
+    	<li class="user-container">
+            <a class="brand" href="#"><i class="icon-large icon-cloud"></i></a>
+    	</li>
+
+    	{% for route, data in rootBreadcrumb() %}
+        	<li {% if data.active %}class="active"{% endif %}>
+        		<a href="{{ path(data.route) }}">
+        			<i class="icon-large {{ data.icon }}"></i>
+        			{{ data.label }}
+        		</a>
+        	</li>
+    	{% endfor %}
+    </ul>
+
+			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			<ul class="nav pull-right">
+				<li class="divider-vertical"></li>
+				<li class="dropdown">{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.user.html.twig' %}</li>
+	        </ul>
+			{% endif %}
+
+  </div>
+</div>

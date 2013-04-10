@@ -1,0 +1,8 @@
+ValidateAction:
+  name: confirm_actiontype
+  fields:
+    confirm:
+      widget:
+          label: Confirmer l'action
+          type: checkbox
+          required: true

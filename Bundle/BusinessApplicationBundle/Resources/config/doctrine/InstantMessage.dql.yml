@@ -1,0 +1,26 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\InstantMessage:
+    alias: im
+    properties:
+        total:
+          field: COUNT(im)
+        id:
+            field: im.id
+        subject:
+            field: im.subject
+        content:
+            field: im.content
+        to_user:
+            field: im.to_user
+        from_user:
+            field: im.from_user
+        was_read:
+            field: im.was_read
+    conditions:
+        new_messages: 
+          items: 
+            username : "im.to_user = :username" 
+            was_read : "im.was_read = :was_read" 
+        my_messages: 
+          items: 
+            username : "im.to_user = :username" 
+    

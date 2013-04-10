@@ -1,0 +1,18 @@
+BF13\Bundle\BusinessApplicationBundle\Model\ValidateAction:
+  properties: 
+    confirm:
+      - 'True': { message: "Vous devez cochez la case !" }
+
+BF13\Bundle\BusinessApplicationBundle\Entity\ValueList:
+  properties:
+    name:
+      - MinLength: 10
+      
+BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList:
+  properties:
+    value_key:
+      - NotNull: ~
+      - MinLength: 10
+    value:
+      - NotNull: ~
+      - MinLength: 2

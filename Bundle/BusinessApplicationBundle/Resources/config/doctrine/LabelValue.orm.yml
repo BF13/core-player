@@ -1,0 +1,23 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\LabelValue:
+  type: entity
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    label_key:
+      type: string
+      unique: true
+    label:
+      type: string
+  manyToOne:
+    LabelList:
+      targetEntity: LabelList
+      inversedBy: LabelValues
+      cascade:
+        - persist
+      joinColumn:
+        name: label_list_id
+        referencedColumnName: id
+        onDelete: CASCADE

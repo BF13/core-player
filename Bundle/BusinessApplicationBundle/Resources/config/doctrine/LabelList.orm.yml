@@ -1,0 +1,18 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\LabelList:
+  type: entity
+  table: null
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    name:
+      type: string
+    list_key:
+      type: string
+      unique: true
+  oneToMany:
+    LabelValues:
+      targetEntity: LabelValue
+      mappedBy: LabelList

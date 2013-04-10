@@ -1,0 +1,25 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList:
+  type: entity
+  repositoryClass: BF13\Bundle\BusinessApplicationBundle\Repository\DataValueListRepository
+  table: null
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    value_key:
+      type: string
+      unique: true
+    value:
+      type: string
+  manyToOne:
+    ValueList:
+      targetEntity: ValueList
+      inversedBy: DataListValues
+      cascade:
+        - persist
+      joinColumn:
+        name: value_list_id
+        referencedColumnName: id
+        onDelete: CASCADE

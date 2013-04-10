@@ -1,0 +1,9 @@
+metadata:
+  name: demo
+  fields:
+    field1:
+      widget:
+        text: ~
+    field2:
+      widget:
+        textarea: ~

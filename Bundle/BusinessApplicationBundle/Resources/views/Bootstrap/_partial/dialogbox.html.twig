@@ -1,0 +1,23 @@
+<div class="modal hide fade" id="dialogbox" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="dialogbox_title">.</h3>
+    </div>
+    <div id="dialogbox_body" class="modal-body"></div>
+    <div class="modal-footer">
+		<button id="dialogbox_cancel" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true">Annuler</button>
+		<button id="dialogbox_validate" class="btn btn-primary" data-loading-text="Saving...">Valider</button>
+    </div>
+    <script>$('#dialogbox_validate').click(function() { $('#dialogbox_body form').submit() });</script>
+</div>
+<script>
+$('body').on('hidden', '.modal', function () {
+	  $(this).removeData('modal');
+	  $('#dialogbox .modal-body').html('');
+	  $('#dialogbox_validate').attr('disabled', false);
+	  $('#dialogbox_validate').attr('style', '');
+	  $('#dialogbox_validate').html('Valider');
+	  $('#dialogbox_cancel').attr('disabled', false);
+	  $('#dialogbox_cancel').html('Annuler');
+	});
+</script>

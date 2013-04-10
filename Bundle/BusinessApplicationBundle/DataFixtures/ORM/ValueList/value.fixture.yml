@@ -1,0 +1,65 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList:
+    value_list_0_0:
+        ValueList: list_0
+        value: oneToOne
+        value_key: metarelationtype.onetoone
+    value_list_0_1:
+        ValueList: list_0
+        value: oneToMany
+        value_key: metarelationtype.onetomany
+    value_list_0_2:
+        ValueList: list_0
+        value: manyToMany
+        value_key: metarelationtype.manytomany
+    value_list_1_0:
+        ValueList: list_1
+        value: Tableau
+        value_key: metaattributetype.tableau
+    value_list_1_1:
+        ValueList: list_1
+        value: 'Chaine de texte'
+        value_key: metaattributetype.chaine_de_texte
+    value_list_1_2:
+        ValueList: list_1
+        value: Paragraphe
+        value_key: metaattributetype.paragraphe
+    value_list_1_3:
+        ValueList: list_1
+        value: 'Oui Non'
+        value_key: metaattributetype.oui_non
+    value_list_1_4:
+        ValueList: list_1
+        value: Nombre
+        value_key: metaattributetype.nombre
+    value_list_2_0:
+        ValueList: list_2
+        value: Oui
+        value_key: ouinon.oui
+    value_list_2_1:
+        ValueList: list_2
+        value: Non
+        value_key: ouinon.non
+    value_list_3_0:
+        ValueList: list_3
+        value: 0..1
+        value_key: cardinality.01
+    value_list_3_1:
+        ValueList: list_3
+        value: '0..*'
+        value_key: cardinality.0
+    value_list_3_2:
+        ValueList: list_3
+        value: '1..*'
+        value_key: cardinality.1
+    value_list_4_0:
+        ValueList: list_4
+        value: Internal
+        value_key: autenticationservice.internal
+    value_list_4_1:
+        ValueList: list_4
+        value: LDAP
+        value_key: autenticationservice.ldap
+    value_list_4_2:
+        ValueList: list_4
+        value: SSO
+        value_key: autenticationservice.sso

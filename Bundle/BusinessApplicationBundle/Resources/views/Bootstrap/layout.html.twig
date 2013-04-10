@@ -1,0 +1,121 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+	<!-- bootstrap css -->
+	{% stylesheets output="/css/compiled/app.css"
+	    '@BF13BusinessApplicationBundle/Resources/public/lib/bootstrap/*.css'
+	%}
+	<link href="{{ asset_url }}" rel="stylesheet" />
+	{% endstylesheets %}
+
+	<link href="{{ asset('bundles/bf13businessapplication/lib/bootstrap-theme1/css/style.css') }}" rel="stylesheet" />
+
+	<!-- for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Bootstrap fav and touch icons, replace with your own icons -->
+	<link rel="shortcut icon" href="assets/ico/favicon.ico">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/bfmainapplication/assets/ico/apple-touch-icon-144-precomposed.png') }}">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/bfmainapplication/assets/ico/apple-touch-icon-114-precomposed.png') }}">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/bfmainapplication/assets/ico/apple-touch-icon-72-precomposed.png') }}">
+	<link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/bfmainapplication/assets/ico/apple-touch-icon-57-precomposed.png') }}">
+{% endblock %}
+
+{% block javascripts %}
+<!-- external api -->
+{# 		<script src="http://maps.google.com/maps/api/js?sensor=false&amp;libraries=places"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication//bp.yahooapis.com/2.4.21/browserplus-min.js') }}"></script>#}
+
+<!-- Base -->
+{% javascripts output='/js/compiled/app.js'
+    '@BF13BusinessApplicationBundle/Resources/public/lib/jquery/*.js'
+    '@BF13BusinessApplicationBundle/Resources/public/lib/bootstrap/*.js'
+    '@BF13BusinessApplicationBundle/Resources/public/js/tabhandler/*.js'
+%}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<!-- jQuery plugins -->
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/map-plugins.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/jquery.form.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/chart-plugins.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/plupload/js/plupload.full.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/chosen.jquery.min.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/jquery-ui-slider.js') }}"></script>#}
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/datatables/media/js/jquery.dataTables.min.js') }}"></script>#}
+
+<!-- Bootstrap plugins -->
+{# <script src="{{ asset('bundles/bfmainapplication/plugins/bootstrap-plugins.js') }}"></script>#}
+
+<!-- for all templates -->
+{# <script src="{{ asset('bundles/bfmainapplication/js/custom.js') }}"></script>#}
+{% endblock %}
+
+{% block body %}
+    <div id="maincontainer">
+    	<div id="contentwrapper">
+    		<div id="contentcolumn">
+    			<!-- ** blue top navbar ** -->
+    			{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.html.twig' %}
+    			<!-- ** ./ blue top navbar ** -->
+    			{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:dialogbox.html.twig' %}
+
+    			<div class="container-fluid">
+
+    {# 						{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:breacrumb.html.twig' %}#}
+
+    				{% for key, message in app.session.getFlashes() %}
+                        <div class="alert alert-{{ key }}">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            {{ message |raw }}
+                        </div>
+                    {% endfor %}
+
+    				<!-- ** grids ** -->
+
+    				<div class="row-fluid">
+    					<div class="span12">
+    				        {% block content %}{% endblock %}
+    				    </div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+
+    	<div id="leftcolumn">
+
+    		<!-- ** left panel ** -->
+    		<div id="leftpanel">
+
+    		<div class="leftpanel-wrapper">
+    			{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:main-menu.html.twig' %}
+    		</div>
+    	</div>
+    	<!-- ** ./ left panel ** -->
+
+    	<!-- ** left sidebar ** -->
+    	<div id="leftsidebar">
+
+    		<div class="blue navbar navbar-static nomargin">
+    			<div class="navbar-inner">
+    				<div class="container" style="width: auto;">
+    {#							<a class="brand" href="index-2.html"><img src="{{ asset('bundles/bfmainapplication/images/puzzle.png') }}" /></a>	#}
+    				</div>
+    			</div>
+    		</div>
+
+
+    		{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:sub-menu.html.twig' %}
+
+    	</div>
+    	<!-- ** ./ left sidebar ** -->
+
+    	</div>
+    	<div class="clearfix"></div>
+    </div>
+
+    {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:footer.html.twig' %}
+{% endblock %}
