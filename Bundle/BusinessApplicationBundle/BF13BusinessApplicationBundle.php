@@ -1,6 +1,6 @@
 <?php
 
-namespace BF13\BusinessApplicationBundle;
+namespace BF13\Bundle\BusinessApplicationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
