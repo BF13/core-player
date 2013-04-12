@@ -9,6 +9,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @author FYAMANI
  */
-class BF13businessApplicationBundle extends Bundle
+class BF13BusinessApplicationBundle extends Bundle
 {
 }
