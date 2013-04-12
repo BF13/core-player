@@ -13,15 +13,19 @@ use BF13\Component\Form\Exception\FormException;
  */
 class FormGenerator
 {
-    private $formFactory;
+    protected $formFactory;
+    
+    protected $loader_class;
 
-    public function __construct($formFactory = null)
+    public function __construct($formFactory = null, $loader_class)
     {
         $this->formFactory = $formFactory;
+        
+        $this->loader_class = $loader_class;
     }
 
     /**
-     * Charge les métadonnées et les fournis au Builder
+     * Charge les métadonnées et les passe au formulaire
      *
      * @param unknown_type $file
      * @param unknown_type $format
@@ -44,13 +48,13 @@ class FormGenerator
 
     protected function loadMetaData($file, $format)
     {
-        $loader_class = sprintf('BF13\Component\Form\Loader\%sFileLoader', ucfirst(strtolower($format)));
-
-        $formSettings = new $loader_class($file);
-
         $metaData = new Mapping\FormMetaData();
 
-        if ($formSettings->loadFormMetaData($metaData)) {
+        $loader_class = $this->loader_class;
+
+        $loader = new $loader_class($file);
+
+        if ($loader->loadFormMetaData($metaData)) {
 
             return $metaData;
         }
