@@ -24,7 +24,7 @@ class YamlFileLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('BF13\Component\Form\Exception\FormException');
 
-        $file = __DIR__ . '/../Fixtures/aaform_test.form.yml';
+        $file = __DIR__ . '/../Fixtures/no_existing_form_test.form.yml';
 
         $loader = new YamlFileLoader($file);
     }

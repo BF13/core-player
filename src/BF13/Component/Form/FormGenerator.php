@@ -13,44 +13,50 @@ use BF13\Component\Form\Exception\FormException;
  */
 class FormGenerator
 {
-    private $formFactory;
+    protected $formFactory;
+    
+    protected $loader_class;
 
-    public function __construct($formFactory = null)
+    public function __construct($formFactory = null, $loader_class)
     {
         $this->formFactory = $formFactory;
+        
+        $this->loader_class = $loader_class;
     }
 
     /**
-     * Charge les métadonnées et les fournis au Builder
+     * Charge les métadonnées et les passe au formulaire
      *
      * @param unknown_type $file
      * @param unknown_type $format
      *
      * @return Symfony\Component\Form\FormBuilder
      */
-    public function buildForm($file, $data = array(), $options = array(), $format = 'Yaml')
+    public function buildForm($file, $data = array(), $options = array())
     {
-        if (!$metaData = $this->loadMetaData($file, $format)) {
+        if (!$metaData = $this->loadMetaData($file)) {
 
             throw new FormException('Métadonnées incorrecte !');
         }
 
         $type = new Type\Form($metaData);
+        
+        $options = array_merge($metaData->getOptions(), $options);
 
         $form = $this->formFactory->create($type, $data, $metaData->getOptions());
 
         return $form;
     }
 
-    protected function loadMetaData($file, $format)
+    protected function loadMetaData($file)
     {
-        $loader_class = sprintf('BF13\Component\Form\Loader\%sFileLoader', ucfirst(strtolower($format)));
-
-        $formSettings = new $loader_class($file);
-
         $metaData = new Mapping\FormMetaData();
 
-        if ($formSettings->loadFormMetaData($metaData)) {
+        $loader_class = $this->loader_class;
+
+        $loader = new $loader_class($file);
+
+        if ($loader->loadFormMetaData($metaData)) {
 
             return $metaData;
         }
