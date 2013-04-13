@@ -39,10 +39,11 @@ class DatagridGenerator
         $path = $this->getDatagridPath($model);
 
         $defaultConfig = Yaml::parse($path);
-
-        //         var_dump($this->kernel);exit;
+        
         list($bundle, $class) = explode(':', $model);
+        
         $ns = $this->getNamespaceBundle($bundle);
+        
         $class = sprintf('%s\Datagrid\%s', $ns, $class);
 
         if(class_exists($class)) {

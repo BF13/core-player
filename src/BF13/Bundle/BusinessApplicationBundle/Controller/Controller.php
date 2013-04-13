@@ -133,4 +133,15 @@ class Controller extends baseController
 
         return $form;
     }
+
+    protected function locateResource($serialName)
+    {
+        list($bundle, $dir, $file) = explode(':', $serialName);
+    
+        $res = sprintf('@%s/Resources/config/%s/%s.datagrid.yml', $bundle, $dir, $file);
+    
+        $path = $this->kernel->locateResource($res);
+    
+        return $path;
+    }
 }

@@ -40,7 +40,7 @@ class DomainConnector
 
         $form_file = sprintf($pattern, $bundle, $file);
 
-        if(! $path = $this->kernel->locateResource($form_file))
+        if(! $path = $this->locateResource($form_file))
         {
             return;
         }
@@ -51,5 +51,15 @@ class DomainConnector
             
             return $scheme = current($scheme);
         }
+    }
+
+    public function locateResource($serialname)
+    {
+        if(! $path = $this->kernel->locateResource($serialname))
+        {
+            return;
+        }
+
+        return $path;
     }
 }
