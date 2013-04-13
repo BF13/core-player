@@ -2,7 +2,7 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Repository;
 
-use BF13\Component\DomainConnect\DomainEntityRepository;
+use BF13\Component\DomainConnect\Doctrine\DomainEntityRepository;
 
 /**
  * ValueListRepository

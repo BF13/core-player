@@ -1,7 +1,7 @@
 <?php
 namespace BF13\Component\ValueList;
 
-use BF13\Component\DomainConnect\DomainRepository;
+use BF13\Component\DomainConnect\DomainConnector;
 
 /**
  * Gestion des listes de valeurs
@@ -15,7 +15,7 @@ class ValueList
 
     protected $value_list;
 
-    public function __construct(DomainRepository $repository = null)
+    public function __construct(DomainConnector $repository = null)
     {
         $this->repository = $repository;
     }

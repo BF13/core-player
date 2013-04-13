@@ -1,6 +1,7 @@
 BF13\Bundle\BusinessApplicationBundle\Entity\LabelList:
   type: entity
   table: null
+  repositoryClass: BF13\Bundle\BusinessApplicationBundle\Repository\LabelListRepository
   fields:
     id:
       type: integer

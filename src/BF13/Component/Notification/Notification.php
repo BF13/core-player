@@ -34,7 +34,7 @@ class Notification
         return true;
     }
 
-    protected function checkNewMessage($username)
+    public function checkNewMessage($username)
     {
         $total_messages = $this->domainRepository
             ->getQuerizer('BF13BusinessApplicationBundle:InstantMessage')

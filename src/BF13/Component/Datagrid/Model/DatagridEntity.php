@@ -5,7 +5,7 @@ namespace BF13\Component\Datagrid\Model;
  * @author FYAMANI
  *
  */
-use BF13\Component\DomainConnect\DomainRepository;
+use BF13\Component\DomainConnect\DomainConnector;
 
 class DatagridEntity extends DatagridObject
 {
@@ -17,7 +17,7 @@ class DatagridEntity extends DatagridObject
 
     protected $raw_columns = array();
 
-    public function __construct($DatagridSettings, DomainRepository $DomainRepository)
+    public function __construct($DatagridSettings, DomainConnector $DomainRepository)
     {
         $this->config = $DatagridSettings;
 

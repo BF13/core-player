@@ -46,11 +46,8 @@ class DomainConnector
         }
 
         $scheme = Yaml::parse($path);
-
-        if (is_array($scheme)) {
-            
-            return $scheme = current($scheme);
-        }
+        
+        return $scheme;
     }
 
     public function locateResource($serialname)

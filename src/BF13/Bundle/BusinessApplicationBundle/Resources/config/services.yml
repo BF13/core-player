@@ -13,7 +13,7 @@ parameters:
     bf13.app.breadcrumb.extension.class: BF13\Component\Breadcrumb\TwigExtension\BreadcrumbExtension
     bf13.app.breadcrumb.config: "%kernel.root_dir%/config/breadcrumb.yml"
 
-    bf13.app.label_list.class: BF13\Component\LabelList\LabelValue
+    bf13.app.label_list.class: BF13\Component\LabelList\LabelList
     bf13.app.twig.label_list_extension.class: BF13\Component\LabelList\TwigExtension\LabelValueExtension
 
     bf13.app.value_list.class: BF13\Component\ValueList\ValueList

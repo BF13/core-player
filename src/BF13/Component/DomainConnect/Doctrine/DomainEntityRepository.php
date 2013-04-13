@@ -216,9 +216,11 @@ class DomainEntityRepository extends EntityRepository
 
     public function initDomainScheme($scheme)
     {
-        die('domain entity repository `namespace`: ' . __NAMESPACE__);
+        $entity = key($scheme);
         
-        $this->from = array(__NAMESPACE__, $scheme['alias']);
+        $scheme = current($scheme);
+        
+        $this->from = array($entity, $scheme['alias']);
 
         if(is_array($this->columns)) {
 
