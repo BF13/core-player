@@ -9,7 +9,7 @@ parameters:
     bf13.app.datagrid_generator.class: BF13\Component\Datagrid\DatagridGenerator
     
     bf13.app.breadcrumb.class: BF13\Component\Breadcrumb\Breadcrumb
-    bf13.app.breadcrumb.listener.class: BF13\Component\Breadcrumb\ControllerListener
+    bf13.app.breadcrumb.listener.class: BF13\Component\Breadcrumb\Listener\ControllerListener
     bf13.app.breadcrumb.extension.class: BF13\Component\Breadcrumb\TwigExtension\BreadcrumbExtension
     bf13.app.breadcrumb.config: "%kernel.root_dir%/config/breadcrumb.yml"
 

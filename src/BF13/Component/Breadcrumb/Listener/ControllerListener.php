@@ -1,5 +1,5 @@
 <?php
-namespace BF13\Component\Breadcrumb;
+namespace BF13\Component\Breadcrumb\Listener;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -8,11 +8,11 @@ use BF13\Component\Breadcrumb\TwigExtension\BreadcrumbExtension;
 
 class ControllerListener
 {
-    protected $extension;
+    protected $service;
 
-    public function __construct($extension)
+    public function __construct($service)
     {
-        $this->extension = $extension;
+        $this->service = $service;
     }
 
     public function onKernelController(FilterControllerEvent $event)
@@ -29,9 +29,9 @@ class ControllerListener
 
             if(in_array($interface, $interfaces))
             {
-                $this->extension->setController($Controller);
+                $this->service->setController($Controller);
 
-                $this->extension->setRequest($event->getRequest());
+                $this->service->setRequest($event->getRequest());
             }
         }
     }

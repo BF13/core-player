@@ -1,0 +1,13 @@
+# Structure de l'application
+Public:
+    Menu1:
+        label: Welcome
+        icon: icon-home
+        default: true
+        nodes:
+            bf_index:
+                label: Index
+                submenu: Actions
+                linked:
+                  - _configurator_step
+                  - _configurator_final

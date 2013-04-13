@@ -1,5 +1,6 @@
 <?php
 namespace BF13\Component\Breadcrumb;
+
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 use Symfony\Component\Yaml\Yaml;
@@ -192,5 +193,10 @@ class Breadcrumb
                 return $path;
             }
         }
+    }
+    
+    public function getRaw()
+    {
+        return $this->data;
     }
 }
