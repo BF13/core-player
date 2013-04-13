@@ -38,12 +38,19 @@ class LabelListTest extends \PHPUnit_Framework_TestCase
         $this->list = new LabelList($repository);
     }
     
-    public function testShowLabel()
+    public function testSuccessShowLabel()
     {
         $list = $this->list->getLabelValues('form');
         
         $this->assertEquals(2, sizeOf($list));
         
         $this->assertEquals('Votre nom', $list['form.name']);
+    }
+    
+    public function testNotExistingList()
+    {
+        $list = $this->list->getLabelValues('form_nonexistingllist');
+        
+        $this->assertEquals(0, sizeOf($list));
     }
 }

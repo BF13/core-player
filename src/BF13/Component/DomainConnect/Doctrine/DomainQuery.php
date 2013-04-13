@@ -1,5 +1,7 @@
 <?php
-namespace BF13\Component\DomainConnect;
+namespace BF13\Component\DomainConnect\Doctrine;
+
+use BF13\Component\DomainConnect\DomainQueryInterface;
 
 /**
  * Assistant requête
@@ -7,7 +9,7 @@ namespace BF13\Component\DomainConnect;
  * @author FYAMANI
  *
  */
-class EntityQuerizer
+class DomainQuery implements DomainQueryInterface
 {
     protected $_params = array('conditions' => array(), 'select' => array());
 
@@ -18,15 +20,6 @@ class EntityQuerizer
         $this->_repository = $repository;
     }
 
-    /**
-     * tableau des conditions
-     *
-     *     nom_condition => [param1 => value1, ...]
-     *
-     *
-     * @param unknown_type $arg
-     * @return \Rff\DomainBundle\Service\Shared\EntityQuerizer
-     */
     public function conditions($arg)
     {
         $this->_params['conditions'] = $arg;
@@ -34,12 +27,6 @@ class EntityQuerizer
         return $this;
     }
 
-    /**
-     * Sélection de la colonne de trie
-     *
-     *
-     * @param unknown_type $orderBy
-     */
     public function sort($orderBy = array())
     {
         $this->_params['order_by'] = $orderBy;
@@ -47,13 +34,6 @@ class EntityQuerizer
         return $this;
     }
 
-    /**
-     * Pagination du résultat
-     *
-     * @param unknown_type $offset
-     * @param unknown_type $max_result
-     * @return \Rff\DomainBundle\Service\Shared\EntityQuerizer
-     */
     public function pager($offset = 0, $max_result = 5)
     {
         $this->_params['pager'] = array('offset' => $offset * $max_result, 'max_result' => $max_result);
@@ -61,12 +41,6 @@ class EntityQuerizer
         return $this;
     }
 
-    /**
-     * Liste des colonnes retournées
-     *
-     * @param unknown_type $fields
-     * @return \Rff\DomainBundle\Service\Shared\EntityQuerizer
-     */
     public function datafields($fields = array())
     {
         $this->_params['select'] = $fields;
@@ -74,12 +48,6 @@ class EntityQuerizer
         return $this;
     }
 
-    /**
-     * Grouper les résultats
-     *
-     * @param unknown_type $group_by
-     * @return \Rff\DomainBundle\Service\Shared\EntityQuerizer
-     */
     public function groupBy($group_by = '')
     {
         $this->_params['group_by'] = $group_by;
@@ -87,11 +55,6 @@ class EntityQuerizer
         return $this;
     }
 
-    /**
-     * Retourne un résultat
-     *
-     * @return unknown
-     */
     public function result()
     {
         $query_builder = $this->_getQueryBuilder();
@@ -103,22 +66,11 @@ class EntityQuerizer
         return $results[0];
     }
 
-    /**
-     * Retourne un tableau de résultats
-     *
-     */
     public function results($mode = \Doctrine\ORM\Query::HYDRATE_ARRAY)
     {
         return $this->_getQueryBuilder()->getQuery()->getResult($mode);
     }
 
-    /**
-     * Retourne le résultat paginé
-     *
-     * @param unknown_type $offset
-     * @param unknown_type $max_result
-     * @return multitype:unknown number
-     */
     public function resultsWithPager($offset = 0, $max_result = 5)
     {
         $query_builder = $this->_getQueryBuilder();
@@ -136,19 +88,12 @@ class EntityQuerizer
 
         $current_page = $offset + 1;
 
-        return array(
-            'total' => $total,
-            'rows' => $results,
-            'offset' => $offset,
-            'max_result' => $max_result,
-            'max_page' => $max_page,
-            'current_page' => $current_page,
-        );
+        return array('total' => $total, 'rows' => $results, 'offset' => $offset, 'max_result' => $max_result, 'max_page' => $max_page, 'current_page' => $current_page,);
     }
 
     protected function _getQueryBuilder()
     {
-        if(! $this->_repository instanceOf DomainEntityRepository) {
+        if (!$this->_repository instanceOf DomainEntityRepository) {
 
             throw new \Exception('Le dépôt doit être une instance de DomainEntityRepository');
         }

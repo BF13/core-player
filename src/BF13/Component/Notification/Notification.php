@@ -15,11 +15,9 @@ class Notification
 
     protected $domainRepository;
 
-    public function __construct($session, $domainRepository, $securityContext)
+    public function __construct($session, $domainRepository)
     {
         $this->session = $session;
-
-        $this->securityContext = $securityContext;
 
         $this->domainRepository = $domainRepository;
     }
@@ -32,9 +30,11 @@ class Notification
         {
             $this->session->getFlashBag()->add('success', $message);
         }
+        
+        return true;
     }
 
-    public function verifierMessage($username)
+    protected function checkNewMessage($username)
     {
         $total_messages = $this->domainRepository
             ->getQuerizer('BF13BusinessApplicationBundle:InstantMessage')
@@ -56,7 +56,7 @@ class Notification
         }
     }
 
-    public function ajouterMessage(NotificationMessage $message)
+    public function addMessage(NotificationMessage $message, $disable_check = false)
     {
         $InstantMessage = $this->domainRepository->retrieveNew('BF13BusinessApplicationBundle:InstantMessage');
 
@@ -71,6 +71,11 @@ class Notification
 
         $username = $message->getTo();
 
-        $this->verifierMessage($username);
+        if(! $disable_check)
+        {
+            $this->checkNewMessage($username);
+        }
+        
+        return true;
     }
 }

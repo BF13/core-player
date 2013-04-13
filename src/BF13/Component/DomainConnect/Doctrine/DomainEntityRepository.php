@@ -1,9 +1,9 @@
 <?php
-namespace BF13\Component\DomainConnect;
-
-use Doctrine\ORM\Mapping\OrderBy;
+namespace BF13\Component\DomainConnect\Doctrine;
 
 use Doctrine\ORM\EntityRepository;
+
+use BF13\Component\DomainConnect\DomainEntityInterface;
 
 /**
  * Repository
@@ -214,9 +214,11 @@ class DomainEntityRepository extends EntityRepository
         return $query_builder->getQuery()->getSingleScalarResult();
     }
 
-    public function initDomainScheme($fqdn, $scheme)
+    public function initDomainScheme($scheme)
     {
-        $this->from = array($fqdn, $scheme['alias']);
+        die('domain entity repository `namespace`: ' . __NAMESPACE__);
+        
+        $this->from = array(__NAMESPACE__, $scheme['alias']);
 
         if(is_array($this->columns)) {
 
