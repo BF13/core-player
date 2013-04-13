@@ -1,33 +1,31 @@
 <?php
 namespace BF13\Component\LabelList;
 
+use BF13\Component\DomainConnect\DomainRepository;
+
 /**
  * Gestion des libellés
  *
  * @author FYAMANI
  *
  */
-class LabelValue
+class LabelList
 {
-    protected $_em;
+    protected $repository;
 
     protected $label_list;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em = null)
+    public function __construct(DomainRepository $repository)
     {
-        $this->_em = $em;
-
-        $this->load();
+        $this->repository = $repository;
     }
 
     protected function load()
     {
-        $label_list = $query_builder = $this->_em->createQueryBuilder()
-            ->select('v.id, v.label_key, v.label, l.list_key')
-            ->from('BF13BusinessApplicationBundle:LabelValue', 'v')
-            ->leftJoin('v.LabelList', 'l')
-
-        ->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $label_list = $query_builder = $this->repository
+        ->getQuerizer('BF13BusinessApplicationBundle:LabelValue')
+        ->datafields(array('id', 'label_key', 'label', 'list_key'))
+        ->results();
 
         $this->label_list = array();
 
@@ -39,6 +37,11 @@ class LabelValue
 
     public function getLabelValues($list)
     {
+        if(is_null($this->label_list))
+        {
+            $this->load();
+        }
+        
         if(! array_key_exists($list, $this->label_list)) {
 
             return array();

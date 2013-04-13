@@ -1,0 +1,21 @@
+BF13\Bundle\BusinessApplicationBundle\Entity\LabelList:
+    alias: ll
+    properties:
+        total:
+          field: COUNT(ll)
+        id:
+            field: ll.id
+        name:
+            field: ll.name
+        list_key:
+            field: ll.list_key
+        label:
+            field: llv.label
+            joins:
+              ll.LabelValues: llv
+        label_key:
+            field: llv.label_key
+            joins:
+              ll.LabelValues: llv
+        
+    conditions: []

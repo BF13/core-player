@@ -64,7 +64,7 @@ services:
     bf13.app.label_list:
         class: %bf13.app.label_list.class%
         arguments:
-          - "@doctrine.orm.default_entity_manager"
+          - @bf13.dom.repository
           
     bf13.app.value_list:
         class: %bf13.app.value_list.class%
