@@ -69,7 +69,7 @@ services:
     bf13.app.value_list:
         class: %bf13.app.value_list.class%
         arguments:
-          - "@doctrine.orm.default_entity_manager"
+          - @bf13.dom.repository
 
     bf13.app.twig.label_list_extension:
         class: %bf13.app.twig.label_list_extension.class%
