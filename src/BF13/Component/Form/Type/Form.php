@@ -1,5 +1,6 @@
 <?php
 namespace BF13\Component\Form\Type;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -12,7 +13,7 @@ use BF13\Component\Form\Mapping\FormMetaData;
  * @author FYAMANI
  *
  */
-class Form extends AbstractType
+class Form extends AbstractType implements FormInterface
 {
     protected $metaData;
 
@@ -23,65 +24,68 @@ class Form extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->metaData)
-        {
-            $this->makeFromMetaData($builder, $options);
+        if ($this->metaData) {
+
+            $this->buildFormMetaData($builder, $options);
         }
 
         $this->configure($builder, $options);
     }
 
-    public function configure($builder, $options) {}
+    public function configure($builder, $options)
+    {
+    }
 
     public function getName()
     {
         return $this->metaData->getName();
     }
 
-    protected function makeFromMetaData($builder, $options)
+    public function buildFormMetaData($builder, $options)
     {
         $this->addFields($builder, $options);
 
-        $this->addEmbeddedForms($builder, $options);
+        $this->addEmbeddedForms($builder);
     }
 
     protected function addFields($builder, $options)
     {
         foreach ($this->metaData->getFields() as $fieldname => $params) {
 
-            foreach ($params as $type => $fieldOptions) {
+            $type = key($params);
 
-                if (array_key_exists('disabled', $options)) {
+            $fieldOptions = current($params);
 
-                    if (true === $options['disabled']) {
-                        $fieldOptions['disabled'] = 'disabled';
-                    }
+            if (array_key_exists('disabled', $options)) {
 
-                    if (is_array($options['disabled']) && in_array($fieldname, $options['disabled'])) {
-                        $fieldOptions['disabled'] = 'disabled';
-                    }
+                if (true === $options['disabled']) {
+                    $fieldOptions['disabled'] = 'disabled';
                 }
 
-                if ($transformer = $this->metaData->getDataTransformer()) {
-
-                    $field = $builder->create($fieldname, $type, $fieldOptions)->addModelTransformer($transformer);
-
-                    $builder->add($field);
-
-                } else {
-
-                    $builder->add($fieldname, $type, (array) $fieldOptions);
+                if (is_array($options['disabled']) && in_array($fieldname, $options['disabled'])) {
+                    $fieldOptions['disabled'] = 'disabled';
                 }
-
-                //                 $this->addValidator($params, $key, $formBuilder);
             }
+
+            if ($transformer = $this->metaData->getDataTransformer()) {
+
+                $field = $builder->create($fieldname, $type, $fieldOptions)->addModelTransformer($transformer);
+
+                $builder->add($field);
+
+            } else {
+
+                $builder->add($fieldname, $type, (array) $fieldOptions);
+            }
+
+            //                 $builder->addValidator($params, $key, $formBuilder);
         }
     }
 
     /**
      *
      */
-    protected function addEmbeddedForms($builder, $options)
+    protected function addEmbeddedForms($builder)
     {
         foreach ($this->metaData->getSubForms() as $alias => $metaData) {
 

@@ -61,13 +61,10 @@
           <!--Body content-->
           <div class="row-fluid">
 {#               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.html.twig' %}#}
+
               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:dialogbox.html.twig' %}
-              {% for key, message in app.session.getFlashes() %}
-                <div class="alert alert-{{ key }}">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  {{ message |raw }}
-                </div>
-              {% endfor %}
+              
+              {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:message.html.twig' %}
           </div>
           <h4>{% block title %}{% endblock %}</h4>
 

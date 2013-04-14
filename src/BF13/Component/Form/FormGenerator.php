@@ -1,6 +1,8 @@
 <?php
 namespace BF13\Component\Form;
+
 use BF13\Component\Form\Exception\FormException;
+use Symfony\Component\Form\FormFactory;
 
 /**
  *
@@ -14,13 +16,13 @@ use BF13\Component\Form\Exception\FormException;
 class FormGenerator
 {
     protected $formFactory;
-    
+
     protected $loader_class;
 
-    public function __construct($formFactory = null, $loader_class)
+    public function __construct(FormFactory $formFactory = null, $loader_class)
     {
         $this->formFactory = $formFactory;
-        
+
         $this->loader_class = $loader_class;
     }
 
@@ -40,7 +42,7 @@ class FormGenerator
         }
 
         $type = new Type\Form($metaData);
-        
+
         $options = array_merge($metaData->getOptions(), $options);
 
         $form = $this->formFactory->create($type, $data, $metaData->getOptions());

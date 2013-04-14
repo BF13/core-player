@@ -84,12 +84,8 @@ class Controller extends baseController
     protected function generateForm($model, $data = null, $options = array())
     {
         $generator = $this->get('bf13.app.form_generator');
-
-        list($bundle, $file) = explode(':', $model);
-
-        $form_file = sprintf('@%s/Resources/config/form/%s.form.yml', $bundle, $file);
-
-        $file = $this->get('kernel')->locateResource($form_file);
+        
+        $file = $this->locateResource($model, 'form.yml');
 
         $form = $generator->buildForm($file, $data, $options);
 
@@ -134,13 +130,13 @@ class Controller extends baseController
         return $form;
     }
 
-    protected function locateResource($serialName)
+    protected function locateResource($serialName, $ext = 'yml')
     {
-        list($bundle, $dir, $file) = explode(':', $serialName);
+        list($bundle, $dir, $filename) = explode(':', $serialName);
     
-        $res = sprintf('@%s/Resources/config/%s/%s.datagrid.yml', $bundle, $dir, $file);
+        $res = sprintf('@%s/Resources/config/%s/%s.%s', $bundle, $dir, $filename, $ext);
     
-        $path = $this->kernel->locateResource($res);
+        $path = $this->get('kernel')->locateResource($res);
     
         return $path;
     }
