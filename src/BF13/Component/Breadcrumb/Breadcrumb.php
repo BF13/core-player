@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Yaml\Yaml;
 
 use BF13\Component\Breadcrumb\BreadcrumbControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class Breadcrumb
 {
@@ -26,18 +27,14 @@ class Breadcrumb
         $this->data = Yaml::parse($settingsFile);
     }
 
-    public function setController($Controller)
+    public function setRootNode($nodeName)
     {
-        $this->controller = $Controller;
-
-        $this->root_node = $this->controller->getBreadcrumbName();
+        $this->root_node = $nodeName;
     }
 
-    public function setRequest($Request)
+    public function setActiveRoute($route)
     {
-        $this->request = $Request;
-
-        $this->active_route = $this->request->get('_route');
+        $this->active_route = $route;
     }
 
     protected function setActiveRoot()

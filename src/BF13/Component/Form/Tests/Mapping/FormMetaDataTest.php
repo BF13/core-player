@@ -9,7 +9,7 @@ class FormMetaDataTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $file = __DIR__ . '/../Fixtures/form_test.form.yml';
+        $file = __DIR__ . '/../fixtures/form_test.form.yml';
 
         $loader = new YamlFileLoader($file);
 

@@ -29,9 +29,13 @@ class ControllerListener
 
             if(in_array($interface, $interfaces))
             {
-                $this->service->setController($Controller);
+                $rootNode = $Controller->getBreadcrumbName();
+                
+                $this->service->setRootNode($rootNode);
 
-                $this->service->setRequest($event->getRequest());
+                $activeRoute = $event->getRequest()->get('_route');
+                
+                $this->service->setActiveRoute($activeRoute);
             }
         }
     }
