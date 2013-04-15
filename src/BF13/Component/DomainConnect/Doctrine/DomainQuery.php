@@ -98,11 +98,11 @@ class DomainQuery implements DomainQueryInterface
             throw new \Exception('Le dépôt doit être une instance de DomainEntityRepository');
         }
 
-        $query_builder = $this->_repository->initializeQuery();
+        $query_builder = $this->_repository->getBuilder();
 
-        $this->_repository->selectQuery($query_builder, $this->_params['select']);
+        $this->_repository->selectQuery($this->_params['select']);
 
-        $this->_repository->conditionQuery($query_builder, $this->_params['conditions']);
+        $this->_repository->conditionQuery($this->_params['conditions']);
 
         if (array_key_exists('group_by', $this->_params)) {
 
@@ -111,10 +111,10 @@ class DomainQuery implements DomainQueryInterface
 
         if (array_key_exists('order_by', $this->_params)) {
 
-            $this->_repository->orderBy($query_builder, $this->_params['order_by']);
+            $this->_repository->orderBy($this->_params['order_by']);
         }
 
-        $this->_repository->joinQuery($query_builder);
+        $this->_repository->joinQuery();
 
         return $query_builder;
     }

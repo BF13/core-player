@@ -15,7 +15,7 @@ class DoctrineManager implements DomainManagerInterface
 {
     protected $_em;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em = null, $kernel = null)
+    public function __construct(\Doctrine\ORM\EntityManager $em = null)
     {
         $this->_em = $em;
     }

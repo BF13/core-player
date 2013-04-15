@@ -4,6 +4,8 @@ namespace BF13\Component\DomainConnect\Doctrine;
 use Doctrine\ORM\EntityRepository;
 
 use BF13\Component\DomainConnect\DomainEntityInterface;
+use BF13\Component\DomainConnect\Exception\WrongSchemaException;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository
@@ -14,12 +16,18 @@ use BF13\Component\DomainConnect\DomainEntityInterface;
 class DomainEntityRepository extends EntityRepository
 {
     protected $scheme;
+    
+    protected $builder;
 
     protected $from;
 
-    protected $columns = array();
+    protected $columns;
 
-    protected $conditions = array('_self' => array('items' => array('id' => 'id = :id'),),);
+    protected $conditions = array(
+            '_self' => array(
+                    'items' => array('id' => 'id = :id'),
+            ),
+    );
 
     protected $joins = array();
 
@@ -35,27 +43,25 @@ class DomainEntityRepository extends EntityRepository
         }
     }
 
-    public function initializeQuery()
+    protected function initializeQueryBuilder()
     {
-        $query_builder = $this->_em->createQueryBuilder();
+        $this->builder = $this->_em->createQueryBuilder();
 
-        $query_builder->from($this->from[0], $this->from[1]);
-
-        return $query_builder;
+        $this->builder->from($this->from[0], $this->from[1]);
     }
 
-    public function joinQuery($query_builder, $join = array())
+    public function joinQuery($join = array())
     {
         if (!sizeOf($this->joins)) {
             return;
         }
 
         foreach ($this->joins as $name => $alias) {
-            $query_builder->leftJoin($name, $alias);
+            $this->builder->leftJoin($name, $alias);
         }
     }
 
-    public function selectQuery($query_builder, $fields = array())
+    public function selectQuery($fields = array())
     {
         if (is_null($fields)) {
             $fields = array();
@@ -86,14 +92,14 @@ class DomainEntityRepository extends EntityRepository
             $selected_fields[] = $this->from[1];
         }
 
-        $query_builder->select(implode(', ', $selected_fields));
+        $this->builder->select(implode(', ', $selected_fields));
     }
 
-    public function conditionQuery($query_builder, $conditions_values = array())
+    public function conditionQuery($conditions_values = array())
     {
         if (!$conditions_values) {
 
-            return false;
+            return;
         }
 
         if (!is_array($conditions_values)) {
@@ -112,70 +118,73 @@ class DomainEntityRepository extends EntityRepository
 
             $mode = array_key_exists('mode', $condition) ? $condition['mode'] : 'basic';
 
-            switch($mode) {
+            switch ($mode) {
 
-                case 'basic':
+            case 'basic':
+                if (array_key_exists('items', $condition)) {
 
-                    if (array_key_exists('items', $condition)) {
+                    foreach ($condition['items'] as $param_name => $condition_part) {
 
-                        foreach ($condition['items'] as $param_name => $condition_part) {
+                        if (is_array($condition_part)) {
 
-                            if(is_array($condition_part)) {
+                            $condition_part = $condition_part['pattern'];
+                        }
 
-                                $condition_part = $condition_part['pattern'];
-                            }
+                        if (is_array($value) && array_key_exists($param_name, $value) || is_string($value)) {
 
-                            if (is_array($value) && array_key_exists($param_name, $value) || is_string($value)) {
+                            if (is_array($value)) {
 
-                                if (is_array($value)) {
+                                $param_value = $value[$param_name];
 
-                                    $param_value = $value[$param_name];
-
-                                    if(is_array($param_value) && 0 == sizeOf($param_value)){
-                                        continue;
-                                    }
-
-                                    $query_builder->andWhere($condition_part)->setParameter($param_name, $param_value);
-
-                                } else {
-
-                                    $param_value = $value;
-
-                                    $query_builder->andWhere($condition_part)->setParameter($param_name, $param_value);
+                                if (is_array($param_value) && 0 == sizeOf($param_value)) {
+                                    continue;
                                 }
+
+                                $this->builder->andWhere($condition_part)->setParameter($param_name, $param_value);
+
+                            } else {
+
+                                $param_value = $value;
+
+                                $this->builder->andWhere($condition_part)->setParameter($param_name, $param_value);
                             }
                         }
                     }
+                }
 
-                    if (array_key_exists('joins', $condition)) {
+                if (array_key_exists('joins', $condition)) {
 
-                        $this->joins = array_merge($this->joins, $condition['joins']);
-                    }
+                    $this->joins = array_merge($this->joins, $condition['joins']);
+                }
 
-                    break;
-                case 'function':
+                break;
+            case 'function':
+                $function = sprintf('%sCondition', $alias);
 
-                    $function = sprintf('%sCondition', $alias);
+                if (!method_exists($this, $function)) {
+                    throw new \Exception(sprintf('Vous devez implémenter la méthode "%s" !', $function));
+                }
 
-                    if(! method_exists($this, $function))
-                    {
-                        throw new \Exception(sprintf('Vous devez implémenter la méthode "%s" !', $function));
-                    }
+                $this->$function($this->builder, $conditions_values[$alias]);
 
-                    $this->$function($query_builder, $conditions_values[$alias]);
-
-                    break;
-                default:
-                    throw new \Exception(sprintf('Mode "%s" inconnu !', $mode));
+                break;
+            default:
+                throw new \Exception(sprintf('Mode "%s" inconnu !', $mode));
             }
         }
     }
 
-    public function orderBy($query_builder, $data)
+    public function orderBy($data = array())
     {
+        if(is_null($data))
+        {
+            return;
+        }
+        
         $allowed_dir = array('ASC', 'DESC');
 
         foreach ($data as $order_field => $dir) {
+            
             if (!array_key_exists($order_field, $this->columns)) {
 
                 throw new \Exception(sprintf('Unknow "%s" field !', $order_field));
@@ -192,37 +201,41 @@ class DomainEntityRepository extends EntityRepository
                 $this->joins = array_merge($this->joins, $column['joins']);
             }
 
-            $query_builder->addOrderBy($column['field'], $dir);
+            $this->builder->addOrderBy($column['field'], $dir);
         }
     }
 
-    public function pager($query_builder, $data)
+    public function pager($data)
     {
-        $query_builder->setMaxResults($data['max_result']);
+        $this->builder->setMaxResults($data['max_result']);
 
-        $query_builder->setFirstResult($data['offset']);
+        $this->builder->setFirstResult($data['offset']);
     }
 
-    public function total($query_builder)
+    public function total()
     {
-        $query_builder->resetDQLPart('select');
+        $this->builder->resetDQLPart('select');
 
-        $query_builder->select('COUNT('.$this->from[1].')');
+        $this->builder->select('COUNT(' . $this->from[1] . ')');
 
-        $query_builder->setFirstResult(0);
+        $this->builder->setFirstResult(0);
 
-        return $query_builder->getQuery()->getSingleScalarResult();
+        return $this->builder->getQuery()->getSingleScalarResult();
     }
-
+    
     public function initDomainScheme($scheme)
     {
         $entity = key($scheme);
-        
+
         $scheme = current($scheme);
+
+        $this->validSchema($scheme);
         
         $this->from = array($entity, $scheme['alias']);
 
-        if(is_array($this->columns)) {
+        $this->initializeQueryBuilder();
+        
+        if (is_array($this->columns)) {
 
             $this->columns = array_merge($scheme['properties'], $this->columns);
 
@@ -231,13 +244,42 @@ class DomainEntityRepository extends EntityRepository
             $this->columns = $scheme['properties'];
         }
 
-        if(is_array($this->conditions)) {
+        if (is_array($this->conditions)) {
 
             $this->conditions = array_merge($scheme['conditions'], $this->conditions);
 
         } else {
 
             $this->conditions = $scheme['conditions'];
+        }
+        
+        return $this;
+    }
+    
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
+    protected function validSchema($schema)
+    {
+        if(! array_key_exists('alias', $schema))
+        {
+            $msg = 'alias field is required !';
+            
+            throw new WrongSchemaException($msg);
+        }
+        if(! array_key_exists('properties', $schema))
+        {
+            $msg = 'properties field is required !';
+            
+            throw new WrongSchemaException($msg);
+        }
+        if(! array_key_exists('conditions', $schema))
+        {
+            $msg = 'conditions field is required !';
+            
+            throw new WrongSchemaException($msg);
         }
     }
 }
