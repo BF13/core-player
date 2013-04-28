@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\Exception\StorageException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Yaml\Yaml;
+use BF13\Component\Storage\DoctrineUnit\Loader\YamlFileLoader;
 
 /**
  * @author FYAMANI
@@ -54,9 +55,15 @@ class Connector implements StorageConnectorInterface
 
         $querizer = new Querizer($repository, $builder);
 
-        $schema = $this->getSchemaPath($serialname);
+        $source = $this->getSchemaPath($serialname);
+        
+        $schema = new Schema();
+        
+        $loader = new YamlFileLoader($source);
+        
+        $loader->loadSchemaData($schema);
 
-        $querizer->load($schema);
+        $querizer->setSchema($schema);
 
         return $querizer;
     }
@@ -65,16 +72,14 @@ class Connector implements StorageConnectorInterface
     {
         list($bundle, $file) = explode(':', $serialname);
 
-        $form_file = sprintf($pattern, $bundle, $file);
+        $settings_file = sprintf($pattern, $bundle, $file);
 
-        if (!$path = $this->kernel->locateResource($form_file)) {
+        if (!$path = $this->kernel->locateResource($settings_file)) {
 
             throw new StorageException('Schema not found !');
         }
 
-        $schema = Yaml::parse($path);
-
-        return $schema;
+        return $path;
     }
 
     /**

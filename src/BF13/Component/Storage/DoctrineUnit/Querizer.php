@@ -250,61 +250,31 @@ class Querizer implements StorageQuerizerInterface
         return $result;
     }
 
-    public function load($schema)
+    public function setSchema(Schema $schema)
     {
-        $entity = key($schema);
-
-        $schema = current($schema);
-
-        $this->validSchema($schema);
-
-        $this->definition['from'] = array($entity, $schema['alias']);
+        $this->definition['from'] = array($schema->getName(), $schema->getAlias());
 
         $this->builder->from($this->definition['from'][0], $this->definition['from'][1]);
 
         if (is_array($this->definition['columns'])) {
 
-            $this->definition['columns'] = array_merge($schema['properties'], $this->definition['columns']);
+            $this->definition['columns'] = array_merge($schema->getProperties(), $this->definition['columns']);
 
         } else {
 
-            $this->definition['columns'] = $schema['properties'];
+            $this->definition['columns'] = $schema->getProperties();
         }
 
         if (is_array($this->definition['conditions'])) {
 
-            $this->definition['conditions'] = array_merge($schema['conditions'], $this->definition['conditions']);
+            $this->definition['conditions'] = array_merge($schema->getConditions(), $this->definition['conditions']);
 
         } else {
 
-            $this->definition['conditions'] = $schema['conditions'];
+            $this->definition['conditions'] = $schema->getConditions();
         }
 
         return $this;
-    }
-
-    protected function validSchema($schema)
-    {
-        if (!array_key_exists('alias', $schema)) {
-
-            $msg = 'alias field is required !';
-
-            throw new StorageException($msg);
-        }
-
-        if (!array_key_exists('properties', $schema)) {
-
-            $msg = 'properties field is required !';
-
-            throw new StorageException($msg);
-        }
-
-        if (!array_key_exists('conditions', $schema)) {
-
-            $msg = 'conditions field is required !';
-
-            throw new StorageException($msg);
-        }
     }
 
     protected function makeJoinQuery()
