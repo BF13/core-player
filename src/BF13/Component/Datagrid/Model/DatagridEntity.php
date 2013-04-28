@@ -6,7 +6,7 @@ namespace BF13\Component\Datagrid\Model;
  *
  */
 use BF13\Component\DomainConnect\DomainConnector;
-use BF13\Component\Storage\DoctrineStorage\Connector;
+use BF13\Component\Storage\DoctrineUnit\Connector;
 
 class DatagridEntity extends DatagridObject
 {
