@@ -1,7 +1,7 @@
 <?php
 namespace BF13\Component\LabelList;
 
-use BF13\Component\DomainConnect\DomainConnector;
+use BF13\Component\Storage\StorageConnectorInterface;
 
 /**
  * Gestion des libellés
@@ -15,14 +15,14 @@ class LabelList
 
     protected $label_list;
 
-    public function __construct(DomainConnector $repository)
+    public function __construct(StorageConnectorInterface $repository)
     {
         $this->repository = $repository;
     }
 
     protected function load()
     {
-        $label_list = $query_builder = $this->repository
+        $label_list = $this->repository
         ->getQuerizer('BF13BusinessApplicationBundle:LabelList')
         ->datafields(array('id', 'label_key', 'label', 'list_key'))
         ->results();

@@ -1,6 +1,6 @@
 parameters:
-    bf13.dom.repository.class: BF13\Component\DomainConnect\DomainConnector
-    bf13.dom.repository_manager.class: BF13\Component\DomainConnect\Doctrine\DoctrineManager
+#    bf13.dom.repository.class: BF13\Component\Storage\StorageConnector
+    bf13.dom.repository.class: BF13\Component\Storage\DoctrineStorage\Connector
     
     bf13.app.notification.class: BF13\Component\Notification\Notification
     
@@ -21,17 +21,17 @@ parameters:
     bf13.app.form.value_list.class: BF13\Component\ValueList\FormType\ValueListType
 
 services:
-    bf13.dom.repository_manager:
-        class: %bf13.dom.repository_manager.class%
-        arguments:
-          - "@doctrine.orm.default_entity_manager"
-          
     bf13.dom.repository:
         class: %bf13.dom.repository.class%
         arguments:
-          - "@bf13.dom.repository_manager"
+          - "@doctrine.orm.default_entity_manager"
           - "@kernel"
           
+#    bf13.dom.repository:
+#        class: %bf13.dom.repository.class%
+#        arguments:
+#          - "@bf13.dom.repository_manager"
+#          
     bf13.app.notification :
         class: %bf13.app.notification.class%
         arguments: 

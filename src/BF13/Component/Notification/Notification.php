@@ -2,6 +2,7 @@
 namespace BF13\Component\Notification;
 
 use BF13\Component\Notification\NotificationMessage;
+use BF13\Component\Storage\StorageConnectorInterface;
 
 /**
  * Service de messagerie interne
@@ -15,7 +16,7 @@ class Notification
 
     protected $domainRepository;
 
-    public function __construct($session, $domainRepository)
+    public function __construct($session, StorageConnectorInterface $domainRepository)
     {
         $this->session = $session;
 
@@ -58,7 +59,7 @@ class Notification
 
     public function addMessage(NotificationMessage $message, $disable_check = false)
     {
-        $InstantMessage = $this->domainRepository->retrieveNew('BF13BusinessApplicationBundle:InstantMessage');
+        $InstantMessage = $this->domainRepository->getHandler('BF13BusinessApplicationBundle:InstantMessage')->create();
 
         $InstantMessage->setFromUser($message->getFrom());
         $InstantMessage->setToUser($message->getTo());

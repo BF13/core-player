@@ -14,9 +14,9 @@ class LabelListTest extends \PHPUnit_Framework_TestCase
                 array('id' => 2, 'label_key' => 'form.civility', 'label' => 'Votre titre', 'list_key' => 'form'),
         );
         
-        $repository = $this->getMockBuilder('BF13\Component\DomainConnect\DomainConnector')
+        $repository = $this->getMockBuilder('BF13\Component\Storage\StorageConnectorInterface')
         ->disableOriginalConstructor()
-        ->setMethods(array('getQuerizer', 'datafields', 'results'))
+        ->setMethods(array('getQuerizer', 'datafields', 'results', 'getHandler'))
         ->getMock();
         ;
         

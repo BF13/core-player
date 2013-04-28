@@ -21,9 +21,9 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         ->will($this->returnSelf())
         ;
         
-        $domain = $this->getMockBuilder('BF13\Component\DomainConnect\DomainConnector')
+        $domain = $this->getMockBuilder('BF13\Component\Storage\StorageConnectorInterface')
         ->disableOriginalConstructor()
-        ->setMethods(array('store', 'getQuerizer', 'datafields', 'conditions', 'result', 'retrieveNew'))
+        ->setMethods(array('store', 'getQuerizer', 'datafields', 'conditions', 'result', 'retrieveNew', 'getHandler', 'create'))
         ->getMock()
         ;
         
@@ -48,8 +48,13 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         ;
         
         $domain->expects($this->any())
-        ->method('retrieveNew')
+        ->method('create')
         ->will($this->returnValue(new InstantMessage()))
+        ;
+        
+        $domain->expects($this->any())
+        ->method('getHandler')
+        ->will($this->returnSelf())
         ;
         
         $domain->expects($this->any())

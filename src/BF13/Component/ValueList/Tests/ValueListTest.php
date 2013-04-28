@@ -12,9 +12,9 @@ class ValueListTest extends \PHPUnit_Framework_TestCase
                 array('id' => 2, 'value_key' => 'ouinon.non', 'value' => 'non', 'list_key' => 'ouinon'),
         );
         
-        $repository = $this->getMockBuilder('BF13\Component\DomainConnect\DomainConnector')
+        $repository = $this->getMockBuilder('BF13\Component\Storage\StorageConnectorInterface')
         ->disableOriginalConstructor()
-        ->setMethods(array('getQuerizer', 'datafields', 'results'))
+        ->setMethods(array('getQuerizer', 'datafields', 'results', 'getHandler'))
         ->getMock();
         ;
         
