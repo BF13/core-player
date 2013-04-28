@@ -1,5 +1,5 @@
 <?php
-namespace BF13\Component\Storage\DoctrineStorage;
+namespace BF13\Component\Storage\DoctrineUnit;
 
 use BF13\Component\Storage\StorageQuerizerInterface;
 use BF13\Component\Storage\StorageRepositoryInterface;

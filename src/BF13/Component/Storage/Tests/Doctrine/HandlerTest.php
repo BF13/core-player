@@ -1,7 +1,7 @@
 <?php
 namespace BF13\Component\Storage\Tests\Doctrine;
 
-use BF13\Component\Storage\DoctrineStorage\Handler;
+use BF13\Component\Storage\DoctrineUnit\Handler;
 
 /**
  * @author FYAMANI

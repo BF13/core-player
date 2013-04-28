@@ -1,8 +1,8 @@
 <?php
 namespace BF13\Component\Storage\Tests\Doctrine;
 
-use BF13\Component\Storage\DoctrineStorage\Querizer;
-use BF13\Component\Storage\DoctrineStorage\Handler;
+use BF13\Component\Storage\DoctrineUnit\Querizer;
+use BF13\Component\Storage\DoctrineUnit\Handler;
 
 /**
  * @author FYAMANI
@@ -16,7 +16,7 @@ class QuerizerTest extends \PHPUnit_Framework_TestCase
     {
         $this->stub_builder = $this->getMock('Doctrine\ORM\QueryBuilder', array('select', 'from', 'andWhere', 'groupBy', 'leftJoin', 'addOrderBy', 'getQuery', 'getResult'), array(), '', false);
 
-        $this->stub_repository = $this->getMock('BF13\Component\Storage\DoctrineStorage\Repository', array('getDefaultSchema'), array(), '', false);
+        $this->stub_repository = $this->getMock('BF13\Component\Storage\DoctrineUnit\Repository', array('getDefaultSchema'), array(), '', false);
 
         $this->querizer = new Querizer($this->stub_repository, $this->stub_builder);
     }

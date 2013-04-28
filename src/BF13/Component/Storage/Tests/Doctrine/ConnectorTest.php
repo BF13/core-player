@@ -1,8 +1,9 @@
 <?php
 namespace BF13\Component\Storage\Tests\Doctrine;
 
-use BF13\Component\Storage\DoctrineStorage\Connector;
-use BF13\Component\Storage\DoctrineStorage\Repository;
+use BF13\Component\Storage\DoctrineUnit\Connector;
+use BF13\Component\Storage\DoctrineUnit\Repository;
+
 /**
  * @author FYAMANI
  *
@@ -10,13 +11,13 @@ use BF13\Component\Storage\DoctrineStorage\Repository;
 class ConnectorTest extends \PHPUnit_Framework_TestCase
 {
     protected $storage;
-    
+
     protected function setUp()
     {
         $this->em = $this->getMock('Doctrine\ORM\EntityManager', array('getRepository'), array(), '', false);
-        
+
         $this->kernel = $this->getMock('Symfony\Component\HttpKernel\Kernel', array('locateResource', 'registerBundles', 'registerContainerConfiguration'), array(), '', false);
-        
+
         $this->storage = new Connector($this->em, $this->kernel);
     }
 
@@ -27,9 +28,9 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     public function testGetHandler()
     {
         $stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('find', 'findOneBy', 'getClassName', 'getDefaultSchema'), array(), '', false);
-        
+
         $this->em->expects($this->any())->method('getRepository')->will($this->returnValue($stub_repository));
-        
+
         $handler = $this->storage->getHandler('My\Identity');
 
         $this->assertInstanceOf('BF13\Component\Storage\StorageHandlerInterface', $handler);
@@ -41,22 +42,18 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetQuerizer()
     {
-        $stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('find', 'findOneBy', 'getClassName', 'getDefaultSchema'), array(), '', false);
-        
-        $schema = array(
-                'columns' => array(),
-                'from' => array(),
-                'conditions' => array()
-        );
-        
+        $schema = array('columns' => array(), 'from' => array(), 'conditions' => array());
+
+        $stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('getDefaultSchema'), array(), '', false);
+
         $stub_repository->expects($this->any())->method('getDefaultSchema')->will($this->returnValue($schema));
-        
+
         $this->em->expects($this->any())->method('getRepository')->will($this->returnValue($stub_repository));
-        
+
         $schema_path = __DIR__ . '/Mock/doctrine/DoctrineEntity.dql.yml';
-        
+
         $this->kernel->expects($this->any())->method('locateResource')->will($this->returnValue($schema_path));
-        
+
         $querizer = $this->storage->getQuerizer('@BF13DemoBundle:DoctrineEntity');
 
         $this->assertInstanceOf('BF13\Component\Storage\StorageQuerizerInterface', $querizer);
