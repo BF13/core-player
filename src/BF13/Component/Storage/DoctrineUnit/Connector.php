@@ -1,11 +1,12 @@
 <?php
-namespace BF13\Component\Storage\DoctrineStorage;
+namespace BF13\Component\Storage\DoctrineUnit;
 
 use BF13\Component\Storage\StorageConnectorInterface;
 use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\Exception\StorageException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Yaml\Yaml;
+use BF13\Component\Storage\DoctrineUnit\Loader\YamlFileLoader;
 
 /**
  * @author FYAMANI
@@ -15,6 +16,13 @@ class Connector implements StorageConnectorInterface
 {
     protected $em;
 
+    /**
+     * 
+     * @todo delete kernel dependency
+     * 
+     * @param EntityManager $em
+     * @param Kernel $kernel
+     */
     public function __construct(EntityManager $em, Kernel $kernel)
     {
         $this->em = $em;
@@ -47,12 +55,15 @@ class Connector implements StorageConnectorInterface
 
         $querizer = new Querizer($repository, $builder);
 
-        if (!$schema = $this->getSchemaPath($serialname)) {
+        $source = $this->getSchemaPath($serialname);
+        
+        $schema = new Schema();
+        
+        $loader = new YamlFileLoader($source);
+        
+        $loader->loadSchemaData($schema);
 
-            throw new StorageException('Schema not found !');
-        }
-
-        $querizer->load($schema);
+        $querizer->setSchema($schema);
 
         return $querizer;
     }
@@ -61,16 +72,14 @@ class Connector implements StorageConnectorInterface
     {
         list($bundle, $file) = explode(':', $serialname);
 
-        $form_file = sprintf($pattern, $bundle, $file);
+        $settings_file = sprintf($pattern, $bundle, $file);
 
-        if (!$path = $this->kernel->locateResource($form_file)) {
+        if (!$path = $this->kernel->locateResource($settings_file)) {
 
-            return;
+            throw new StorageException('Schema not found !');
         }
 
-        $schema = Yaml::parse($path);
-
-        return $schema;
+        return $path;
     }
 
     /**
@@ -79,7 +88,7 @@ class Connector implements StorageConnectorInterface
      */
     public function store($item)
     {
-        $this->em->persist($data);
+        $this->em->persist($item);
 
         $this->em->flush();
     }
@@ -90,8 +99,8 @@ class Connector implements StorageConnectorInterface
      */
     public function delete($item)
     {
-        $this->_em->remove($item);
+        $this->em->remove($item);
 
-        $this->_em->flush();
+        $this->em->flush();
     }
 }

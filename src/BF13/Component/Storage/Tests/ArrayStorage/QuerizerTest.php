@@ -1,8 +1,8 @@
 <?php
-namespace BF13\Component\Storage\Tests\ArrayStorage;
+namespace BF13\Component\Storage\Tests\ArrayUnit;
 
-use BF13\Component\Storage\ArrayStorage\Querizer;
-use BF13\Component\Storage\ArrayStorage\Handler;
+use BF13\Component\Storage\ArrayUnit\Querizer;
+use BF13\Component\Storage\ArrayUnit\Handler;
 
 /**
  * @author FYAMANI

@@ -1,7 +1,7 @@
 <?php
-namespace BF13\Component\Storage\Tests\ArrayStorage;
+namespace BF13\Component\Storage\Tests\ArrayUnit;
 
-use BF13\Component\Storage\ArrayStorage\Connector;
+use BF13\Component\Storage\ArrayUnit\Connector;
 
 /**
  * @author FYAMANI
@@ -26,7 +26,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     {
         $handler = $this->storage->getHandler('My\Dom');
 
-        $this->assertInstanceOf('BF13\Component\Storage\ArrayStorage\Handler', $handler);
+        $this->assertInstanceOf('BF13\Component\Storage\ArrayUnit\Handler', $handler);
     }
 
     /**
@@ -37,6 +37,6 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     {
         $querizer = $this->storage->getQuerizer('My:Dom');
 
-        $this->assertInstanceOf('BF13\Component\Storage\ArrayStorage\Querizer', $querizer);
+        $this->assertInstanceOf('BF13\Component\Storage\ArrayUnit\Querizer', $querizer);
     }
 }
