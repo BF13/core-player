@@ -43,13 +43,21 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     {
         $stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('find', 'findOneBy', 'getClassName', 'getDefaultSchema'), array(), '', false);
         
+        $schema = array(
+                'columns' => array(),
+                'from' => array(),
+                'conditions' => array()
+        );
+        
+        $stub_repository->expects($this->any())->method('getDefaultSchema')->will($this->returnValue($schema));
+        
         $this->em->expects($this->any())->method('getRepository')->will($this->returnValue($stub_repository));
         
         $schema_path = __DIR__ . '/Mock/doctrine/DoctrineEntity.dql.yml';
         
         $this->kernel->expects($this->any())->method('locateResource')->will($this->returnValue($schema_path));
         
-        $querizer = $this->storage->getQuerizer('My\Dom\Entity:DoctrineEntity');
+        $querizer = $this->storage->getQuerizer('@BF13DemoBundle:DoctrineEntity');
 
         $this->assertInstanceOf('BF13\Component\Storage\StorageQuerizerInterface', $querizer);
     }

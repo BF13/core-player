@@ -1,4 +1,4 @@
-BF13\Component\Storage\Tests\Mock\DoctrineEntity:
+DoctrineEntity:
     alias: de
     properties:
         total:
