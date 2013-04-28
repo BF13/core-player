@@ -15,6 +15,13 @@ class Connector implements StorageConnectorInterface
 {
     protected $em;
 
+    /**
+     * 
+     * @todo delete kernel dependency
+     * 
+     * @param EntityManager $em
+     * @param Kernel $kernel
+     */
     public function __construct(EntityManager $em, Kernel $kernel)
     {
         $this->em = $em;
@@ -47,10 +54,7 @@ class Connector implements StorageConnectorInterface
 
         $querizer = new Querizer($repository, $builder);
 
-        if (!$schema = $this->getSchemaPath($serialname)) {
-
-            throw new StorageException('Schema not found !');
-        }
+        $schema = $this->getSchemaPath($serialname);
 
         $querizer->load($schema);
 
@@ -65,7 +69,7 @@ class Connector implements StorageConnectorInterface
 
         if (!$path = $this->kernel->locateResource($form_file)) {
 
-            return;
+            throw new StorageException('Schema not found !');
         }
 
         $schema = Yaml::parse($path);
@@ -79,7 +83,7 @@ class Connector implements StorageConnectorInterface
      */
     public function store($item)
     {
-        $this->em->persist($data);
+        $this->em->persist($item);
 
         $this->em->flush();
     }
@@ -90,8 +94,8 @@ class Connector implements StorageConnectorInterface
      */
     public function delete($item)
     {
-        $this->_em->remove($item);
+        $this->em->remove($item);
 
-        $this->_em->flush();
+        $this->em->flush();
     }
 }

@@ -3,6 +3,7 @@ namespace BF13\Component\Storage\Tests\Doctrine;
 
 use BF13\Component\Storage\DoctrineUnit\Connector;
 use BF13\Component\Storage\DoctrineUnit\Repository;
+use BF13\Component\Storage\Tests\Doctrine\Mock\DoctrineEntity;
 
 /**
  * @author FYAMANI
@@ -14,7 +15,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->em = $this->getMock('Doctrine\ORM\EntityManager', array('getRepository'), array(), '', false);
+        $this->em = $this->getMock('Doctrine\ORM\EntityManager', array('getRepository', 'persist', 'flush', 'remove'), array(), '', false);
 
         $this->kernel = $this->getMock('Symfony\Component\HttpKernel\Kernel', array('locateResource', 'registerBundles', 'registerContainerConfiguration'), array(), '', false);
 
@@ -57,6 +58,47 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $querizer = $this->storage->getQuerizer('@BF13DemoBundle:DoctrineEntity');
 
         $this->assertInstanceOf('BF13\Component\Storage\StorageQuerizerInterface', $querizer);
+    }
+
+    /**
+     * Test the connection to the Querizer
+     * 
+     */
+    public function testFailedGetQuerizer()
+    {
+        $this->setExpectedException('BF13\Component\Storage\Exception\StorageException');
+        
+        $schema = array('columns' => array(), 'from' => array(), 'conditions' => array());
+
+        $stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('getDefaultSchema'), array(), '', false);
+
+        $stub_repository->expects($this->any())->method('getDefaultSchema')->will($this->returnValue($schema));
+
+        $this->em->expects($this->any())->method('getRepository')->will($this->returnValue($stub_repository));
+
+        $schema_path = false;
+
+        $this->kernel->expects($this->any())->method('locateResource')->will($this->returnValue($schema_path));
+
+        $querizer = $this->storage->getQuerizer('@BF13DemoBundle:DoctrineEntity');
+    }
+
+    public function testStore()
+    {
+        $item = new DoctrineEntity();
+        
+        $this->storage->store($item);
+        
+        $this->assertTrue(true);
+    }
+
+    public function testDelete()
+    {
+        $item = new DoctrineEntity();
+        
+        $this->storage->delete($item);
+        
+        $this->assertTrue(true);
     }
 }
 
