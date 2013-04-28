@@ -49,7 +49,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         
         $this->kernel->expects($this->any())->method('locateResource')->will($this->returnValue($schema_path));
         
-        $querizer = $this->storage->getQuerizer('My\Dom');
+        $querizer = $this->storage->getQuerizer('My\Dom\Entity:DoctrineEntity');
 
         $this->assertInstanceOf('BF13\Component\Storage\StorageQuerizerInterface', $querizer);
     }
