@@ -1,0 +1,8 @@
+BF13\Component\Storage\Tests\Mock\DoctrineEntity:
+    alias: de
+    properties:
+        total:
+          field: COUNT(de)
+        id:
+            field: de.id
+    conditions: []
