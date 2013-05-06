@@ -1,8 +1,8 @@
-ValidateAction:
+metadata:
   name: confirm_actiontype
   fields:
     confirm:
       widget:
+        checkbox:
           label: Confirmer l'action
-          type: checkbox
           required: true

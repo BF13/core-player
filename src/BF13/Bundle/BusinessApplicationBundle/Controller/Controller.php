@@ -125,7 +125,7 @@ class Controller extends baseController
     {
         $ValidateAction = new ValidateAction;
 
-        $form = $this->generateForm('BF13BusinessApplicationBundle:ValidateAction', $ValidateAction);
+        $form = $this->generateForm('BF13BusinessApplicationBundle:form:ValidateAction', $ValidateAction);
 
         return $form;
     }
