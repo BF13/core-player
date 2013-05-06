@@ -211,7 +211,7 @@ class Querizer implements StorageQuerizerInterface
      */
     public function result($mode = null)
     {
-        return current($this->exec());
+        return current($this->results($mode));
     }
 
     /**
