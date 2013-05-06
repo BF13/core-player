@@ -4,7 +4,7 @@
 	"type" : "symfony-bundle",
 	"authors" : [{
 			"name" : "Fouad YAMANI",
-			"email" : "fyam@free.fr"
+			"email" : "fyamani@free.fr"
 		}
 	],
 	"keywords" : [
@@ -32,5 +32,10 @@
 			"BF13\\" : "src\/"
 		}
 	},
-	"minimum-stability" : "dev"
+	"minimum-stability" : "dev",
+	"support" : {
+		"source" : "https:\/\/github.com\/BF13\/BF13\/tree\/master",
+		"issues" : "https:\/\/github.com\/BF13\/BF13\/issues",
+		"wiki" : "https:\/\/github.com\/BF13\/BF13\/wiki"
+	}
 }
