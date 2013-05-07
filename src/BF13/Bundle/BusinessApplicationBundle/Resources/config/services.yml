@@ -1,6 +1,6 @@
 parameters:
 #    bf13.dom.repository.class: BF13\Component\Storage\StorageConnector
-    bf13.dom.repository.class: BF13\Component\Storage\DoctrineStorage\Connector
+    bf13.dom.repository.class: BF13\Component\Storage\DoctrineUnit\Connector
     
     bf13.app.notification.class: BF13\Component\Notification\Notification
     
@@ -22,7 +22,7 @@ parameters:
 
 services:
     bf13.dom.repository:
-        class: %bf13.dom.repository.class%
+        class: "%bf13.dom.repository.class%"
         arguments:
           - "@doctrine.orm.default_entity_manager"
           - "@kernel"
@@ -33,52 +33,52 @@ services:
 #          - "@bf13.dom.repository_manager"
 #          
     bf13.app.notification :
-        class: %bf13.app.notification.class%
+        class: "%bf13.app.notification.class%"
         arguments: 
-          - @session
-          - @bf13.dom.repository
-          - @security.context
+          - "@session"
+          - "@bf13.dom.repository"
+          - "@security.context"
 
     bf13.app.breadcrumb :
-        class: %bf13.app.breadcrumb.class%
-        arguments: [%bf13.app.breadcrumb.config%]
+        class: "%bf13.app.breadcrumb.class%"
+        arguments: ["%bf13.app.breadcrumb.config%"]
         
     bf13.app.breadcrumb.listener :
-        class: %bf13.app.breadcrumb.listener.class%
-        arguments: [@bf13.app.breadcrumb]
+        class: "%bf13.app.breadcrumb.listener.class%"
+        arguments: ["@bf13.app.breadcrumb"]
         tags:
           - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
           
     bf13.app.breadcrumb.extension:
-        class: %bf13.app.breadcrumb.extension.class%
-        arguments: [@bf13.app.breadcrumb]
+        class: "%bf13.app.breadcrumb.extension.class%"
+        arguments: ["@bf13.app.breadcrumb"]
         tags:
           - { name: twig.extension }
           
     bf13.app.form_generator:
-        class: %bf13.app.form_generator.class%
+        class: "%bf13.app.form_generator.class%"
         arguments:
           - "@form.factory"
-          - %bf13.app.form_dataloader.class%
+          - "%bf13.app.form_dataloader.class%"
 
     bf13.app.datagrid_generator:
-        class: %bf13.app.datagrid_generator.class%
+        class: "%bf13.app.datagrid_generator.class%"
         arguments:
           - "@bf13.dom.repository"
           - "@kernel"
           
     bf13.app.label_list:
-        class: %bf13.app.label_list.class%
+        class: "%bf13.app.label_list.class%"
         arguments:
-          - @bf13.dom.repository
+          - "@bf13.dom.repository"
           
     bf13.app.value_list:
-        class: %bf13.app.value_list.class%
+        class: "%bf13.app.value_list.class%"
         arguments:
-          - @bf13.dom.repository
+          - "@bf13.dom.repository"
 
     bf13.app.twig.label_list_extension:
-        class: %bf13.app.twig.label_list_extension.class%
+        class: "%bf13.app.twig.label_list_extension.class%"
         arguments:
           - "@bf13.app.label_list"
 #          - true               # uncomment row to show key
@@ -86,14 +86,14 @@ services:
             - { name: twig.extension }
             
     bf13.app.form.value_list:
-        class: %bf13.app.form.value_list.class%
+        class: "%bf13.app.form.value_list.class%"
         arguments:
           - "@bf13.app.value_list"
         tags:
             - { name: form.type, alias: value_list }
             
     bf13.app.twig.value_list_extension:
-        class: %bf13.app.twig.value_list_extension.class%
+        class: "%bf13.app.twig.value_list_extension.class%"
         arguments:
           - "@bf13.app.value_list"
         tags:

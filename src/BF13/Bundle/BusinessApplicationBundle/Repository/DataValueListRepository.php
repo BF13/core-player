@@ -2,7 +2,7 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Repository;
 
-use BF13\Component\Storage\DoctrineStorage\Repository;
+use BF13\Component\Storage\DoctrineUnit\Repository;
 
 /**
  * DataValueListRepository

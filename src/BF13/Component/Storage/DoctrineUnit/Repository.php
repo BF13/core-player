@@ -1,5 +1,5 @@
 <?php
-namespace BF13\Component\Storage\DoctrineStorage;
+namespace BF13\Component\Storage\DoctrineUnit;
 
 use Doctrine\ORM\EntityRepository;
 
