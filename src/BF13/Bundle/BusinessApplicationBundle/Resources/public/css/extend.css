@@ -1,0 +1,24 @@
+@CHARSET "UTF-8";
+
+header {
+	margin-top: 25px;
+}
+
+section {
+    margin-top: 30px;
+    padding-top: 50px;
+}
+
+.navbar .nav>.active>a, .navbar .nav>.active>a:hover, .nav > li.dropdown.open.active > a:hover, .nav > li.dropdown.open.active > a:focus {
+	color: #ff8432;
+	background-color: black;
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+	background-image: -webkit-linear-gradient(top, #ff8432, #ff8432);
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
+	background-image: -webkit-linear-gradient(top, #FFF3EA, #FFF3EA);
+	color:#999999;
+}

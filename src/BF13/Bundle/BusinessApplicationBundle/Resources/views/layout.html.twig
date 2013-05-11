@@ -2,8 +2,12 @@
 
 {% block stylesheets %}
 	<!-- bootstrap css -->
-	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
-
+{# 	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />#}
+{# 	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />#}
+	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootswatch.css" rel="stylesheet" />
+	<link href="/bundles/bf13businessapplication/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="/bundles/bf13businessapplication/css/extend.css" rel="stylesheet" />
+	
 	<!-- for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -49,30 +53,28 @@
 {% endblock %}
 
 {% block body %}
+  {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:main-menu.html.twig' %}
     <div class="container">
-              {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:main-menu.html.twig' %}
+    <header>
+        <h1>{% block title %}{% endblock %}</h1>
+    </header>
+    <section id="content-area">
       <div class="row-fluid">
-        <div class="span2">
-          <!--Sidebar content-->
-          {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:sub-menu.html.twig' %}
-
-        </div>
-        <div class="span10">
+        <div class="span12">
           <!--Body content-->
           <div class="row-fluid">
-{#               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.html.twig' %}#}
-
               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:dialogbox.html.twig' %}
               
               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:message.html.twig' %}
           </div>
-          <h4>{% block title %}{% endblock %}</h4>
-
-          <div class="well">
-              {% block base_content %}{% endblock %}
-          </div>
+          {% block base_content %}{% endblock %}
         </div>
       </div>
-      {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:footer.html.twig' %}
+      </section>
     </div>
+  <footer id="footer">
+  <div class="container" >
+  {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:footer.html.twig' %}
+  </div>
+  </footer>
 {% endblock %}

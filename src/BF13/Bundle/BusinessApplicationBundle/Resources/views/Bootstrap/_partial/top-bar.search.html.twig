@@ -1,10 +1,10 @@
 <form id="formSearch" class="navbar-search" action="#">
 	<div class="input-prepend input-append">
 		<span class="add-on"><i class="icon icon-search"></i></span>
-		<input id="appendedPrependedSearch" class="span6" type="text">
-		<div class="btn-group btn-group-prep">
-			<button class="btn btn-inverse">Rechercher</button>
-			<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		<input id="appendedPrependedSearch" class="input-medium" type="text" placeholder="rechercher ...">
+		<div class="btn-group ">
+			<button class="btn btn-primary">Rechercher</button>
+			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
         	{% for route, data in rootBreadcrumb() %}
     			<li><a href="#"><i class="{{ data.icon }}"></i> {{ data.label }}</a></li>

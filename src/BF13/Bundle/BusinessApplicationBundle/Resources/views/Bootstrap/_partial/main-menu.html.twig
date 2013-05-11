@@ -1,27 +1,57 @@
-<div class="navbar">
+<div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
-    <a class="brand" href="#">BusinessApplication</a>
+      <div class="container">
+  
+    <a class="brand" href="{{ path('_welcome') }}">BusinessApplication</a>
     <ul class="nav">
-    	<li class="user-container">
-            <a class="brand" href="#"><i class="icon-large icon-cloud"></i></a>
-    	</li>
-
-    	{% for route, data in rootBreadcrumb() %}
-        	<li {% if data.active %}class="active"{% endif %}>
-        		<a href="{{ path(data.route) }}">
+{#     {{ dump(rootBreadcrumb()) }}#}
+    	{% for root_name, data in rootBreadcrumb() %}
+        	<li class="{% if data.active %}active{% endif %} {% if data.nodes %}dropdown{% endif %}">
+        		<a href="{% if data.nodes %}#{% else %}{{ path(data.route) }}{% endif %}" {% if data.nodes %}class="dropdown-toogle" data-toggle="dropdown"{% endif %}>
         			<i class="icon-large {{ data.icon }}"></i>
         			{{ data.label }}
+        			{% if data.nodes %}
+        			     <b class="caret"></b>
+        			{% endif %}
         		</a>
+        		{% if data.nodes %}
+{#         		  {{ dump(data.nodes) }}#}
+        		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+            		  {% for menu_label, nodes in childsBreadcrumb(root_name) %}
+                		  {% for route_node, node in nodes %}
+        		          <li class="{% if node.active %}active{% endif %}">
+        		              <a href="{{ path(route_node) }}" class="active">
+        		                  {{ node.label }}
+    		                  </a>
+        		          </li>
+            		      {% endfor %}
+        		      {% endfor %}
+        		  </ul>
+        		{% endif %}
         	</li>
     	{% endfor %}
     </ul>
-
-			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-			<ul class="nav pull-right">
-				<li class="divider-vertical"></li>
-				<li class="dropdown">{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.user.html.twig' %}</li>
-	        </ul>
-			{% endif %}
-
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <ul class="nav pull-right">
+{#        {% if app.session.get('instant_notif') %}#}
+{# 	   <li>#}
+{# 	       <a href="#"><span class="badge badge-info">i</span></a>#}
+{# 	   </li>#}
+{#        {% endif %}#}
+       <li class="dropdown">{% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.user.html.twig' %}</li>
+    </ul>
+	{% endif %}
+    </div>
+  </div>
+  <div class="container" style="background:white;border-bottom:1px solid #EEE;">
+	
+	
+	
+	<ul class="nav pull-right">
+		<li>
+          {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:top-bar.search.html.twig' %}
+          </li>
+		<li class="dropdown"></li>
+    </ul>
   </div>
 </div>
