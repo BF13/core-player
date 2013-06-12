@@ -1,14 +1,10 @@
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-    {% if app.session.get('instant_notif') %}
-    <span class="badge badge-important">!</span>
-    {% endif %}
     <i class="icon-user"></i>
     <b class="caret"></b>
 </a>
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-  <li><a tabindex="-1" href="{{ path('bf_demo_user_afficher') }}">Afficher profil</a></li>
-  <li><a tabindex="-1" href="{{ path('bf_demo_user_messages') }}">Messages</a></li>
-  <li class="divider"></li>
-  <li><a tabindex="-1" href="{{ path('bf_demo_logout') }}">Déconnexion</a></li>
+{#   <li><a tabindex="-1" href="{{ path('bf_demo_user_afficher') }}"><i class="icon-user"></i> Mon profil</a></li>#}
+{#   <li><a tabindex="-1" href="{{ path('bf_demo_user_messages') }}"><i class="icon-envelope"></i> Mes messages</a></li>#}
+{#   <li class="divider"></li>#}
+{#   <li><a tabindex="-1" href="{{ path('bf_demo_logout') }}"><i class="icon-signout"></i> Déconnexion</a></li>#}
 </ul>

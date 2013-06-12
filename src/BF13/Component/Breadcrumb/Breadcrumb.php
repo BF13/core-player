@@ -97,6 +97,8 @@ class Breadcrumb
                 $first = array_shift($nodes);
 
                 $roots[$key]['route'] = $first;
+                
+                $roots[$key]['nodes'] = 1 < sizeOf($item['nodes']);
             }
         }
 
