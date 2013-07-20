@@ -108,17 +108,17 @@ class Controller extends baseController
 
     protected function addSuccessMessage($msg)
     {
-        $this->get('session')->setFlash('success', $msg);
+        $this->get('session')->getFlashBag()->add('success', $msg);
     }
 
     protected function addWarningMessage($msg)
     {
-        $this->get('session')->setFlash('warning', $msg);
+        $this->get('session')->getFlashBag()->add('warning', $msg);
     }
 
     protected function addErrorMessage($msg)
     {
-        $this->get('session')->setFlash('error', $msg);
+        $this->get('session')->getFlashBag()->add('error', $msg);
     }
 
     protected function getValidateActionForm()
