@@ -66,7 +66,7 @@ class Handler implements StorageHandlerInterface
      * (non-PHPdoc)
      * @see \BF13\Component\Storage\StorageRepositoryInterface::retrieveNew()
      */
-    public function create(\Closure $fn = null)
+    public function create($data)
     {
         $source = $this->datasource[$this->fqcn]['structure']['columns'];
 

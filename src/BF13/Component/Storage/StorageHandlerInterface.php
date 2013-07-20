@@ -10,5 +10,5 @@ interface StorageHandlerInterface
 {
     public function retrieve($index);
 
-    public function create(\Closure $fn = null);
+    public function create($data);
 }

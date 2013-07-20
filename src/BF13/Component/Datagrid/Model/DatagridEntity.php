@@ -16,7 +16,7 @@ class DatagridEntity extends DatagridObject
 
     public $ref;
 
-    protected $raw_columns = array();
+    public $raw_columns = array();
 
     public function __construct($DatagridSettings, Connector $DomainRepository)
     {
@@ -55,7 +55,6 @@ class DatagridEntity extends DatagridObject
             ->datafields($fields);
 
         if($data && $condition = $this->config->getCondition() ) {
-
             $query->conditions(array($condition => $data));
         }
 

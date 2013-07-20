@@ -36,23 +36,27 @@ class FormGenerator
      */
     public function buildForm($file, $data = array(), $options = array())
     {
-        if (!$metaData = $this->loadMetaData($file)) {
+        $opt = array_key_exists('metadata', $options) ? $options['metadata'] : array();
+        
+        unset($options['metadata']);
+        
+        if (!$metaData = $this->loadMetaData($file, $opt)) {
 
             throw new FormException('Métadonnées incorrecte !');
         }
+        
+        //$subforms = $metaData->getSubForms();
 
         $type = new Type\Form($metaData);
 
-        $options = array_merge($metaData->getOptions(), $options);
-
-        $form = $this->formFactory->create($type, $data, $metaData->getOptions());
+        $form = $this->formFactory->create($type, $data, $options);
 
         return $form;
     }
 
-    protected function loadMetaData($file)
+    protected function loadMetaData($file, $options = array())
     {
-        $metaData = new Mapping\FormMetaData();
+        $metaData = new Mapping\FormMetaData(null, $options);
 
         $loader_class = $this->loader_class;
 

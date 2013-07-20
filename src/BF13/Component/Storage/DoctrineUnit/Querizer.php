@@ -131,7 +131,7 @@ class Querizer implements StorageQuerizerInterface
                         }
                     }
                 }
-
+                
                 if (array_key_exists('joins', $condition)) {
 
                     $this->definition['joins'] = array_merge($this->definition['joins'], $condition['joins']);
@@ -248,6 +248,13 @@ class Querizer implements StorageQuerizerInterface
         $result = $this->builder->getQuery()->getResult($mode);
 
         return $result;
+    }
+
+    public function getQueryBuilder()
+    {
+        $this->makeJoinQuery();
+
+        return $this->builder;
     }
 
     public function setSchema(Schema $schema)

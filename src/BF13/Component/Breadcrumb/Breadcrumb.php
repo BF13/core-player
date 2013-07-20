@@ -163,7 +163,12 @@ class Breadcrumb
 
         foreach ($nodes as $route => $child) {
 
-            $item = array('label' => $child['label'], 'active' => ($this->active_route == $route), 'hidden' => array_key_exists('hidden', $child) ? $child['hidden'] : false,);
+            $item = array(
+                'label' => $child['label'], 
+                'active' => ($this->active_route == $route), 
+                'target' => isset($child['target']) ? $child['target'] : 'page', 
+                'hidden' => isset($child['hidden']) ? $child['hidden'] : false,
+            );
 
             $data[$child['submenu']][$route] = $item; //['active'] = ($this->active_route == $route);
         }

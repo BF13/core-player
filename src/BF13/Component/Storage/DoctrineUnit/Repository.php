@@ -30,4 +30,13 @@ class Repository extends EntityRepository implements StorageRepositoryInterface
 
         return array('from' => $this->from, 'columns' => $this->columns, 'conditions' => $this->conditions, 'joins' => $this->joins);
     }
+
+    public function createEntity($data)
+    {
+        $class_name = $this->getClassName();
+        
+        $item = new $class_name;
+        
+        return $item;
+    }
 }

@@ -56,6 +56,7 @@ class DatagridGenerator
         }
 
         $type = array_key_exists('type', $defaultConfig['settings']) ? $defaultConfig['settings']['type'] : 'entity';
+        
         $datagrid_model = sprintf('BF13\Component\Datagrid\Model\Datagrid%s', ucfirst($type));
 
         switch($type)

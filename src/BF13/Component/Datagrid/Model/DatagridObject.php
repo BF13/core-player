@@ -15,7 +15,7 @@ class DatagridObject
 
     public $ref;
 
-    protected $raw_columns = array();
+    public $raw_columns = array();
 
     public function __construct($DatagridSettings)
     {

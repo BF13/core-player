@@ -19,7 +19,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->stub_em = $this->getMock('Doctrine\ORM\EntityManager', array('getRepository', 'persist', 'remove', 'flush'), array(), '', false);
 
-        $this->stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('find', 'findOneBy', 'getClassName', 'getDefaultSchema'), array(), '', false);
+        $this->stub_repository = $this->getMock('BF13\Component\Storage\StorageRepositoryInterface', array('find', 'findOneBy', 'getClassName', 'getDefaultSchema', 'createEntity'), array(), '', false);
 
         $this->stub_em->expects($this->any())->method('getRepository')->will($this->returnValue($this->stub_repository));
 
@@ -50,11 +50,11 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
     {
         $class = 'BF13\Component\Storage\Tests\Doctrine\Mock\DoctrineEntity';
 
-        $this->stub_repository->expects($this->any())->method('getClassName')->will($this->returnValue($class));
+        $this->stub_repository->expects($this->any())->method('createEntity')->will($this->returnValue($class));
 
         $item = $this->handler->create();
 
-        $this->assertInstanceOf($class, $item);
+        $this->assertEquals($class, $item);
     }
 
 //     public function testDelete()

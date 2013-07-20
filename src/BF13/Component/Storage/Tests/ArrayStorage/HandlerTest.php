@@ -42,7 +42,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrieveNew()
     {
-        $item = $this->handler->create();
+        $item = $this->handler->create(array());
         
         $this->assertTrue(array_key_exists('name', $item));
         

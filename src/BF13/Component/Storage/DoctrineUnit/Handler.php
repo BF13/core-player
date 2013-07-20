@@ -35,7 +35,7 @@ class Handler implements StorageHandlerInterface
 
         if (!$item) {
 
-            throw new \Exception(sprintf('Unable to find "%s" entity "%s".', $this->repository->getClassName(), $index));
+//             throw new \Exception(sprintf('Unable to find "%s" entity "%s".', $this->repository->getClassName(), $index));
         }
 
         return $item;
@@ -45,17 +45,8 @@ class Handler implements StorageHandlerInterface
      * (non-PHPdoc)
      * @see \BF13\Component\Storage\StorageRepositoryInterface::retrieveNew()
      */
-    public function create(Closure $fn = null)
+    public function create($data = array())
     {
-        $class_name = $this->repository->getClassName();
-
-        $item = new $class_name;
-
-        if ($fn) {
-
-            $fn($item);
-        }
-
-        return $item;
+        return $this->repository->createEntity($data);
     }
 }
