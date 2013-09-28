@@ -1,7 +1,7 @@
 <?php
 namespace BF13\Bundle\BusinessApplicationBundle\Controller;
 
-use Symfony\Component\Form\Exception\NotValidException;
+use Symfony\Component\Form\Exception\InvalidArgumentException;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -51,7 +51,7 @@ class Controller extends baseController
 
 //             $this->get('logger')->err('Erreur formulaire: ' . $msg);
 
-            throw new NotValidException($msg);
+            throw new InvalidArgumentException($msg);
         }
     }
 
