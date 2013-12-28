@@ -97,7 +97,7 @@ class Breadcrumb
                 $first = array_shift($nodes);
 
                 $roots[$key]['route'] = $first;
-                
+
                 $roots[$key]['nodes'] = 1 < sizeOf($item['nodes']);
             }
         }
@@ -161,16 +161,18 @@ class Breadcrumb
 
         $data = array();
 
+        $defaults = array(
+            'label' => 'unknow',
+            'active' => false,
+            'target' => 'page',
+            'hidden' => false,
+        );
+
         foreach ($nodes as $route => $child) {
 
-            $item = array(
-                'label' => $child['label'], 
-                'active' => ($this->active_route == $route), 
-                'target' => isset($child['target']) ? $child['target'] : 'page', 
-                'hidden' => isset($child['hidden']) ? $child['hidden'] : false,
-            );
+            $defaults['active'] = ($this->active_route == $route);
 
-            $data[$child['submenu']][$route] = $item; //['active'] = ($this->active_route == $route);
+            $data[$child['submenu']][$route] = array_merge($defaults, $child);
         }
 
         return $data;
@@ -198,7 +200,7 @@ class Breadcrumb
             }
         }
     }
-    
+
     public function getRaw()
     {
         return $this->data;
