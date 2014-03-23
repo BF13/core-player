@@ -13,7 +13,7 @@
 	"homepage" : "http://bf13.github.com",
 	"license" : "MIT",
 	"require" : {
-		"symfony/symfony" : ">=2.3.*",
+		"symfony/symfony" : ">=2.3.0",
 		"twig/extensions" : "1.0.*",
 		"php" : ">=5.3.3",
 		"doctrine/orm" : ">=2.2.3,<2.4-dev",
