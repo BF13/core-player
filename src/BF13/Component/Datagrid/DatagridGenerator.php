@@ -5,8 +5,6 @@ use Symfony\Component\Yaml\Yaml;
 
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 
-use BF13\Component\Datagrid\Doctrine\DatagridEntity;
-use BF13\Component\Datagrid\DatagridObject;
 use BF13\Component\Datagrid\datagridContainer;
 
 
@@ -39,11 +37,11 @@ class DatagridGenerator
         $path = $this->getDatagridPath($model);
 
         $defaultConfig = Yaml::parse($path);
-        
+
         list($bundle, $class) = explode(':', $model);
-        
+
         $ns = $this->getNamespaceBundle($bundle);
-        
+
         $class = sprintf('%s\Datagrid\%s', $ns, $class);
 
         if(class_exists($class)) {
@@ -56,20 +54,26 @@ class DatagridGenerator
         }
 
         $type = array_key_exists('type', $defaultConfig['settings']) ? $defaultConfig['settings']['type'] : 'entity';
-        
+
         $datagrid_model = sprintf('BF13\Component\Datagrid\Model\Datagrid%s', ucfirst($type));
 
         switch($type)
         {
             case 'object':
-                $datagrid = new $datagrid_model($Grid);
-                break;
             case 'entity':
-                $datagrid = new $datagrid_model($Grid, $this->DomainRepository);
                 break;
+
             default:
-                throw new \Exception(sprintf('Unknow datagrid type "%s"', $type));
+
+                if(!class_exists($type))
+                {
+                    throw new \Exception(sprintf('Unknow datagrid type "%s"', $type));
+                }
+
+                $datagrid_model = $type;
         }
+
+        $datagrid = new $datagrid_model($Grid, $this->kernel);
 
         return $datagrid;
     }

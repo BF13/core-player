@@ -5,8 +5,6 @@ namespace BF13\Component\Datagrid\Model;
  * @author FYAMANI
  *
  */
-use BF13\Component\DomainConnect\DomainConnector;
-use BF13\Component\Storage\DoctrineUnit\Connector;
 
 class DatagridEntity extends DatagridObject
 {
@@ -18,11 +16,11 @@ class DatagridEntity extends DatagridObject
 
     public $raw_columns = array();
 
-    public function __construct($DatagridSettings, Connector $DomainRepository)
+    public function __construct($DatagridSettings, $kernel)
     {
         $this->config = $DatagridSettings;
 
-        $this->DomainRepository = $DomainRepository;
+        $this->DomainRepository = $kernel->getContainer()->get('bf13.dom.repository');
 
         $this->setColumnHeaders($DatagridSettings->getColumns());
     }
