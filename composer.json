@@ -14,13 +14,13 @@
 	"license" : "MIT",
 	"require" : {
 		"symfony/symfony" : ">=2.3.0",
-		"twig/extensions" : "1.0.*",
+		"twig/extensions" : "~1.0",
 		"php" : ">=5.3.3",
 		"doctrine/orm" : "~2.2,>=2.2.3",
-		"symfony/assetic-bundle" : "2.3.*",
+		"symfony/assetic-bundle" : "~2.3",
 		"sensio/framework-extra-bundle" : ">=2.3.4",
-		"doctrine/doctrine-bundle" : "1.2.*",
-		"sensio/distribution-bundle" : "2.3.*"
+		"doctrine/doctrine-bundle" : "~1.2",
+		"sensio/distribution-bundle" : "~2.3"
 	},
 	"require-dev" : {
 		"twig/extensions" : "1.0.*",
