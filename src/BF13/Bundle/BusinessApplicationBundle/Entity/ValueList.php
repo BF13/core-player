@@ -2,8 +2,6 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * ValueList
  */
@@ -36,11 +34,11 @@ class ValueList
     {
         $this->DataListValues = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,14 +54,14 @@ class ValueList
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -79,14 +77,14 @@ class ValueList
     public function setListKey($listKey)
     {
         $this->list_key = $listKey;
-    
+
         return $this;
     }
 
     /**
      * Get list_key
      *
-     * @return string 
+     * @return string
      */
     public function getListKey()
     {
@@ -102,7 +100,7 @@ class ValueList
     public function addDataListValue(\BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList $dataListValues)
     {
         $this->DataListValues[] = $dataListValues;
-    
+
         return $this;
     }
 
@@ -119,7 +117,7 @@ class ValueList
     /**
      * Get DataListValues
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDataListValues()
     {

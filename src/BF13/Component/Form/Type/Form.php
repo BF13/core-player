@@ -3,7 +3,6 @@ namespace BF13\Component\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use BF13\Component\Form\Mapping\FormMetaData;
 
@@ -16,13 +15,13 @@ use BF13\Component\Form\Mapping\FormMetaData;
 class Form extends AbstractType implements FormInterface
 {
     protected $metaData;
-    
+
     protected $options;
 
     public function __construct(FormMetaData $metadata = null, $options = array())
     {
         $this->metaData = $metadata;
-        
+
         $this->options = $options;
     }
 
@@ -51,7 +50,7 @@ class Form extends AbstractType implements FormInterface
 
         $this->addEmbeddedForms($builder);
     }
-    
+
     protected function addFields($builder, $options)
     {
         foreach ($this->metaData->getFields() as $fieldname => $params) {
@@ -70,19 +69,16 @@ class Form extends AbstractType implements FormInterface
                     $fieldOptions['disabled'] = 'disabled';
                 }
             }
-            
+
             if (is_array($fieldOptions) && array_key_exists('data_transformer', $fieldOptions)) {
-                
+
                 $transformer = $fieldOptions['data_transformer'];
-                
+
                 $transformer_options = array_key_exists('data_option_transformer', $fieldOptions) ? $fieldOptions['data_option_transformer'] : array();
 
                 unset($fieldOptions['data_transformer'], $fieldOptions['data_option_transformer']);
-                
-                $transformer = new $transformer(array_merge($fieldOptions, $transformer_options));
-//             }
 
-//             if ($transformer = $this->metaData->getDataTransformer()) {
+                $transformer = new $transformer(array_merge($fieldOptions, $transformer_options));
 
                 $field = $builder->create($fieldname, $type, $fieldOptions)->addModelTransformer($transformer);
 
@@ -92,8 +88,6 @@ class Form extends AbstractType implements FormInterface
 
                 $builder->add($fieldname, $type, (array) $fieldOptions);
             }
-
-            //                 $builder->addValidator($params, $key, $formBuilder);
         }
     }
 

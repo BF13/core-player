@@ -2,7 +2,6 @@
 namespace BF13\Component\Storage\DoctrineUnit;
 
 use BF13\Component\Storage\StorageHandlerInterface;
-use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\StorageRepositoryInterface;
 
 /**
@@ -31,11 +30,6 @@ class Handler implements StorageHandlerInterface
         } else {
 
             $item = $this->repository->find($index);
-        }
-
-        if (!$item) {
-
-//             throw new \Exception(sprintf('Unable to find "%s" entity "%s".', $this->repository->getClassName(), $index));
         }
 
         return $item;

@@ -1,15 +1,11 @@
 <?php
 namespace BF13\Component\Form\Mapping;
 
-use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Yaml\Parser;
-
 /**
  * Métadonnées d'un formulaire
  *
  * @author bitnami
- *        
+ *
  */
 class FormMetaData
 {
@@ -19,7 +15,7 @@ class FormMetaData
     protected $multiple;
 
     protected $options = array();
-    
+
     protected $extended_metadata = array();
 
     protected $dataTransformer;
@@ -37,53 +33,53 @@ class FormMetaData
         if (! is_null($name)) {
             $this->setName($name);
         }
-        
+
         $this->extended_metadata = $extended_metadata;
     }
 
     public function configure($metadata = array())
     {
         if (array_key_exists('name', $metadata)) {
-            
+
             $this->setName($metadata['name']);
         }
-        
+
         if (array_key_exists('multiple', $metadata)) {
-            
+
             $this->setMultiple($metadata['multiple']);
         }
-        
+
         if (array_key_exists('options', $metadata)) {
-            
+
             $this->setOptions($metadata['options']);
-            
+
             if (array_key_exists('data_class', $metadata['options'])) {
-                
+
                 $this->setDataClass($metadata['options']['data_class']);
             }
         }
-        
+
         if (array_key_exists('fields', $metadata)) {
-            
+
             $fields = array();
-            
+
             foreach ($metadata['fields'] as $field => $meta_field) {
-                
+
                 if (! array_key_exists('widget', $meta_field)) {
-                    
+
                     continue;
                 }
-                
+
                 $fields[$field] = $meta_field['widget'];
             }
-            
+
             $this->setFields($fields);
         }
-        
+
         if (array_key_exists('subforms', $metadata)) {
-            
+
             $subforms = $metadata['subforms'];
-            
+
             $this->setSubForms($subforms);
         }
     }
@@ -129,12 +125,12 @@ class FormMetaData
     public function setFields($fields)
     {
         if (array_key_exists('fields', $this->extended_metadata)) {
-            
+
             $fields = array_merge_recursive($fields, $this->extended_metadata['fields']);
         }
-        
+
         $this->fields = $fields;
-        
+
         return $this;
     }
 
@@ -157,21 +153,21 @@ class FormMetaData
     public function setSubForms($source)
     {
         $this->subForms = array();
-        
+
         foreach ($source as $key => $metadata) {
-            
+
             $ext_metadata = array();
-            
+
             if (array_key_exists('subforms', $this->extended_metadata) && array_key_exists($key, $this->extended_metadata['subforms'])) {
-                
+
                 $ext_metadata = $this->extended_metadata['subforms'][$key];
             }
-            
+
             $this->subForms[$key] = new self($key, $ext_metadata);
-            
+
             $this->subForms[$key]->configure($metadata);
         }
-        
+
         return $this;
     }
 

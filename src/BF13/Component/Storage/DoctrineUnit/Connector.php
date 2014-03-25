@@ -5,7 +5,6 @@ use BF13\Component\Storage\StorageConnectorInterface;
 use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\Exception\StorageException;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Yaml\Yaml;
 use BF13\Component\Storage\DoctrineUnit\Loader\YamlFileLoader;
 
 /**
@@ -17,9 +16,7 @@ class Connector implements StorageConnectorInterface
     protected $em;
 
     /**
-     * 
-     * @todo delete kernel dependency
-     * 
+     *
      * @param EntityManager $em
      * @param Kernel $kernel
      */
@@ -56,11 +53,11 @@ class Connector implements StorageConnectorInterface
         $querizer = new Querizer($repository, $builder);
 
         $source = $this->getSchemaPath($serialname);
-        
+
         $schema = new Schema();
-        
+
         $loader = new YamlFileLoader($source);
-        
+
         $loader->loadSchemaData($schema);
 
         $querizer->setSchema($schema);

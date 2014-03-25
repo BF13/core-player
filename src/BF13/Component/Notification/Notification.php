@@ -31,7 +31,7 @@ class Notification
         {
             $this->session->getFlashBag()->add('success', $message);
         }
-        
+
         return true;
     }
 
@@ -53,7 +53,7 @@ class Notification
         {
             $msg = sprintf('Vous avez <b>%s</b> nouveaux messages !', $total);
 
-            $this->notify();
+            $this->notify($msg);
         }
     }
 
@@ -76,7 +76,7 @@ class Notification
         {
             $this->checkNewMessage($username);
         }
-        
+
         return true;
     }
 }

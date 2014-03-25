@@ -3,8 +3,6 @@ namespace BF13\Bundle\BusinessApplicationBundle\Controller;
 
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 use Symfony\Component\Form\Form;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as baseController;
@@ -46,10 +44,9 @@ class Controller extends baseController
             } else {
 
                 $msg = "\n- " . $form->getErrorsAsString();
-//                 $msg = "";
             }
 
-//             $this->get('logger')->err('Erreur formulaire: ' . $msg);
+            $this->get('logger')->err('Erreur formulaire: ' . $msg);
 
             throw new InvalidArgumentException($msg);
         }
@@ -58,27 +55,6 @@ class Controller extends baseController
     protected function isGranted($role)
     {
         return $this->get('security.context')->isGranted($role);
-    }
-
-    protected function validateAccess($resource)
-    {
-        $user = $this->getuser();
-
-        $resource_type = get_class($resource);
-
-        switch($resource_type)
-        {
-            case 'Rff\DomainBundle\Entity\Root\Incident':
-                if($user->getDirectionRegionale() != $resource->getDirectionRegionale()) {
-
-                    throw new AccessDeniedException();
-                }
-            break;
-
-            default:
-
-                die(sprintf('Type "%s" inconnu !', $resource_type));
-        }
     }
 
     protected function generateForm($model, $data = null, $options = array())

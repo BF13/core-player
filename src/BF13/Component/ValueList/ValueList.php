@@ -22,11 +22,11 @@ class ValueList
 
     protected function load()
     {
-        $value_list = $query_builder = $this->repository
+        $value_list = $this->repository
             ->getQuerizer('BF13BusinessApplicationBundle:ValueList')
             ->datafields(array('id', 'value_key', 'value', 'list_key'))
             ->results();
-        
+
         $this->value_list = array();
 
         foreach($value_list as $data){
@@ -41,7 +41,7 @@ class ValueList
         {
             $this->load();
         }
-        
+
         if(! array_key_exists($list, $this->value_list)) {
 
             return array();

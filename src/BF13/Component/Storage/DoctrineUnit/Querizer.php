@@ -131,7 +131,7 @@ class Querizer implements StorageQuerizerInterface
                         }
                     }
                 }
-                
+
                 if (array_key_exists('joins', $condition)) {
 
                     $this->definition['joins'] = array_merge($this->definition['joins'], $condition['joins']);
@@ -229,7 +229,6 @@ class Querizer implements StorageQuerizerInterface
      */
     public function pager($offset = 0, $max_result = 5)
     {
-        // TODO Auto-generated method stub
     }
 
     /**
@@ -238,7 +237,6 @@ class Querizer implements StorageQuerizerInterface
      */
     public function resultsWithPager($offset = 0, $max_result = 5)
     {
-        // TODO Auto-generated method stub 
     }
 
     protected function exec($mode = null)

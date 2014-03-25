@@ -1,12 +1,7 @@
 <?php
 namespace BF13\Component\Breadcrumb;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-
 use Symfony\Component\Yaml\Yaml;
-
-use BF13\Component\Breadcrumb\BreadcrumbControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class Breadcrumb
 {
@@ -40,8 +35,6 @@ class Breadcrumb
     protected function setActiveRoot()
     {
         $data = $this->data[$this->root_node];
-
-        $roots = array();
 
         foreach ($data as $menu_root => $options) {
 
