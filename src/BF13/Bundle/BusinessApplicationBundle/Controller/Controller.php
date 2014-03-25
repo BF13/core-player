@@ -67,13 +67,6 @@ class Controller extends baseController
 
         switch($resource_type)
         {
-            case 'Rff\DomainBundle\Entity\Root\Incident':
-                if($user->getDirectionRegionale() != $resource->getDirectionRegionale()) {
-
-                    throw new AccessDeniedException();
-                }
-            break;
-
             default:
 
                 $msg = sprintf('Type "%s" inconnu !', $resource_type);
