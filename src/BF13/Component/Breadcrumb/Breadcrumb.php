@@ -36,8 +36,6 @@ class Breadcrumb
     {
         $data = $this->data[$this->root_node];
 
-        $roots = array();
-
         foreach ($data as $menu_root => $options) {
 
             if (array_key_exists('default', $options)) {
