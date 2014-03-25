@@ -2,7 +2,7 @@
 namespace BF13\Component\Datagrid;
 
 use Symfony\Component\Yaml\Yaml;
-use BF13\Component\Datagrid\datagridContainer;
+use BF13\Component\Datagrid\DatagridContainer;
 
 
 /**
@@ -47,7 +47,7 @@ class DatagridGenerator
 
         } else {
 
-            $Grid = new datagridContainer($defaultConfig);
+            $Grid = new DatagridContainer($defaultConfig);
         }
 
         $type = array_key_exists('type', $defaultConfig['settings']) ? $defaultConfig['settings']['type'] : 'entity';

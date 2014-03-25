@@ -1,7 +1,7 @@
 <?php
 namespace BF13\Component\Datagrid;
 
-class datagridContainer
+class DatagridContainer
 {
     protected $source;
 
