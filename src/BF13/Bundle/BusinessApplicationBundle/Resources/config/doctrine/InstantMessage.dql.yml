@@ -18,9 +18,9 @@ BF13\Bundle\BusinessApplicationBundle\Entity\InstantMessage:
     conditions:
         new_messages: 
           items: 
-            username : "im.to_user = :username" 
+            from_user : "im.to_user = :from_user" 
             was_read : "im.was_read = :was_read" 
         my_messages: 
           items: 
-            username : "im.to_user = :username" 
+            from_user : "im.to_user = :from_user" 
     
