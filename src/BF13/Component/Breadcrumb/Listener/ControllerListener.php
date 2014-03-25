@@ -1,10 +1,8 @@
 <?php
 namespace BF13\Component\Breadcrumb\Listener;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use BF13\Component\Breadcrumb\TwigExtension\BreadcrumbExtension;
 
 class ControllerListener
 {
@@ -30,11 +28,11 @@ class ControllerListener
             if(in_array($interface, $interfaces))
             {
                 $rootNode = $Controller->getBreadcrumbName();
-                
+
                 $this->service->setRootNode($rootNode);
 
                 $activeRoute = $event->getRequest()->get('_route');
-                
+
                 $this->service->setActiveRoute($activeRoute);
             }
         }

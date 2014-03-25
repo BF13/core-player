@@ -5,7 +5,6 @@ use BF13\Component\Storage\StorageConnectorInterface;
 use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\Exception\StorageException;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Yaml\Yaml;
 use BF13\Component\Storage\DoctrineUnit\Loader\YamlFileLoader;
 
 /**

@@ -2,8 +2,6 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * DataValueList
  */
@@ -33,7 +31,7 @@ class DataValueList
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -49,14 +47,14 @@ class DataValueList
     public function setValueKey($valueKey)
     {
         $this->value_key = $valueKey;
-    
+
         return $this;
     }
 
     /**
      * Get value_key
      *
-     * @return string 
+     * @return string
      */
     public function getValueKey()
     {
@@ -72,14 +70,14 @@ class DataValueList
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -95,14 +93,14 @@ class DataValueList
     public function setValueList(\BF13\Bundle\BusinessApplicationBundle\Entity\ValueList $valueList = null)
     {
         $this->ValueList = $valueList;
-    
+
         return $this;
     }
 
     /**
      * Get ValueList
      *
-     * @return \BF13\Bundle\BusinessApplicationBundle\Entity\ValueList 
+     * @return \BF13\Bundle\BusinessApplicationBundle\Entity\ValueList
      */
     public function getValueList()
     {

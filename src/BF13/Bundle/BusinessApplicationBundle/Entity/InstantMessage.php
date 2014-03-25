@@ -2,8 +2,6 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * InstantMessage
  */
@@ -48,7 +46,7 @@ class InstantMessage
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -64,14 +62,14 @@ class InstantMessage
     public function setFrom($from)
     {
         $this->from = $from;
-    
+
         return $this;
     }
 
     /**
      * Get from
      *
-     * @return string 
+     * @return string
      */
     public function getFrom()
     {
@@ -87,14 +85,14 @@ class InstantMessage
     public function setTo($to)
     {
         $this->to = $to;
-    
+
         return $this;
     }
 
     /**
      * Get to
      *
-     * @return string 
+     * @return string
      */
     public function getTo()
     {
@@ -110,14 +108,14 @@ class InstantMessage
     public function setSubject($subject)
     {
         $this->subject = $subject;
-    
+
         return $this;
     }
 
     /**
      * Get subject
      *
-     * @return string 
+     * @return string
      */
     public function getSubject()
     {
@@ -133,14 +131,14 @@ class InstantMessage
     public function setContent($content)
     {
         $this->content = $content;
-    
+
         return $this;
     }
 
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {
@@ -156,14 +154,14 @@ class InstantMessage
     public function setWasRead($wasRead)
     {
         $this->was_read = $wasRead;
-    
+
         return $this;
     }
 
     /**
      * Get was_read
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWasRead()
     {
@@ -179,14 +177,14 @@ class InstantMessage
     public function setCreatedAt($createdAt)
     {
         $this->created_at = $createdAt;
-    
+
         return $this;
     }
 
     /**
      * Get created_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -212,14 +210,14 @@ class InstantMessage
     public function setFromUser($fromUser)
     {
         $this->from_user = $fromUser;
-    
+
         return $this;
     }
 
     /**
      * Get from_user
      *
-     * @return string 
+     * @return string
      */
     public function getFromUser()
     {
@@ -235,14 +233,14 @@ class InstantMessage
     public function setToUser($toUser)
     {
         $this->to_user = $toUser;
-    
+
         return $this;
     }
 
     /**
      * Get to_user
      *
-     * @return string 
+     * @return string
      */
     public function getToUser()
     {

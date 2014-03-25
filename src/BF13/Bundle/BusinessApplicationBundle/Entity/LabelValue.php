@@ -2,8 +2,6 @@
 
 namespace BF13\Bundle\BusinessApplicationBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LabelValue
  */
@@ -33,7 +31,7 @@ class LabelValue
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -49,14 +47,14 @@ class LabelValue
     public function setLabelKey($labelKey)
     {
         $this->label_key = $labelKey;
-    
+
         return $this;
     }
 
     /**
      * Get label_key
      *
-     * @return string 
+     * @return string
      */
     public function getLabelKey()
     {
@@ -72,14 +70,14 @@ class LabelValue
     public function setLabel($label)
     {
         $this->label = $label;
-    
+
         return $this;
     }
 
     /**
      * Get label
      *
-     * @return string 
+     * @return string
      */
     public function getLabel()
     {
@@ -95,14 +93,14 @@ class LabelValue
     public function setLabelList(\BF13\Bundle\BusinessApplicationBundle\Entity\LabelList $labelList = null)
     {
         $this->LabelList = $labelList;
-    
+
         return $this;
     }
 
     /**
      * Get LabelList
      *
-     * @return \BF13\Bundle\BusinessApplicationBundle\Entity\LabelList 
+     * @return \BF13\Bundle\BusinessApplicationBundle\Entity\LabelList
      */
     public function getLabelList()
     {

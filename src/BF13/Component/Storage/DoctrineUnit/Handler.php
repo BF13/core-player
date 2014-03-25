@@ -2,7 +2,6 @@
 namespace BF13\Component\Storage\DoctrineUnit;
 
 use BF13\Component\Storage\StorageHandlerInterface;
-use Doctrine\ORM\EntityManager;
 use BF13\Component\Storage\StorageRepositoryInterface;
 
 /**

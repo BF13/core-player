@@ -3,7 +3,6 @@ namespace BF13\Component\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use BF13\Component\Form\Mapping\FormMetaData;
 

@@ -5,7 +5,6 @@ namespace BF13\Component\Datagrid\Model;
  * @author FYAMANI
  *
  */
-use BF13\Component\DomainRepository;
 
 class DatagridObject
 {
