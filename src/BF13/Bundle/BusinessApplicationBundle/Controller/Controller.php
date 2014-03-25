@@ -3,8 +3,6 @@ namespace BF13\Bundle\BusinessApplicationBundle\Controller;
 
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 use Symfony\Component\Form\Form;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as baseController;
@@ -57,22 +55,6 @@ class Controller extends baseController
     protected function isGranted($role)
     {
         return $this->get('security.context')->isGranted($role);
-    }
-
-    protected function validateAccess($resource)
-    {
-        $user = $this->getuser();
-
-        $resource_type = get_class($resource);
-
-        switch($resource_type)
-        {
-            default:
-
-                $msg = sprintf('Type "%s" inconnu !', $resource_type);
-
-                throw new \Exception($msg);
-        }
     }
 
     protected function generateForm($model, $data = null, $options = array())
