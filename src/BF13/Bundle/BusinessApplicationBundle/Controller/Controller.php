@@ -76,7 +76,9 @@ class Controller extends baseController
 
             default:
 
-                die(sprintf('Type "%s" inconnu !', $resource_type));
+                $msg = sprintf('Type "%s" inconnu !', $resource_type);
+
+                throw new \Exception($msg);
         }
     }
 
