@@ -46,10 +46,9 @@ class Controller extends baseController
             } else {
 
                 $msg = "\n- " . $form->getErrorsAsString();
-//                 $msg = "";
             }
 
-//             $this->get('logger')->err('Erreur formulaire: ' . $msg);
+            $this->get('logger')->err('Erreur formulaire: ' . $msg);
 
             throw new InvalidArgumentException($msg);
         }

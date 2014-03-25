@@ -33,11 +33,6 @@ class Handler implements StorageHandlerInterface
             $item = $this->repository->find($index);
         }
 
-        if (!$item) {
-
-//             throw new \Exception(sprintf('Unable to find "%s" entity "%s".', $this->repository->getClassName(), $index));
-        }
-
         return $item;
     }
 
