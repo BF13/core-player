@@ -1292,7 +1292,7 @@ ClusterIcon.prototype['onRemove'] = ClusterIcon.prototype.onRemove;
  /*!
  * jQuery FN Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
- * Copyright (c) 2010 - 2012 Johan Säll Larsson
+ * Copyright (c) 2010 - 2012 Johan Sï¿½ll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  */
 ( function($) {
@@ -1666,7 +1666,7 @@ ClusterIcon.prototype['onRemove'] = ClusterIcon.prototype.onRemove;
  /*!
  * jQuery UI Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
- * Copyright (c) 2010 - 2011 Johan Säll Larsson
+ * Copyright (c) 2010 - 2011 Johan Sï¿½ll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  *
  * Depends:
