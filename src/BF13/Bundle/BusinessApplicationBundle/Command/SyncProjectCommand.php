@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Filesystem\Filesystem;
 
 class SyncProjectCommand extends ContainerAwareCommand
 {
@@ -27,24 +28,37 @@ EOT
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
+
         $output->writeln(array(
             'Synchronisation du projet'
         ));
 
-        $api_params = $this->getContainer()->getParameter('bf13');
+        $project_root_dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/..');
+
+        $api_params = $this->getContainer()->getParameter('bf13_business_application');
+
         $dest = $api_params['api_workdir'];
+
+        $fs = new Filesystem();
 
         if (! is_dir($dest)) {
             throw new \Exception('Le paramètre "workdir" est incorrecte !');
         }
 
+        $dest .= '/bf13_sync';
+
+        if (is_dir($dest)) {
+            $fs->remove($dest);
+        }
+
+        $fs->mkdir($dest);
+
         $filename = $dest . '/project.tmp.zip';
-        $extract_folder = $dest . '/extract';
         $api_url = $api_params['api_url'] . $api_params['api_call'];
 
         $ZipFile = $this->getZipFile($api_url, $api_params['api_auth']);
         $this->saveZipFile($filename, $ZipFile);
-        $this->extractZipFile($filename, $extract_folder);
+        $this->extractZipFile($filename, $project_root_dir);
 
         $output->writeln('Terminé');
     }
@@ -58,7 +72,12 @@ EOT
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-type: application/zip'
         ));
-        curl_setopt($ch, CURLOPT_USERPWD, $auth);
+
+        if('' != trim($auth))
+        {
+            curl_setopt($ch, CURLOPT_USERPWD, $auth);
+        }
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $http_response = curl_exec($ch);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
