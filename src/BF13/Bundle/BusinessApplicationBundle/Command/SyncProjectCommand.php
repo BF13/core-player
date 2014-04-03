@@ -7,6 +7,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 
 class SyncProjectCommand extends ContainerAwareCommand
 {
@@ -16,6 +18,10 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setName('bf13:sync:project');
 
         $this->setDescription('Synchronize a project');
+        $this->setDefinition(array(
+            new InputOption('make-scope', 'm', InputOption::VALUE_REQUIRED, 'Generate synchronisation file for a scope'),
+            new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope')
+        ));
 
         $this->setHelp(<<<EOT
 Sync a project
@@ -29,12 +35,106 @@ EOT
     {
         $this->output = $output;
 
-        $output->writeln(array(
+        $make_scope = $input->getOption('make-scope');
+        $scope = $input->getOption('scope');
+
+        if ($make_scope) {
+
+            $this->makeScope($make_scope);
+
+        } else {
+
+            $this->syncProject($scope);
+        }
+
+        $output->writeln('Terminé');
+    }
+
+    protected function makeScope($scope)
+    {
+        $filepath = $this->buildZipFile('project.tmp.zip', $scope);
+
+        $dir = realpath($this->getContainer()->getParameter('kernel.cache_dir')) . '/bf13_scope/' . $scope;
+
+        $fs = new Filesystem();
+
+        if (is_dir($dir)) {
+
+            $fs->remove($dir);
+        }
+
+        $fs->mkdir($dir);
+
+        $this->extractZipFile($filepath, $dir);
+
+        $finder = new Finder();
+
+        $finder->files()->in($dir);
+
+        $files = array('include' => array(), 'exclude' => array());
+
+        foreach ($finder as $file) {
+
+            $files['include'][] = $file->getRelativePathname();
+        }
+
+        $yaml = new Yaml();
+
+        $yaml_data = $yaml->dump($files);
+
+        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . '/bf13-dev/scope';
+
+        if (! is_dir($dir)) {
+
+            $fs->mkdir($dir);
+        }
+
+        $filescope = sprintf('%s.scope.yml', $scope);
+        $this->output->writeln(array(
+            sprintf('Création du fichier "%s"', $filescope)
+        ));
+
+        file_put_contents($dir . '/' . $filescope, $yaml_data);
+    }
+
+
+    protected function syncProject($scope = null)
+    {
+        $this->output->writeln(array(
             'Synchronisation du projet'
         ));
 
-        $project_root_dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/..');
+        $filepath = $this->buildZipFile('project.tmp.zip', $scope);
 
+        $include = null;
+
+        if ($scope) {
+
+            $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . '/bf13-dev/scope';
+
+            $filescope = sprintf('%s/%s.scope.yml', $dir, $scope);
+
+            if(! is_file($filescope))
+            {
+                throw new \Exception(sprintf('Fichier "%s" introuvable !', $filescope));
+            }
+
+            $content = file_get_contents($filescope);
+
+            $yaml = new Yaml();
+
+            $data = $yaml->parse($content);
+
+            $include = $data['include'];
+        }
+
+        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/..');
+
+        $this->extractZipFile($filepath, $dir . '/', $include);
+    }
+
+    protected function buildZipFile($filename, $scope)
+    {
         $api_params = $this->getContainer()->getParameter('bf13_business_application');
 
         $dest = $api_params['api_workdir'];
@@ -53,14 +153,14 @@ EOT
 
         $fs->mkdir($dest);
 
-        $filename = $dest . '/project.tmp.zip';
+        $filename = $dest . '/' . $filename;
         $api_url = $api_params['api_url'] . $api_params['api_call'];
 
         $ZipFile = $this->getZipFile($api_url, $api_params['api_auth']);
-        $this->saveZipFile($filename, $ZipFile);
-        $this->extractZipFile($filename, $project_root_dir);
 
-        $output->writeln('Terminé');
+        $this->saveZipFile($filename, $ZipFile);
+
+        return $filename;
     }
 
     protected function getZipFile($url, $auth)
@@ -73,8 +173,7 @@ EOT
             'Content-type: application/zip'
         ));
 
-        if('' != trim($auth))
-        {
+        if ('' != trim($auth)) {
             curl_setopt($ch, CURLOPT_USERPWD, $auth);
         }
 
@@ -105,13 +204,29 @@ EOT
         file_put_contents($filename, $content);
     }
 
-    protected function extractZipFile($filename, $extract_folder)
+    protected function extractZipFile($filename, $extract_folder, $include = null)
     {
+
+
         // extract files
         $this->output->writeln('- Extraction');
         $za = new \ZipArchive();
         $za->open($filename);
-        $za->extractTo($extract_folder);
+
+        $files = null;
+        if($include)
+        {
+            for($i = 0; $i < $za->numFiles; $i++) {
+                $entry = $za->getNameIndex($i);
+                //Use strpos() to check if the entry name contains the directory we want to extract
+                if (in_array($entry, $include)) {
+                    //Add the entry to our array if it in in our desired directory
+                    $files[] = $entry;
+                }
+            }
+        }
+
+        $za->extractTo($extract_folder, $files);
         $za->close();
     }
 }
