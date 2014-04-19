@@ -53,7 +53,7 @@ EOT
     {
         $filepath = $this->buildZipFile('project.tmp.zip', $scope);
 
-        $dir = realpath($this->getContainer()->getParameter('kernel.cache_dir')) . '/bf13_scope/' . $scope;
+        $dir = realpath($this->getContainer()->getParameter('kernel.cache_dir')) . DIRECTORY_SEPARATOR . 'bf13-dev' . DIRECTORY_SEPARATOR . $scope;
 
         $fs = new Filesystem();
 
@@ -84,7 +84,7 @@ EOT
 
         $yaml_data = $yaml->dump($files);
 
-        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . '/bf13-dev/scope';
+        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . DIRECTORY_SEPARATOR . 'bf13-dev' . DIRECTORY_SEPARATOR .'scope';
 
         if (! is_dir($dir)) {
 
@@ -96,7 +96,7 @@ EOT
             sprintf('Création du fichier "%s"', $filescope)
         ));
 
-        file_put_contents($dir . '/' . $filescope, $yaml_data);
+        file_put_contents($dir . DIRECTORY_SEPARATOR . $filescope, $yaml_data);
     }
 
     protected function syncFiles($from_dir, $target_dir)
@@ -111,8 +111,8 @@ EOT
 
             $src_pattern = $file->getRelativePathname();
 
-            $new_file = $from_dir . '/' . $src_pattern;
-            $existing_file = $target_dir . '/' . $src_pattern;
+            $new_file = $from_dir . DIRECTORY_SEPARATOR . $src_pattern;
+            $existing_file = $target_dir . DIRECTORY_SEPARATOR . $src_pattern;
 
             if (is_file($existing_file)) {
                 $existing_file_content = file_get_contents($existing_file);
@@ -168,7 +168,7 @@ EOT
 
         if ($scope) {
 
-            $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . '/bf13-dev/scope';
+            $dir = realpath($this->getContainer()->getParameter('kernel.root_dir')) . DIRECTORY_SEPARATOR . 'bf13-dev' . DIRECTORY_SEPARATOR .'scope';
 
             $filescope = sprintf('%s/%s.scope.yml', $dir, $scope);
 
@@ -212,7 +212,7 @@ EOT
 
         $fs->mkdir($dest);
 
-        $filename = $dest . '/' . $filename;
+        $filename = $dest . DIRECTORY_SEPARATOR . $filename;
         $api_url = $api_params['api_url'] . $api_params['api_call'];
 
         $ZipFile = $this->getZipFile($api_url, $api_params['api_auth']);
