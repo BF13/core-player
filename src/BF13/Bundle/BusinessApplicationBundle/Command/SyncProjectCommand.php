@@ -26,7 +26,7 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setHelp(<<<EOT
 Sync a project
 EOT
-        );
+);
     }
 
     /**
@@ -41,7 +41,6 @@ EOT
         if ($make_scope) {
 
             $this->makeScope($make_scope);
-
         } else {
 
             $this->syncProject($scope);
@@ -71,7 +70,10 @@ EOT
 
         $finder->files()->in($dir);
 
-        $files = array('include' => array(), 'exclude' => array());
+        $files = array(
+            'include' => array(),
+            'exclude' => array()
+        );
 
         foreach ($finder as $file) {
 
@@ -97,6 +99,62 @@ EOT
         file_put_contents($dir . '/' . $filescope, $yaml_data);
     }
 
+    protected function syncFiles($from_dir, $target_dir)
+    {
+        $fs = new Filesystem();
+
+        $finder = new Finder();
+
+        $finder->files()->in($from_dir);
+
+        foreach ($finder as $file) {
+
+            $src_pattern = $file->getRelativePathname();
+
+            $new_file = $from_dir . '/' . $src_pattern;
+            $existing_file = $target_dir . '/' . $src_pattern;
+
+            if (is_file($existing_file)) {
+                $existing_file_content = file_get_contents($existing_file);
+            } else {
+
+                $existing_file_content = false;
+            }
+            if (is_file($new_file)) {
+                $new_file_content = file_get_contents($new_file);
+            } else {
+
+                $new_file_content = false;
+            }
+
+            switch (true) {
+                case $existing_file_content === false && $new_file_content !== false:
+
+                    $fs->copy($new_file, $existing_file, true);
+
+                    $this->output->writeln(array(
+                        'Copie du fichier: ' . $src_pattern
+                    ));
+                    break;
+
+                case $new_file_content === false && $existing_file_content !== false:
+
+                    break;
+
+                case $new_file_content !== false && $new_file_content !== $existing_file_content:
+
+                    $fs->copy($new_file, $existing_file, true);
+
+                    $this->output->writeln(array(
+                        'Copie du fichier: ' . $src_pattern
+                    ));
+                    break;
+
+                case $new_file_content === $existing_file_content:
+                default:
+            }
+        }
+    }
 
     protected function syncProject($scope = null)
     {
@@ -114,8 +172,7 @@ EOT
 
             $filescope = sprintf('%s/%s.scope.yml', $dir, $scope);
 
-            if(! is_file($filescope))
-            {
+            if (! is_file($filescope)) {
                 throw new \Exception(sprintf('Fichier "%s" introuvable !', $filescope));
             }
 
@@ -128,9 +185,11 @@ EOT
             $include = $data['include'];
         }
 
-        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/..');
+        $cache_dir = realpath($this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/');
+        $root_dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/../');
 
-        $this->extractZipFile($filepath, $dir . '/', $include);
+        $this->extractZipFile($filepath, $cache_dir, $include);
+        $this->syncFiles($cache_dir, $root_dir);
     }
 
     protected function buildZipFile($filename, $scope)
@@ -206,21 +265,18 @@ EOT
 
     protected function extractZipFile($filename, $extract_folder, $include = null)
     {
-
-
         // extract files
         $this->output->writeln('- Extraction');
         $za = new \ZipArchive();
         $za->open($filename);
 
         $files = null;
-        if($include)
-        {
-            for($i = 0; $i < $za->numFiles; $i++) {
+        if ($include) {
+            for ($i = 0; $i < $za->numFiles; $i ++) {
                 $entry = $za->getNameIndex($i);
-                //Use strpos() to check if the entry name contains the directory we want to extract
+                // Use strpos() to check if the entry name contains the directory we want to extract
                 if (in_array($entry, $include)) {
-                    //Add the entry to our array if it in in our desired directory
+                    // Add the entry to our array if it in in our desired directory
                     $files[] = $entry;
                 }
             }
