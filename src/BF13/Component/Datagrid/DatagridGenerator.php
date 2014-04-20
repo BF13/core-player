@@ -37,6 +37,14 @@ class DatagridGenerator
 
         list($bundle, $class) = explode(':', $model);
 
+        //allow subfolder
+        if(strpos($class, '/'))
+        {
+            $class_section = explode('/', $class);
+
+            $class = end($class_section);
+        }
+
         $ns = $this->getNamespaceBundle($bundle);
 
         $class = sprintf('%s\Datagrid\%s', $ns, $class);

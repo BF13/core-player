@@ -185,8 +185,8 @@ EOT
             $include = $data['include'];
         }
 
-        $cache_dir = realpath($this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/');
-        $root_dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/../');
+        $cache_dir = $this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/';
+        $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../';
 
         $this->extractZipFile($filepath, $cache_dir, $include);
         $this->syncFiles($cache_dir, $root_dir);
@@ -284,5 +284,6 @@ EOT
 
         $za->extractTo($extract_folder, $files);
         $za->close();
+        $this->output->writeln('- Extraction' . $extract_folder);
     }
 }

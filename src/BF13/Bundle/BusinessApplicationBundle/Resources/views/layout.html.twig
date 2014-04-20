@@ -4,10 +4,10 @@
 	<!-- bootstrap css -->
 {# 	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />#}
 {# 	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />#}
-	<link href="/bundles/bf13businessapplication/lib/bootstrap/css/bootswatch.css" rel="stylesheet" />
-	<link href="/bundles/bf13businessapplication/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-	<link href="/bundles/bf13businessapplication/css/extend.css" rel="stylesheet" />
-	
+	<link href="{{ asset('bundles/bf13businessapplication/lib/bootstrap/css/bootswatch.css') }}" rel="stylesheet" />
+	<link href="{{ asset('bundles/bf13businessapplication/lib/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
+	<link href="{{ asset('bundles/bf13businessapplication/css/extend.css') }}" rel="stylesheet" />
+
 	<!-- for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -64,7 +64,7 @@
           <!--Body content-->
           <div class="row-fluid">
               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:dialogbox.html.twig' %}
-              
+
               {% include 'BF13BusinessApplicationBundle:Bootstrap/_partial:message.html.twig' %}
           </div>
           {% block base_content %}{% endblock %}

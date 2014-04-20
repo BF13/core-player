@@ -74,7 +74,10 @@ class Controller extends baseController
 
         $datagrid = $generator->buildDatagrid($model);
 
-        $datagrid->loadData($data);
+        if($data)
+        {
+            $datagrid->loadData($data);
+        }
 
         return $datagrid;
     }
