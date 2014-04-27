@@ -104,8 +104,11 @@ class Querizer implements StorageQuerizerInterface
 
                     foreach ($condition['items'] as $param_name => $condition_part) {
 
+                        $where = "and";
+
                         if (is_array($condition_part)) {
 
+                            $where = $condition_part['where'];
                             $condition_part = $condition_part['pattern'];
                         }
 
@@ -120,7 +123,15 @@ class Querizer implements StorageQuerizerInterface
                                     continue;
                                 }
 
-                                $this->builder->andWhere($condition_part)->setParameter($param_name, $param_value);
+                                switch($where)
+                                {
+                                	case "OR":
+                                        $this->builder->orWhere($condition_part)->setParameter($param_name, $param_value);
+                                	    break;
+
+                                	default:
+                                        $this->builder->andWhere($condition_part)->setParameter($param_name, $param_value);
+                                }
 
                             } else {
 

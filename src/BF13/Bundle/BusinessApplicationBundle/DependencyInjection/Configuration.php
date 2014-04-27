@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('api_url')->isRequired()->end()
-                ->scalarNode('api_call')->isRequired()->end()
+                ->scalarNode('api_token')->isRequired()->end()
                 ->scalarNode('api_auth')->end()
                 ->scalarNode('api_workdir')->defaultValue('%kernel.cache_dir%')->end()
                 ->scalarNode('api_extractdir')->defaultValue('%kernel.root_dir%/..')->end()
