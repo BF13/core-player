@@ -20,7 +20,9 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setDescription('Synchronize a project');
         $this->setDefinition(array(
             new InputOption('make-scope', 'm', InputOption::VALUE_REQUIRED, 'Generate synchronisation file for a scope'),
-            new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope')
+            new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope'),
+            new InputOption('release', 'r', InputOption::VALUE_REQUIRED, 'Retrieve the selected release'),
+            new InputOption('latest', 'l', InputOption::VALUE_NONE, 'Retrieve the last release else retrieve the release defined into release.bf13 file')
         ));
 
         $this->setHelp(<<<EOT
@@ -33,25 +35,55 @@ EOT
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln(array('##########################################', '# Synchronisation du projet #', '##########################################'));
+
         $this->output = $output;
 
         $make_scope = $input->getOption('make-scope');
         $scope = $input->getOption('scope');
 
+        $release = $this->defineSelectedRelease($input);
+
+        $this->output->writeln('- Release: ' . $release);
+
         if ($make_scope) {
 
-            $this->makeScope($make_scope);
+            $this->makeScope($make_scope, $release);
         } else {
 
-            $this->syncProject($scope);
+            $this->syncProject($release, $scope);
         }
 
         $output->writeln('Terminé');
     }
 
-    protected function makeScope($scope)
+    protected function defineSelectedRelease($input)
     {
-        $filepath = $this->buildZipFile('project.tmp.zip', $scope);
+        if($input->getOption('latest'))
+        {
+            return 'latest';
+        }
+
+        if($release = $input->getOption('release'))
+        {
+            return $release;
+        }
+
+        $dir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/../');
+
+        $release_file = $dir . '/release.BF13';
+
+        if(file_exists($release_file) && $release = (string) file_get_contents($release_file))
+        {
+            return $release;
+        }
+
+        return 'latest';
+    }
+
+    protected function makeScope($scope, $release = null)
+    {
+        $filepath = $this->buildZipFile('project.tmp.zip', $scope, $release);
 
         $dir = realpath($this->getContainer()->getParameter('kernel.cache_dir')) . DIRECTORY_SEPARATOR . 'bf13-dev' . DIRECTORY_SEPARATOR . $scope;
 
@@ -156,13 +188,9 @@ EOT
         }
     }
 
-    protected function syncProject($scope = null)
+    protected function syncProject($release = null, $scope = null)
     {
-        $this->output->writeln(array(
-            'Synchronisation du projet'
-        ));
-
-        $filepath = $this->buildZipFile('project.tmp.zip', $scope);
+        $filepath = $this->buildZipFile('project.tmp.zip', $scope, $release);
 
         $include = null;
 
@@ -173,6 +201,7 @@ EOT
             $filescope = sprintf('%s/%s.scope.yml', $dir, $scope);
 
             if (! is_file($filescope)) {
+
                 throw new \Exception(sprintf('Fichier "%s" introuvable !', $filescope));
             }
 
@@ -192,7 +221,7 @@ EOT
         $this->syncFiles($cache_dir, $root_dir);
     }
 
-    protected function buildZipFile($filename, $scope)
+    protected function buildZipFile($filename, $scope, $release = null)
     {
         $api_params = $this->getContainer()->getParameter('bf13_business_application');
 
@@ -213,7 +242,18 @@ EOT
         $fs->mkdir($dest);
 
         $filename = $dest . DIRECTORY_SEPARATOR . $filename;
-        $api_url = $api_params['api_url'] . $api_params['api_call'];
+
+        switch($release)
+        {
+        	case 'latest':
+                $api_call = '/main/api/export/last-release/' . $api_params['api_token'];
+                break;
+
+        	default:
+                $api_call = strtr('/main/api/export/release/{release}/{token}', array('{release}' => $release, '{token}' => $api_params['api_token']));
+        }
+
+        $api_url = $api_params['api_url'] . $api_call;
 
         $ZipFile = $this->getZipFile($api_url, $api_params['api_auth']);
 
@@ -284,6 +324,6 @@ EOT
 
         $za->extractTo($extract_folder, $files);
         $za->close();
-        $this->output->writeln('- Extraction' . $extract_folder);
+        $this->output->writeln('--> ' . $extract_folder);
     }
 }
