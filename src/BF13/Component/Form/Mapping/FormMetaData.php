@@ -70,7 +70,23 @@ class FormMetaData
                     continue;
                 }
 
-                $fields[$field] = $meta_field['widget'];
+                switch(key($meta_field['widget']))
+                {
+                	case 'subform':
+
+                	    $f = new self($field);
+
+                	    $f->configure($meta_field['widget']['subform']);
+
+                	    $fields[$field] = $f;
+
+                	    break;
+
+                	default:
+
+                        $fields[$field] = $meta_field['widget'];
+                }
+
             }
 
             $this->setFields($fields);
