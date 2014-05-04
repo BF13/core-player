@@ -84,6 +84,14 @@ class Form extends AbstractType implements FormInterface
 
                 $builder->add($field);
 
+            } else if ($params instanceof FormMetaData) {
+
+                $sub_options = $params->getOptions();
+
+                $subform = new self($params);
+
+                $builder->add($fieldname, $subform, $sub_options);
+
             } else {
 
                 $builder->add($fieldname, $type, (array) $fieldOptions);
