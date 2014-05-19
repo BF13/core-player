@@ -68,15 +68,20 @@ class Controller extends baseController
         return $form;
     }
 
-    protected function generateDatagrid($model, $data = null)
+    protected function generateDatagrid($model, $data = null, $pager = null, $config = array())
     {
         $generator = $this->get('bf13.app.datagrid_generator');
 
         $datagrid = $generator->buildDatagrid($model);
 
+        if(sizeOf($config))
+        {
+            $datagrid->updateConfig($config);
+        }
+
         if($data)
         {
-            $datagrid->loadData($data);
+            $datagrid->loadData($data, $pager, $config);
         }
 
         return $datagrid;
