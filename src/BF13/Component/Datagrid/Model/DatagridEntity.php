@@ -1,5 +1,6 @@
 <?php
 namespace BF13\Component\Datagrid\Model;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 /**
  *
  * @author FYAMANI
@@ -15,6 +16,12 @@ class DatagridEntity extends DatagridObject
     public $ref;
 
     public $raw_columns = array();
+
+    public $total_pages = 0;
+
+    public $current_page = 0;
+
+    public $offset = 0;
 
     public function __construct($DatagridSettings, $kernel)
     {
@@ -44,7 +51,7 @@ class DatagridEntity extends DatagridObject
         $this->column_headers = $labels;
     }
 
-    public function loadData($data)
+    public function loadData($data, $pager = null)
     {
         $fields = array_keys($this->raw_columns);
 
@@ -56,6 +63,81 @@ class DatagridEntity extends DatagridObject
             $query->conditions(array($condition => $data));
         }
 
-        $this->bind($query->results());
+        if(! is_null($pager))
+        {
+            $this->offset = ($pager['page'] - 1) * $pager['max_items'];
+
+            $this->bind($query->resultsWithPager($this->offset, $pager['max_items']));
+
+            $totalitems = $query->totalResults();
+
+            $total = isset($totalitems['total']) ? $totalitems['total'] : 0;
+
+            $this->total_pages = ceil($total / $pager['max_items']);
+
+            $this->current_page = ($this->offset / $pager['max_items']) + 1;
+
+        } else {
+
+            $this->bind($query->results());
+        }
+    }
+
+    public function updateConfig($config)
+    {
+        if(isset($config['source']))
+        {
+            $this->config->setSource($config['source']);
+        }
+        if(isset($config['condition']))
+        {
+            $this->config->setCondition($config['condition']);
+        }
+    }
+
+    public function totalPages()
+    {
+        return $this->total_pages;
+    }
+
+    public function currentPage()
+    {
+        return $this->current_page;
+    }
+
+    public function previousPages($range = 3)
+    {
+        $offset = array();
+
+        $limit = $this->current_page - $range;
+
+        for($i=$limit; $i < $this->current_page; $i++)
+        {
+            if(0 >= $i)
+            {
+                continue;
+            }
+
+            $offset[] = $i;
+        }
+        return $offset;
+    }
+
+    public function nextPages($range = 3)
+    {
+        $offset = array();
+
+        $limit = $this->current_page + $range;
+
+        for($i=$this->current_page + 1; $i <= $this->total_pages; $i++)
+        {
+            $offset[] = $i;
+
+            if($limit == $i)
+            {
+                break;
+            }
+        }
+        return $offset;
     }
 }

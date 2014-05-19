@@ -140,7 +140,17 @@ class FormMetaData
     {
         if (array_key_exists('fields', $this->extended_metadata)) {
 
-            $fields = array_merge_recursive($fields, $this->extended_metadata['fields']);
+            foreach($this->extended_metadata['fields'] as $f => $data)
+            {
+                if(! isset($fields[$f]))
+                {
+                    throw new \Exception(sprintf('Unexpected field "%s"', $f));
+                }
+                foreach($data as $attr => $values)
+                {
+                    $fields[$f][$attr] = array_merge($fields[$f][$attr], $values);
+                }
+            }
         }
 
         $this->fields = $fields;

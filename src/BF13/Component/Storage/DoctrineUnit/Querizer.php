@@ -5,6 +5,7 @@ use BF13\Component\Storage\StorageQuerizerInterface;
 use BF13\Component\Storage\StorageRepositoryInterface;
 use BF13\Component\Storage\Exception\StorageException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @author FYAMANI
@@ -231,7 +232,7 @@ class Querizer implements StorageQuerizerInterface
      */
     public function results($mode = null)
     {
-        return $this->exec();
+        return $this->exec()->getResult($mode);
     }
 
     /**
@@ -248,15 +249,34 @@ class Querizer implements StorageQuerizerInterface
      */
     public function resultsWithPager($offset = 0, $max_result = 5)
     {
+        $this->builder
+            ->setFirstResult($offset)
+            ->setMaxResults($max_result);
+
+        return $this->exec()->getResult();
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \BF13\Component\Storage\StorageQuerizerInterface::resultsWithPager()
+     */
+    public function totalResults()
+    {
+        $alias = $this->definition['from'][1];
+
+        $this->builder
+            ->select(sprintf('COUNT(%s) as total', $alias))
+            ->setFirstResult(null)
+            ->setMaxResults(null);
+
+        return current($this->builder->getQuery()->getResult());
     }
 
     protected function exec($mode = null)
     {
         $this->makeJoinQuery();
 
-        $result = $this->builder->getQuery()->getResult($mode);
-
-        return $result;
+        return $this->builder->getQuery();
     }
 
     public function getQueryBuilder()
