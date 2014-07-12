@@ -24,14 +24,16 @@ class ValueList
     {
         $value_list = $this->repository
             ->getQuerizer('BF13BusinessApplicationBundle:ValueList')
-            ->datafields(array('id', 'value_key', 'value', 'list_key'))
+            ->datafields(array('id', 'vlkey', 'data'))
             ->results();
 
         $this->value_list = array();
 
-        foreach($value_list as $data){
+        foreach($value_list as $values){
 
-            $this->value_list[$data['list_key']][$data['value_key']] = $data['value'];
+            list($key, $key_value) = explode('.', $values['vlkey']);
+
+            $this->value_list[$key][$values['vlkey']] = $values['data']['fr'];
         }
     }
 

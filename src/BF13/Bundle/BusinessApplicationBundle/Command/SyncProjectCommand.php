@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use BF13\Bundle\BusinessApplicationBundle\Entity\ValueList;
 
 class SyncProjectCommand extends ContainerAwareCommand
 {
@@ -20,6 +21,7 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setDescription('Synchronize a project');
         $this->setDefinition(array(
             new InputOption('make-scope', 'm', InputOption::VALUE_REQUIRED, 'Generate synchronisation file for a scope'),
+            new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope'),
             new InputOption('release', 'r', InputOption::VALUE_REQUIRED, 'Retrieve the selected release'),
             new InputOption('latest', 'l', InputOption::VALUE_NONE, 'Retrieve the last release else retrieve the release defined into release.bf13 file')
@@ -54,7 +56,55 @@ EOT
             $this->syncProject($release, $scope);
         }
 
+        if($input->getOption('data-load'))
+        {
+            $output->writeln('- Chargement des listes de valeurs');
+
+            $this->loadValueList();
+        }
+
         $output->writeln('Terminé');
+    }
+
+    protected function loadValueList()
+    {
+        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+
+        $conn = $entityManager->getConnection();
+
+        $conn->query('DELETE FROM valuelist');
+
+        $cache_dir = $this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/';
+
+        $finder = new Finder();
+
+        $finder->files()->name('*.valuelist.yml')->in($cache_dir);
+
+        foreach ($finder as $file) {
+            $yaml = new Yaml();
+
+            $yaml_data = $yaml->parse($file->getRealpath());
+
+            $DataValueList = $this->prepareValueList($yaml_data['value_list']);
+        }
+    }
+
+    protected function prepareValueList($data)
+    {
+        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+
+        foreach ($data as $row) {
+
+            $DataValueList = new ValueList();
+            $DataValueList->setVlkey($row['key']);
+            $DataValueList->setData($row['data']);
+
+            $entityManager->persist($DataValueList);
+        }
+
+        $entityManager->flush();
+
+        return $DataValueList;
     }
 
     protected function defineSelectedRelease($input)

@@ -15,30 +15,18 @@ class ValueList
     /**
      * @var string
      */
-    private $name;
+    private $vlkey;
 
     /**
-     * @var string
+     * @var array
      */
-    private $list_key;
+    private $data;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $DataListValues;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->DataListValues = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -46,81 +34,48 @@ class ValueList
     }
 
     /**
-     * Set name
+     * Set vlkey
      *
-     * @param string $name
+     * @param string $vlkey
      * @return ValueList
      */
-    public function setName($name)
+    public function setVlkey($vlkey)
     {
-        $this->name = $name;
+        $this->vlkey = $vlkey;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get vlkey
      *
-     * @return string
+     * @return string 
      */
-    public function getName()
+    public function getVlkey()
     {
-        return $this->name;
+        return $this->vlkey;
     }
 
     /**
-     * Set list_key
+     * Set data
      *
-     * @param string $listKey
+     * @param array $data
      * @return ValueList
      */
-    public function setListKey($listKey)
+    public function setData($data)
     {
-        $this->list_key = $listKey;
+        $this->data = $data;
 
         return $this;
     }
 
     /**
-     * Get list_key
+     * Get data
      *
-     * @return string
+     * @return array 
      */
-    public function getListKey()
+    public function getData()
     {
-        return $this->list_key;
-    }
-
-    /**
-     * Add DataListValues
-     *
-     * @param \BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList $dataListValues
-     * @return ValueList
-     */
-    public function addDataListValue(\BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList $dataListValues)
-    {
-        $this->DataListValues[] = $dataListValues;
-
-        return $this;
-    }
-
-    /**
-     * Remove DataListValues
-     *
-     * @param \BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList $dataListValues
-     */
-    public function removeDataListValue(\BF13\Bundle\BusinessApplicationBundle\Entity\DataValueList $dataListValues)
-    {
-        $this->DataListValues->removeElement($dataListValues);
-    }
-
-    /**
-     * Get DataListValues
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDataListValues()
-    {
-        return $this->DataListValues;
+        return $this->data;
     }
 }
