@@ -8,12 +8,8 @@ BF13\Bundle\BusinessApplicationBundle\Entity\ValueList:
       id: true
       generator:
         strategy: AUTO
-    name:
-      type: string
-    list_key:
+    vlkey:
       type: string
       unique: true
-  oneToMany:
-    DataListValues:
-      targetEntity: DataValueList
-      mappedBy: ValueList
+    data:
+      type: array
