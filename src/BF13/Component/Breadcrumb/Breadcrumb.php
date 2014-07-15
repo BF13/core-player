@@ -175,11 +175,13 @@ class Breadcrumb
     {
         $root = $this->getActiveRoot();
 
+        $resume = isset($this->roots[$root]['resume']) ? $this->roots[$root]['resume'] : '';
+
         $label_root = $this->getRootName();
 
         $path = array();
 
-        $path[] = array('label' => $label_root, 'route' => $root, 'last' => false);
+        $path[] = array('label' => $label_root, 'resume' => $resume, 'route' => $root, 'last' => false);
 
         $nodes = $this->data[$this->root_node][$root]['nodes'];
 
@@ -187,7 +189,11 @@ class Breadcrumb
 
             if ($this->active_route == $route) {
 
-                $path[] = array('label' => $child['label'], 'route' => $route, 'last' => true);
+                $resume = isset($child['resume']) ? $child['resume'] : '';
+
+                $icon = isset($child['icon']) ? $child['icon'] : 'icon-caret-right';
+
+                $path[] = array('label' => $child['label'], 'resume' => $resume, 'route' => $route, 'icon' => $icon, 'last' => true);
 
                 return $path;
             }

@@ -337,7 +337,7 @@ EOT
                 break;
 
             case 4:
-                throw new \Exception('! Erreur HTTP ' . $http_status . ":\nl'authentification de base a échouée !");
+                throw new \Exception('! Erreur HTTP ' . $http_status . ": " . $http_response);
                 break;
 
             default:
