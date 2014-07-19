@@ -34,30 +34,59 @@ class DatagridEntity extends DatagridObject
 
     protected function setColumnHeaders($columns)
     {
-        $this->raw_columns = $columns;
-
+        $raw_columns = array();
         $labels = array();
 
-        foreach($columns as $key => $opt) {
+        foreach($columns as $opt) {
 
             if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
             {
-                $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $key;
+                $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $opt['ref'];
+
+                switch ($opt['type'])
+                {
+                    case 'attribute_entity':
+                        $key = $opt['ref'] . '__' . $opt['source'];
+                        break;
+
+                	default:
+                        $key = $opt['ref'];
+                }
 
                 $labels[$key] = $label;
+
+                $raw_columns[$key] = $opt;
             }
         }
 
+        $this->raw_columns = $raw_columns;
         $this->column_headers = $labels;
     }
 
     public function loadData($data, $pager = null)
     {
-        $fields = array_keys($this->raw_columns);
+//         $fields = array_map(function($item) {
+
+//             return $item['ref'];
+
+//         },$this->raw_columns);
+
+        $fields = array();
+        foreach($this->raw_columns as $col)
+        {
+            switch($col['type'])
+            {
+            	case 'attribute_entity':
+                        $fields[] = $col['ref'] . '__' . $col['source'];
+            	    break;
+            	default:
+                    $fields[] = $col['ref'];
+            }
+        }
 
         $query = $this->DomainRepository
         ->getQuerizer($this->config->getSource())
-            ->datafields($fields);
+            ->datafields(array_unique($fields));
 
         if($data && $condition = $this->config->getCondition() ) {
             $query->conditions(array($condition => $data));
