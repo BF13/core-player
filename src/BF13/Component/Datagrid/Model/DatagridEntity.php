@@ -39,8 +39,8 @@ class DatagridEntity extends DatagridObject
 
         foreach($columns as $opt) {
 
-            if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
-            {
+//             if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
+//             {
                 $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $opt['ref'];
 
                 switch ($opt['type'])
@@ -56,7 +56,7 @@ class DatagridEntity extends DatagridObject
                 $labels[$key] = $label;
 
                 $raw_columns[$key] = $opt;
-            }
+//             }
         }
 
         $this->raw_columns = $raw_columns;
