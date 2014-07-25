@@ -213,7 +213,7 @@ class FormMetaData
 
     public function isMultiple()
     {
-        return true == $this->multiple;
+        return is_array($this->multiple);
     }
 
     public function setMultiple($multiple)

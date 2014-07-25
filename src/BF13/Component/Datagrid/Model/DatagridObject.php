@@ -16,6 +16,10 @@ class DatagridObject
 
     public $raw_columns = array();
 
+    public $global_actions = array();
+
+    public $row_actions = array();
+
     public function __construct($DatagridSettings)
     {
         $this->config = $DatagridSettings;

@@ -90,7 +90,24 @@ class Form extends AbstractType implements FormInterface
 
                 $subform = new self($params);
 
-                $builder->add($fieldname, $subform, $sub_options);
+                if ($params->isMultiple()) {
+
+                    $opt = array();
+
+                    $opt['type'] = $subform;
+
+                    $multiple = $params->getMultiple();
+
+                    $opt = array_merge($opt, $multiple);
+
+                    $opt['options'] = $sub_options;
+
+                    $builder->add($fieldname, 'collection', $opt);
+
+                } else {
+
+                    $builder->add($fieldname, $subform, $sub_options);
+                }
 
             } else {
 
