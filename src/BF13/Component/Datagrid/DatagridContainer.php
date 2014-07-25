@@ -5,7 +5,7 @@ class DatagridContainer
 {
     protected $source;
 
-    protected $ref;
+    protected $ref = 'id';
 
     protected $condition;
 
