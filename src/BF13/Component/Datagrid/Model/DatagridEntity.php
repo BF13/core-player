@@ -1,14 +1,16 @@
 <?php
 namespace BF13\Component\Datagrid\Model;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  *
  * @author FYAMANI
  *
  */
-
 class DatagridEntity extends DatagridObject
 {
+
     public $column_headers = array();
 
     public $column_values = array();
@@ -37,26 +39,39 @@ class DatagridEntity extends DatagridObject
         $raw_columns = array();
         $labels = array();
 
-        foreach($columns as $opt) {
+        foreach ($columns as $pos => $opt) {
 
-//             if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
-//             {
-                $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $opt['ref'];
+            // if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
+            // {
 
-                switch ($opt['type'])
-                {
-                    case 'attribute_entity':
-                        $key = $opt['ref'] . '__' . $opt['source'];
-                        break;
+            if(isset($opt['label']) && '' != trim($opt['label']))
+            {
+                $label = $opt['label'];
 
-                	default:
+            } else {
+
+                $label = isset($opt['ref']) && '' != trim($opt['ref']) ? $opt['ref'] : $pos;
+            }
+
+            switch ($opt['type']) {
+                case 'attribute_entity':
+                    $key = $opt['ref'] . '__' . $opt['source'];
+                    break;
+
+                default:
+                    if (isset($opt['ref'])) {
                         $key = $opt['ref'];
-                }
+                    } else {
 
-                $labels[$key] = $label;
+                        // retro compatibilité
+                        $key = $pos;
+                    }
+            }
 
-                $raw_columns[$key] = $opt;
-//             }
+            $labels[$key] = $label;
+
+            $raw_columns[$key] = $opt;
+            // }
         }
 
         $this->raw_columns = $raw_columns;
@@ -65,35 +80,38 @@ class DatagridEntity extends DatagridObject
 
     public function loadData($data, $pager = null)
     {
-//         $fields = array_map(function($item) {
+        // $fields = array_map(function($item) {
 
-//             return $item['ref'];
+        // return $item['ref'];
 
-//         },$this->raw_columns);
-
+        // },$this->raw_columns);
         $fields = array();
-        foreach($this->raw_columns as $col)
-        {
-            switch($col['type'])
-            {
-            	case 'attribute_entity':
-                        $fields[] = $col['ref'] . '__' . $col['source'];
-            	    break;
-            	default:
-                    $fields[] = $col['ref'];
+        foreach ($this->raw_columns as $pos => $col) {
+            switch ($col['type']) {
+                case 'attribute_entity':
+                    $fields[] = $col['ref'] . '__' . $col['source'];
+                    break;
+                default:
+                    if (isset($opt['ref'])) {
+                        $fields[] = $col['ref'];
+                    } else {
+
+                        // retro compatibilité
+                        $fields[] = $pos;
+                    }
             }
         }
 
-        $query = $this->DomainRepository
-        ->getQuerizer($this->config->getSource())
+        $query = $this->DomainRepository->getQuerizer($this->config->getSource())
             ->datafields(array_unique($fields));
 
-        if($data && $condition = $this->config->getCondition() ) {
-            $query->conditions(array($condition => $data));
+        if ($data && $condition = $this->config->getCondition()) {
+            $query->conditions(array(
+                $condition => $data
+            ));
         }
 
-        if(! is_null($pager))
-        {
+        if (! is_null($pager)) {
             $this->offset = ($pager['page'] - 1) * $pager['max_items'];
 
             $this->bind($query->resultsWithPager($this->offset, $pager['max_items']));
@@ -105,7 +123,6 @@ class DatagridEntity extends DatagridObject
             $this->total_pages = ceil($total / $pager['max_items']);
 
             $this->current_page = ($this->offset / $pager['max_items']) + 1;
-
         } else {
 
             $this->bind($query->results());
@@ -114,12 +131,10 @@ class DatagridEntity extends DatagridObject
 
     public function updateConfig($config)
     {
-        if(isset($config['source']))
-        {
+        if (isset($config['source'])) {
             $this->config->setSource($config['source']);
         }
-        if(isset($config['condition']))
-        {
+        if (isset($config['condition'])) {
             $this->config->setCondition($config['condition']);
         }
     }
@@ -140,10 +155,8 @@ class DatagridEntity extends DatagridObject
 
         $limit = $this->current_page - $range;
 
-        for($i=$limit; $i < $this->current_page; $i++)
-        {
-            if(0 >= $i)
-            {
+        for ($i = $limit; $i < $this->current_page; $i ++) {
+            if (0 >= $i) {
                 continue;
             }
 
@@ -158,12 +171,10 @@ class DatagridEntity extends DatagridObject
 
         $limit = $this->current_page + $range;
 
-        for($i=$this->current_page + 1; $i <= $this->total_pages; $i++)
-        {
+        for ($i = $this->current_page + 1; $i <= $this->total_pages; $i ++) {
             $offset[] = $i;
 
-            if($limit == $i)
-            {
+            if ($limit == $i) {
                 break;
             }
         }
