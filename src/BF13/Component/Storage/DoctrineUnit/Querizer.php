@@ -96,6 +96,10 @@ class Querizer implements StorageQuerizerInterface
 
             $condition = $this->definition['conditions'][$alias];
 
+            if (isset($condition['sort'])) {
+                $this->sort($condition['sort']);
+            }
+
             $mode = array_key_exists('mode', $condition) ? $condition['mode'] : 'basic';
 
             switch ($mode) {
