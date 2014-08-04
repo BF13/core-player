@@ -61,6 +61,8 @@ class FormMetaData
 
         if (array_key_exists('fields', $metadata)) {
 
+            $metadata['fields'] = $this->updateSettingFields($metadata['fields']);
+
             $fields = array();
 
             foreach ($metadata['fields'] as $field => $meta_field) {
@@ -138,6 +140,13 @@ class FormMetaData
 
     public function setFields($fields)
     {
+        $this->fields = $fields;
+
+        return $this;
+    }
+
+    protected function updateSettingFields($fields)
+    {
         if (array_key_exists('fields', $this->extended_metadata)) {
 
             foreach($this->extended_metadata['fields'] as $f => $data)
@@ -146,16 +155,15 @@ class FormMetaData
                 {
                     throw new \Exception(sprintf('Unexpected field "%s"', $f));
                 }
+
                 foreach($data as $attr => $values)
                 {
-                    $fields[$f][$attr] = array_merge($fields[$f][$attr], $values);
+                    $fields[$f]['widget'][$attr] = array_merge_recursive($fields[$f]['widget'][$attr], $values);
                 }
             }
         }
 
-        $this->fields = $fields;
-
-        return $this;
+        return $fields;
     }
 
     public function getValidators()
