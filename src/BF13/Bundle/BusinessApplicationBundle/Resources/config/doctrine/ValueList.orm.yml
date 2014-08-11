@@ -1,7 +1,7 @@
 BF13\Bundle\BusinessApplicationBundle\Entity\ValueList:
   type: entity
   repositoryClass: BF13\Bundle\BusinessApplicationBundle\Repository\ValueListRepository
-  table: null
+  table: valuelist
   fields:
     id:
       type: integer

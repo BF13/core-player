@@ -1,6 +1,7 @@
 BF13\Bundle\BusinessApplicationBundle\Entity\InstantMessage:
   type: entity
   repositoryClass: BF13\Bundle\BusinessApplicationBundle\Repository\InstantMessage
+  table: instantmessage
   fields:
     id:
       type: integer

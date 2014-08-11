@@ -1,5 +1,6 @@
 BF13\Bundle\BusinessApplicationBundle\Entity\LabelValue:
   type: entity
+  table: labelvalue
   fields:
     id:
       type: integer
