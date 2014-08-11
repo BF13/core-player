@@ -326,7 +326,9 @@ EOT
             curl_setopt($ch, CURLOPT_USERPWD, $auth);
         }
 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
         $http_response = curl_exec($ch);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
