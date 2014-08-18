@@ -52,31 +52,58 @@ class Connector implements StorageConnectorInterface
 
         $querizer = new Querizer($repository, $builder);
 
-        $source = $this->getSchemaPath($serialname);
-
-        $schema = new Schema();
-
-        $loader = new YamlFileLoader($source);
-
-        $loader->loadSchemaData($schema);
+        $schema = $this->getSchema($serialname, $repository);
 
         $querizer->setSchema($schema);
 
         return $querizer;
     }
 
-    protected function getSchemaPath($serialname, $pattern = '@%s/Resources/config/doctrine/%s.dql.yml')
+    protected function getSchema($serialname, $repository, $pattern = '@%s/Resources/config/doctrine/%s.dql.yml')
     {
         list($bundle, $file) = explode(':', $serialname);
 
+        $schema = new Schema();
+
         $settings_file = sprintf($pattern, $bundle, $file);
 
-        if (!$path = $this->kernel->locateResource($settings_file)) {
+        try {
 
-            throw new StorageException('Schema not found !');
+            $path = $this->kernel->locateResource($settings_file);
+
+            $loader = new YamlFileLoader($path);
+
+            $loader->loadSchemaData($schema);
+
+        } catch (\Exception $e) {
+
+            $reflection = new \ReflectionClass($repository->getClassName());
+
+            $namespace = $repository->getClassName();
+
+            $section = explode('\\', $namespace);
+
+            $alias = strtolower(substr(end($section), 0, 1));
+
+            $properties = array();
+
+            foreach($reflection->getProperties() as $p)
+            {
+                $properties[$p->getName()] = array(
+                    'field' => $alias . '.' . $p->getName()
+                );
+            }
+
+            $schema->setName($namespace);
+
+            $schema->setAlias($alias);
+
+            $schema->setProperties($properties);
+
+            $schema->setConditions(array());
         }
 
-        return $path;
+        return $schema;
     }
 
     /**
