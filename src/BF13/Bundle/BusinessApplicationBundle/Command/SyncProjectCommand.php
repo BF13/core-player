@@ -326,7 +326,9 @@ EOT
             curl_setopt($ch, CURLOPT_USERPWD, $auth);
         }
 
+
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $http_response = curl_exec($ch);
@@ -340,6 +342,18 @@ EOT
 
             case 4:
                 throw new \Exception('! Erreur HTTP ' . $http_status . ": " . $http_response);
+                break;
+
+            case 5:
+                if(503 == $http_status)
+                {
+
+                    $this->output->writeln($http_response);
+
+                    throw new \Exception('! Erreur HTTP : La construction a généré une erreur !');
+                }
+
+                throw new \Exception('! Erreur HTTP ' . $http_status);
                 break;
 
             default:
@@ -360,7 +374,23 @@ EOT
         // extract files
         $this->output->writeln('- Extraction');
         $za = new \ZipArchive();
-        $za->open($filename);
+        $opened = $za->open($filename);
+
+        if($opened !== true)
+        {
+            $zip_error = array(
+                \ZipArchive::ER_EXISTS => 'Le fichier existe déjà',
+                \ZipArchive::ER_INCONS => 'L\'archive ZIP est inconsistante',
+                \ZipArchive::ER_INVAL => 'Argument invalide',
+                \ZipArchive::ER_MEMORY => 'Erreur de mémoire',
+                \ZipArchive::ER_NOENT => 'Le fichier n\'existe pas',
+                \ZipArchive::ER_NOZIP => 'Le fichier n\'est pas une archive valide',
+                \ZipArchive::ER_OPEN => 'Impossible d\'ouvrir le fichier',
+                \ZipArchive::ER_READ => 'Erreur lors de la lecture',
+                \ZipArchive::ER_SEEK => 'Erreur de position',
+            );
+            throw new \Exception(sprintf('! ZIP erreur : "%s"', $zip_error[$opened]));
+        }
 
         $files = null;
         if ($include) {
