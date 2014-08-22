@@ -1,6 +1,7 @@
 parameters:
 #    bf13.dom.repository.class: BF13\Component\Storage\StorageConnector
     bf13.dom.repository.class: BF13\Component\Storage\DoctrineUnit\Connector
+    bf13.dom.repository.inspector.class: BF13\Component\Storage\DoctrineUnit\Tools\Inspector
     
     bf13.app.notification.class: BF13\Component\Notification\Notification
     
@@ -26,7 +27,8 @@ services:
         arguments:
           - "@doctrine.orm.default_entity_manager"
           - "@kernel"
-          
+          - "%bf13.dom.repository.inspector.class%"
+
 #    bf13.dom.repository:
 #        class: %bf13.dom.repository.class%
 #        arguments:

@@ -20,11 +20,20 @@ class Connector implements StorageConnectorInterface
      * @param EntityManager $em
      * @param Kernel $kernel
      */
-    public function __construct(EntityManager $em, Kernel $kernel)
+    public function __construct(EntityManager $em, Kernel $kernel, $class_inspector)
     {
         $this->em = $em;
 
         $this->kernel = $kernel;
+
+        if( is_string($class_inspector))
+        {
+            $this->Inspector = new $class_inspector;
+
+        } else {
+
+            $this->Inspector = $class_inspector;
+        }
     }
 
     /**
@@ -77,7 +86,7 @@ class Connector implements StorageConnectorInterface
 
         } catch (\Exception $e) {
 
-            $reflection = new \ReflectionClass($repository->getClassName());
+            $Inspected = $this->Inspector->inspect($repository->getClassName());
 
             $namespace = $repository->getClassName();
 
@@ -87,7 +96,7 @@ class Connector implements StorageConnectorInterface
 
             $properties = array();
 
-            foreach($reflection->getProperties() as $p)
+            foreach($Inspected->getProperties() as $p)
             {
                 $properties[$p->getName()] = array(
                     'field' => $alias . '.' . $p->getName()

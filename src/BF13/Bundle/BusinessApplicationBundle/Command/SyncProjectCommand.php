@@ -10,6 +10,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use BF13\Bundle\BusinessApplicationBundle\Entity\ValueList;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class SyncProjectCommand extends ContainerAwareCommand
 {
@@ -21,6 +22,10 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setDescription('Synchronize a project');
         $this->setDefinition(array(
             new InputOption('make-scope', 'm', InputOption::VALUE_REQUIRED, 'Generate synchronisation file for a scope'),
+            new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
+            new InputOption('init-bundles', 'ib', InputOption::VALUE_NONE, 'Generate bundles'),
+            new InputOption('init-db', 'id', InputOption::VALUE_NONE, 'Create the database'),
+            new InputOption('update-db', 'ud', InputOption::VALUE_NONE, 'Update the database schema'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope'),
             new InputOption('release', 'r', InputOption::VALUE_REQUIRED, 'Retrieve the selected release'),
@@ -51,15 +56,26 @@ EOT
         if ($make_scope) {
 
             $this->makeScope($make_scope, $release);
+
         } else {
 
-            $this->syncProject($release, $scope);
+            $this->syncProject($release, $scope, $input->getOption('init-bundles'));
+        }
+
+        $this->generateBusinessEntities();
+
+        if($input->getOption('init-db'))
+        {
+            $this->initDatabase();
+        }
+
+        if($input->getOption('update-db'))
+        {
+            $this->updateDatabase();
         }
 
         if($input->getOption('data-load'))
         {
-            $output->writeln('- Chargement des listes de valeurs');
-
             $this->loadValueList();
         }
 
@@ -68,6 +84,8 @@ EOT
 
     protected function loadValueList()
     {
+        $this->output->writeln('- Chargement des listes de valeurs');
+
         $entityManager = $this->getContainer()->get('doctrine')->getManager();
 
         $conn = $entityManager->getConnection();
@@ -183,6 +201,8 @@ EOT
 
     protected function syncFiles($from_dir, $target_dir)
     {
+        $this->output->writeln('- sync files');
+
         $fs = new Filesystem();
 
         $finder = new Finder();
@@ -238,7 +258,100 @@ EOT
         }
     }
 
-    protected function syncProject($release = null, $scope = null)
+    protected function initDatabase()
+    {
+        $this->output->writeln('- generate database');
+
+        $command = $this->getApplication()->find('doctrine:database:create');
+
+        $arguments = array(
+            'command' => 'doctrine:database:create',
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+
+        $this->output->writeln('- create schema');
+
+        $command = $this->getApplication()->find('doctrine:schema:create');
+
+        $arguments = array(
+            'command' => 'doctrine:schema:create',
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+    }
+
+    protected function updateDatabase()
+    {
+        $this->output->writeln('- update database');
+
+        $command = $this->getApplication()->find('doctrine:schema:update');
+
+        $arguments = array(
+            'command' => 'doctrine:schema:update',
+            '--force' => true
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+    }
+
+    protected function generateBusinessEntities()
+    {
+        $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../';
+
+        $file = $root_dir . 'app/config/bf13/bundles.yml';
+
+        if(! file_exists($file))
+        {
+            throw new \Exception(sprintf('File "%s" not found !', $file));
+        }
+
+        $yaml = new Yaml();
+
+        $yaml_data = $yaml->parse($file);
+
+        foreach($yaml_data['bundles'] as $bundle)
+        {
+            if(false === strpos($bundle, 'BusinessBundle'))
+            {
+                continue;
+            }
+
+            $path = sprintf('%s/src', $root_dir);
+
+            $path_entities = $path . '/' . $bundle . '/resources/config/doctrine';
+
+            if(! is_dir($path_entities))
+            {
+                $this->output->writeln(sprintf('[!] folder "%s/resources/config/doctrine" does not exists', $bundle));
+
+                continue;
+            }
+
+            $this->output->writeln(sprintf('- generate "%s" entities', $bundle));
+
+            $command = $this->getApplication()->find('doctrine:generate:entities');
+
+            $arguments = array(
+                'command' => 'doctrine:generate:entities',
+                'name' => $bundle,
+                '--path' => $path,
+                '--no-backup' => true
+            );
+
+            $input = new ArrayInput($arguments);
+
+            $returnCode = $command->run($input, $this->output);
+        }
+    }
+
+    protected function syncProject($release = null, $scope = null, $initbundles = false)
     {
         $filepath = $this->buildZipFile('project.tmp.zip', $scope, $release);
 
@@ -268,7 +381,60 @@ EOT
         $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../';
 
         $this->extractZipFile($filepath, $cache_dir, $include);
+
+        if($initbundles)
+        {
+            $this->generateBundles($cache_dir, $root_dir);
+        }
+
         $this->syncFiles($cache_dir, $root_dir);
+    }
+
+    protected function generateBundles($cache_dir, $root_dir)
+    {
+        $this->output->writeln('- generate bundles');
+
+        $file = $cache_dir . 'app/config/bf13/bundles.yml';
+
+        if(! file_exists($file))
+        {
+            throw new \Exception(sprintf('File "%s" not found !', $file));
+        }
+
+        $yaml = new Yaml();
+
+        $yaml_data = $yaml->parse($file);
+
+        foreach($yaml_data['bundles'] as $bundle)
+        {
+            $this->output->writeln('[+] generate bundle: ' . $bundle);
+
+            $target = $root_dir . 'src/' . $bundle;
+
+            if(is_dir($target))
+            {
+                $this->output->writeln(sprintf('--> Bundle "%s" already exists !', $bundle));
+
+                continue;
+            }
+
+            $command = $this->getApplication()->find('generate:bundle');
+
+            $bundle_sections = explode('/', $bundle);
+
+            $arguments = array(
+                'command' => 'generate:bundle',
+                '--namespace'    => $bundle,
+                '--bundle-name'    => $bundle_sections[0] . end($bundle_sections),
+                '--dir'  => 'src',
+                '--format'  => 'yml',
+                '--structure'  => 'yes',
+                '--no-interaction'  => true
+            );
+
+            $input = new ArrayInput($arguments);
+            $returnCode = $command->run($input, $this->output);
+        }
     }
 
     protected function buildZipFile($filename, $scope, $release = null)
@@ -280,6 +446,7 @@ EOT
         $fs = new Filesystem();
 
         if (! is_dir($dest)) {
+
             throw new \Exception('Le paramètre "workdir" est incorrecte !');
         }
 
