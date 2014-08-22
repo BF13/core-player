@@ -25,6 +25,7 @@ class SyncProjectCommand extends ContainerAwareCommand
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('init-bundles', 'ib', InputOption::VALUE_NONE, 'Generate bundles'),
             new InputOption('init-db', 'id', InputOption::VALUE_NONE, 'Create the database'),
+            new InputOption('update-db', 'ud', InputOption::VALUE_NONE, 'Update the database schema'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('scope', 'c', InputOption::VALUE_REQUIRED, 'Define the synchronisation scope'),
             new InputOption('release', 'r', InputOption::VALUE_REQUIRED, 'Retrieve the selected release'),
@@ -61,15 +62,20 @@ EOT
             $this->syncProject($release, $scope, $input->getOption('init-bundles'));
         }
 
+        $this->generateBusinessEntities();
+
         if($input->getOption('init-db'))
         {
-            $this->output->writeln('- Init dB');
+            $this->initDatabase();
+        }
+
+        if($input->getOption('update-db'))
+        {
+            $this->updateDatabase();
         }
 
         if($input->getOption('data-load'))
         {
-            $output->writeln('- Chargement des listes de valeurs');
-
             $this->loadValueList();
         }
 
@@ -78,6 +84,8 @@ EOT
 
     protected function loadValueList()
     {
+        $this->output->writeln('- Chargement des listes de valeurs');
+
         $entityManager = $this->getContainer()->get('doctrine')->getManager();
 
         $conn = $entityManager->getConnection();
@@ -247,6 +255,90 @@ EOT
                 case $new_file_content === $existing_file_content:
                 default:
             }
+        }
+    }
+
+    protected function initDatabase()
+    {
+        $this->output->writeln('- generate database');
+
+        $command = $this->getApplication()->find('doctrine:database:create');
+
+        $arguments = array(
+            'command' => 'doctrine:database:create',
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+
+        $this->output->writeln('- create schema');
+
+        $command = $this->getApplication()->find('doctrine:schema:create');
+
+        $arguments = array(
+            'command' => 'doctrine:schema:create',
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+    }
+
+    protected function updateDatabase()
+    {
+        $this->output->writeln('- update database');
+
+        $command = $this->getApplication()->find('doctrine:schema:update');
+
+        $arguments = array(
+            'command' => 'doctrine:schema:update',
+            '--force' => true
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+    }
+
+    protected function generateBusinessEntities()
+    {
+        $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../';
+
+        $file = $root_dir . 'app/config/bf13/bundles.yml';
+
+        if(! file_exists($file))
+        {
+            throw new \Exception(sprintf('File "%s" not found !', $file));
+        }
+
+        $yaml = new Yaml();
+
+        $yaml_data = $yaml->parse($file);
+
+        foreach($yaml_data['bundles'] as $bundle)
+        {
+            if(false === strpos($bundle, 'BusinessBundle'))
+            {
+                continue;
+            }
+
+            $this->output->writeln(sprintf('- generate "%s" entities', $bundle));
+
+            $command = $this->getApplication()->find('doctrine:generate:entities');
+
+            $path = sprintf('%s/src', $root_dir);
+
+            $arguments = array(
+                'command' => 'doctrine:generate:entities',
+                'name' => $bundle,
+                '--path' => $path,
+                '--no-backup' => true
+            );
+
+            $input = new ArrayInput($arguments);
+
+            $returnCode = $command->run($input, $this->output);
         }
     }
 
