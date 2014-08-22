@@ -323,11 +323,20 @@ EOT
                 continue;
             }
 
+            $path = sprintf('%s/src', $root_dir);
+
+            $path_entities = $path . '/' . $bundle . '/resources/config/doctrine';
+
+            if(! is_dir($path_entities))
+            {
+                $this->output->writeln(sprintf('[!] folder "%s/resources/config/doctrine" does not exists', $bundle));
+
+                continue;
+            }
+
             $this->output->writeln(sprintf('- generate "%s" entities', $bundle));
 
             $command = $this->getApplication()->find('doctrine:generate:entities');
-
-            $path = sprintf('%s/src', $root_dir);
 
             $arguments = array(
                 'command' => 'doctrine:generate:entities',
