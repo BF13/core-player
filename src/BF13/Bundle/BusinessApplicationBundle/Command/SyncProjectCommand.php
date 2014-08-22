@@ -199,7 +199,7 @@ EOT
         file_put_contents($dir . DIRECTORY_SEPARATOR . $filescope, $yaml_data);
     }
 
-    protected function syncFiles($from_dir, $target_dir)
+    protected function copyFiles($from_dir, $target_dir)
     {
         $this->output->writeln('- sync files');
 
@@ -211,25 +211,43 @@ EOT
 
         foreach ($finder as $file) {
 
+            $base_file_strategy = false;
+
             $src_pattern = $file->getRelativePathname();
 
+            $filename = $file->getFilename();
+
             $new_file = $from_dir . DIRECTORY_SEPARATOR . $src_pattern;
+
+            if(0 === strpos($filename, '$$'))
+            {
+                $base_file_strategy = true;
+
+                $src_pattern = str_replace($filename, substr($filename, 2), $src_pattern);
+            }
+
             $existing_file = $target_dir . DIRECTORY_SEPARATOR . $src_pattern;
 
-            if (is_file($existing_file)) {
+            if (is_file($existing_file))
+            {
                 $existing_file_content = file_get_contents($existing_file);
+
             } else {
 
                 $existing_file_content = false;
             }
-            if (is_file($new_file)) {
+
+            if (is_file($new_file))
+            {
                 $new_file_content = file_get_contents($new_file);
+
             } else {
 
                 $new_file_content = false;
             }
 
             switch (true) {
+
                 case $existing_file_content === false && $new_file_content !== false:
 
                     $fs->copy($new_file, $existing_file, true);
@@ -243,7 +261,7 @@ EOT
 
                     break;
 
-                case $new_file_content !== false && $new_file_content !== $existing_file_content:
+                case $new_file_content !== false && $new_file_content !== $existing_file_content && $base_file_strategy == false:
 
                     $fs->copy($new_file, $existing_file, true);
 
@@ -325,11 +343,11 @@ EOT
 
             $path = sprintf('%s/src', $root_dir);
 
-            $path_entities = $path . '/' . $bundle . '/resources/config/doctrine';
+            $path_entities = $path . '/' . $bundle . '/Resources/config/doctrine';
 
             if(! is_dir($path_entities))
             {
-                $this->output->writeln(sprintf('[!] folder "%s/resources/config/doctrine" does not exists', $bundle));
+                $this->output->writeln(sprintf('[!] folder "%s/Resources/config/doctrine" does not exists', $bundle));
 
                 continue;
             }
@@ -387,7 +405,7 @@ EOT
             $this->generateBundles($cache_dir, $root_dir);
         }
 
-        $this->syncFiles($cache_dir, $root_dir);
+        $this->copyFiles($cache_dir, $root_dir);
     }
 
     protected function generateBundles($cache_dir, $root_dir)
