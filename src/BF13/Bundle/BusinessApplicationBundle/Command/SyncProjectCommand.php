@@ -250,7 +250,7 @@ EOT
         }
     }
 
-    protected function syncProject($release = null, $scope = null, $initbundle = false)
+    protected function syncProject($release = null, $scope = null, $initbundles = false)
     {
         $filepath = $this->buildZipFile('project.tmp.zip', $scope, $release);
 
@@ -281,19 +281,19 @@ EOT
 
         $this->extractZipFile($filepath, $cache_dir, $include);
 
-        if($initbundle)
+        if($initbundles)
         {
-            $this->generateBundles($cache_dir);
+            $this->generateBundles($cache_dir, $root_dir);
         }
 
         $this->syncFiles($cache_dir, $root_dir);
     }
 
-    protected function generateBundles($root_folder)
+    protected function generateBundles($cache_dir, $root_dir)
     {
         $this->output->writeln('- generate bundles');
 
-        $file = $root_folder . 'app/config/bf13/bundles.yml';
+        $file = $cache_dir . 'app/config/bf13/bundles.yml';
 
         if(! file_exists($file))
         {
@@ -307,6 +307,15 @@ EOT
         foreach($yaml_data['bundles'] as $bundle)
         {
             $this->output->writeln('[+] generate bundle: ' . $bundle);
+
+            $target = $root_dir . 'src/' . $bundle;
+
+            if(is_dir($target))
+            {
+                $this->output->writeln(sprintf('--> Bundle "%s" already exists !', $bundle));
+
+                continue;
+            }
 
             $command = $this->getApplication()->find('generate:bundle');
 
