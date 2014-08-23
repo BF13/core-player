@@ -400,6 +400,15 @@ EOT
         $cache_dir = $this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/';
         $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../';
 
+        $fs = new Filesystem();
+
+        if (is_dir($cache_dir)) {
+
+            $fs->remove($cache_dir);
+        }
+
+        $fs->mkdir($cache_dir);
+
         $this->extractZipFile($filepath, $cache_dir, $include);
 
         $this->checkBundles($cache_dir, $root_dir, $initbundles);
