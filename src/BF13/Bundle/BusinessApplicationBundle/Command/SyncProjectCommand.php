@@ -60,23 +60,25 @@ EOT
         } else {
 
             $this->syncProject($release, $scope, $input->getOption('init-bundles'));
-        }
 
-        $this->generateBusinessEntities();
+            if($input->getOption('init-db'))
+            {
+                $this->generateBusinessEntities();
 
-        if($input->getOption('init-db'))
-        {
-            $this->initDatabase();
-        }
+                $this->initDatabase();
+            }
 
-        if($input->getOption('update-db'))
-        {
-            $this->updateDatabase();
-        }
+            if($input->getOption('update-db'))
+            {
+                $this->generateBusinessEntities();
 
-        if($input->getOption('data-load'))
-        {
-            $this->loadValueList();
+                $this->updateDatabase();
+            }
+
+            if($input->getOption('data-load'))
+            {
+                $this->loadValueList();
+            }
         }
 
         $output->writeln('Terminé');
@@ -425,16 +427,16 @@ EOT
 
         foreach($yaml_data['bundles'] as $bundle)
         {
-            $this->output->writeln('[+] generate bundle: ' . $bundle);
-
             $target = $root_dir . 'src/' . $bundle;
 
             if(is_dir($target))
             {
-                $this->output->writeln(sprintf('--> Bundle "%s" already exists !', $bundle));
+                $this->output->writeln(sprintf('[!] Bundle "%s" already exists !', $bundle));
 
                 continue;
             }
+
+            $this->output->writeln('[x] generate bundle: ' . $bundle);
 
             $command = $this->getApplication()->find('generate:bundle');
 
@@ -446,13 +448,33 @@ EOT
                 '--bundle-name'    => $bundle_sections[0] . end($bundle_sections),
                 '--dir'  => 'src',
                 '--format'  => 'yml',
-                '--structure'  => 'yes',
-                '--no-interaction'  => true
+                '--structure'  => false,
+                '--no-interaction'  => true,
             );
 
             $input = new ArrayInput($arguments);
             $returnCode = $command->run($input, $this->output);
+
+            $this->prepareNewBundle($target);
         }
+    }
+
+    protected function prepareNewBundle($bundle_dir)
+    {
+        $this->output->writeln('- cleanup ' . $bundle_dir);
+
+        $files = array(
+            $bundle_dir . '/Resources/config/routing.yml',
+            $bundle_dir . '/Resources/config/services.yml',
+            $bundle_dir . '/Resources/public',
+            $bundle_dir . '/Resources/views',
+            $bundle_dir . '/Controller',
+            $bundle_dir . '/Tests/Controller',
+        );
+
+        $fs = new Filesystem();
+
+        $fs->remove($files);
     }
 
     protected function buildZipFile($filename, $scope, $release = null)
