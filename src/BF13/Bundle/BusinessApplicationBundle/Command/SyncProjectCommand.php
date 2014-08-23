@@ -402,17 +402,14 @@ EOT
 
         $this->extractZipFile($filepath, $cache_dir, $include);
 
-        if($initbundles)
-        {
-            $this->generateBundles($cache_dir, $root_dir);
-        }
+        $this->checkBundles($cache_dir, $root_dir, $initbundles);
 
         $this->copyFiles($cache_dir, $root_dir);
     }
 
-    protected function generateBundles($cache_dir, $root_dir)
+    protected function checkBundles($cache_dir, $root_dir, $initbundles = false)
     {
-        $this->output->writeln('- generate bundles');
+        $this->output->writeln('- check bundles');
 
         $file = $cache_dir . 'app/config/bf13/bundles.yml';
 
@@ -429,37 +426,51 @@ EOT
         {
             $target = $root_dir . 'src/' . $bundle;
 
-            if(is_dir($target))
+            if($initbundles && is_dir($target))
             {
-                $this->output->writeln(sprintf('[!] Bundle "%s" already exists !', $bundle));
+                $this->output->writeln(sprintf('[i] Bundle "%s" already exists !', $bundle));
 
                 continue;
+
+            } else if(!$initbundles && is_dir($target))
+            {
+                continue;
+
+            } else if(!$initbundles && ! is_dir($target))
+            {
+                throw new \Exception(sprintf("Bundle \"%s\" is undefined !\n relaunch command with --init-debug option", $bundle));
             }
 
-            $this->output->writeln('[x] generate bundle: ' . $bundle);
+            $this->generateBundle($bundle);
 
-            $command = $this->getApplication()->find('generate:bundle');
-
-            $bundle_sections = explode('/', $bundle);
-
-            $arguments = array(
-                'command' => 'generate:bundle',
-                '--namespace'    => $bundle,
-                '--bundle-name'    => $bundle_sections[0] . end($bundle_sections),
-                '--dir'  => 'src',
-                '--format'  => 'yml',
-                '--structure'  => false,
-                '--no-interaction'  => true,
-            );
-
-            $input = new ArrayInput($arguments);
-            $returnCode = $command->run($input, $this->output);
-
-            $this->prepareNewBundle($target);
+            $this->purgeNewBundle($target);
         }
     }
 
-    protected function prepareNewBundle($bundle_dir)
+    protected function generateBundle($bundle)
+    {
+        $this->output->writeln('[x] generate bundle: ' . $bundle);
+
+        $command = $this->getApplication()->find('generate:bundle');
+
+        $bundle_sections = explode('/', $bundle);
+
+        $arguments = array(
+            'command' => 'generate:bundle',
+            '--namespace'    => $bundle,
+            '--bundle-name'    => $bundle_sections[0] . end($bundle_sections),
+            '--dir'  => 'src',
+            '--format'  => 'yml',
+            '--structure'  => false,
+            '--no-interaction'  => true,
+        );
+
+        $input = new ArrayInput($arguments);
+
+        $returnCode = $command->run($input, $this->output);
+    }
+
+    protected function purgeNewBundle($bundle_dir)
     {
         $this->output->writeln('- cleanup ' . $bundle_dir);
 
