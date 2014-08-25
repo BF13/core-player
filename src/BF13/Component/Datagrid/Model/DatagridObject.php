@@ -20,6 +20,8 @@ class DatagridObject
 
     public $row_actions = array();
 
+    protected $formatter = null;
+
     public function __construct($DatagridSettings)
     {
         $this->config = $DatagridSettings;
@@ -46,8 +48,18 @@ class DatagridObject
         $this->column_headers = $labels;
     }
 
-    public function bind($values)
+    public function bind($values, $format = false)
     {
         $this->column_values = $values;
+
+        if($format && $this->formatter)
+        {
+            $this->formatter->format($this);
+        }
+    }
+
+    public function setFormatter($formatter)
+    {
+        $this->formatter = $formatter;
     }
 }

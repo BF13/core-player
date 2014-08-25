@@ -114,7 +114,7 @@ class DatagridEntity extends DatagridObject
         if (! is_null($pager)) {
             $this->offset = ($pager['page'] - 1) * $pager['max_items'];
 
-            $this->bind($query->resultsWithPager($this->offset, $pager['max_items']));
+            $this->bind($query->resultsWithPager($this->offset, $pager['max_items']), true);
 
             $totalitems = $query->totalResults();
 
@@ -125,7 +125,7 @@ class DatagridEntity extends DatagridObject
             $this->current_page = ($this->offset / $pager['max_items']) + 1;
         } else {
 
-            $this->bind($query->results());
+            $this->bind($query->results(), true);
         }
     }
 

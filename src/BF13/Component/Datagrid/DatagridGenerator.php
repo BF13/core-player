@@ -15,11 +15,13 @@ class DatagridGenerator
 {
     protected $DomainRepository;
 
-    public function __construct($conn, $kernel)
+    public function __construct($conn, $kernel, $formatter = null)
     {
         $this->DomainRepository = $conn;
 
         $this->kernel = $kernel;
+
+        $this->formatter = $formatter;
     }
 
     /**
@@ -79,6 +81,10 @@ class DatagridGenerator
         }
 
         $datagrid = new $datagrid_model($Grid, $this->kernel);
+        if(isset($this->formatter[$type]))
+        {
+            $datagrid->setFormatter($this->formatter[$type]);
+        }
 
         return $datagrid;
     }
