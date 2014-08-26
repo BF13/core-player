@@ -250,6 +250,12 @@ EOT
 
             switch (true) {
 
+                //ne rien faire si fichier existant et stratégie de réplication active
+                case $base_file_strategy === true && $existing_file_content !== false && trim($existing_file_content) != '':
+
+                    break;
+
+                //copie si nouveau fichier
                 case $existing_file_content === false && $new_file_content !== false:
 
                     $fs->copy($new_file, $existing_file, true);
@@ -259,11 +265,13 @@ EOT
                     ));
                     break;
 
+                //ne rien faire si fichier existant et sans source
                 case $new_file_content === false && $existing_file_content !== false:
 
                     break;
 
-                case $new_file_content !== false && $new_file_content !== $existing_file_content && $base_file_strategy == false:
+                //copie si fichier existant différent de la source et sans stratégie de réplication
+                case $new_file_content !== false && $new_file_content !== $existing_file_content:
 
                     $fs->copy($new_file, $existing_file, true);
 
@@ -272,6 +280,7 @@ EOT
                     ));
                     break;
 
+                //ne rien faire si fichier existant identique à la source
                 case $new_file_content === $existing_file_content:
                 default:
             }
