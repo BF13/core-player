@@ -41,6 +41,8 @@ class DatagridObject
             {
                 $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $key;
 
+                $key = isset($opt['ref']) ? $opt['ref'] : $pos;
+
                 $labels[$key] = $label;
             }
         }
