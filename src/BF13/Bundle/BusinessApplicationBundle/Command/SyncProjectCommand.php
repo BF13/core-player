@@ -22,6 +22,7 @@ class SyncProjectCommand extends ContainerAwareCommand
         $this->setDescription('Synchronize a project');
         $this->setDefinition(array(
             new InputOption('make-scope', 'm', InputOption::VALUE_REQUIRED, 'Generate synchronisation file for a scope'),
+            new InputOption('bypass-sync', 'by', InputOption::VALUE_NONE, 'Bypass synchronisation (for prod action)'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('init-bundles', 'ib', InputOption::VALUE_NONE, 'Generate bundles'),
             new InputOption('init-db', 'id', InputOption::VALUE_NONE, 'Create the database'),
@@ -48,6 +49,7 @@ EOT
 
         $make_scope = $input->getOption('make-scope');
         $scope = $input->getOption('scope');
+        $bypass = $input->getOption('bypass-sync');
 
         $release = $this->defineSelectedRelease($input);
 
@@ -59,7 +61,10 @@ EOT
 
         } else {
 
-            $this->syncProject($release, $scope, $input->getOption('init-bundles'));
+            if(!$bypass)
+            {
+                $this->syncProject($release, $scope, $input->getOption('init-bundles'));
+            }
 
             if($input->getOption('init-db'))
             {
@@ -94,15 +99,16 @@ EOT
 
         $conn->query('DELETE FROM valuelist');
 
-        $cache_dir = $this->getContainer()->getParameter('kernel.cache_dir') . '/bf13_extract/';
+        $root_dir = $this->getContainer()->getParameter('kernel.root_dir') . '/../src';
 
         $finder = new Finder();
 
-        $finder->files()->name('*.valuelist.yml')->in($cache_dir);
+        $finder->files()->name('*.valuelist.yml')->in($root_dir);
 
         foreach ($finder as $file) {
             $yaml = new Yaml();
 
+            $this->output->writeln('+ ' . $file->getFilename());
             $yaml_data = $yaml->parse($file->getRealpath());
 
             $DataValueList = $this->prepareValueList($yaml_data['value_list']);
