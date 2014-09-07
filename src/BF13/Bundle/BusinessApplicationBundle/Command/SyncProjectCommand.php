@@ -562,8 +562,8 @@ EOT
             curl_setopt($ch, CURLOPT_USERPWD, $auth);
         }
 
-
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSLVERSION, 3);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
