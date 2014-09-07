@@ -19,6 +19,8 @@ class Querizer implements StorageQuerizerInterface
 
     public function __construct(StorageRepositoryInterface $repository, QueryBuilder $builder)
     {
+        $this->repository = $repository;
+
         $this->definition = $repository->getDefaultSchema();
 
         $this->builder = $builder;
@@ -158,11 +160,11 @@ class Querizer implements StorageQuerizerInterface
             case 'function':
                 $function = sprintf('%sCondition', $alias);
 
-                if (!method_exists($this, $function)) {
+                if (!method_exists($this->repository, $function)) {
                     throw new StorageException(sprintf('Vous devez implémenter la méthode "%s" !', $function));
                 }
 
-                $this->$function($this->builder, $conditions[$alias]);
+                $this->repository->$function($this->builder, $conditions[$alias]);
 
                 break;
 

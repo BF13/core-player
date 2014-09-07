@@ -8,7 +8,7 @@ parameters:
     bf13.app.form_generator.class: BF13\Component\Form\FormGenerator
     bf13.app.form_dataloader.class: BF13\Component\Form\Loader\YamlFileLoader
     bf13.app.datagrid_generator.class: BF13\Component\Datagrid\DatagridGenerator
-    bf13.app.datagrid_generator.formatter_class: BF13\Component\Datagrid\Formatter\NullFormattersssss
+    bf13.app.datagrid_generator.formatter_class: BF13\Component\Datagrid\Formatter\NullFormatter
     
     bf13.app.breadcrumb.class: BF13\Component\Breadcrumb\Breadcrumb
     bf13.app.breadcrumb.listener.class: BF13\Component\Breadcrumb\Listener\ControllerListener
