@@ -158,7 +158,15 @@ class FormMetaData
 
                 foreach($data as $attr => $values)
                 {
-                    $fields[$f]['widget'][$attr] = array_merge_recursive($fields[$f]['widget'][$attr], $values);
+                    switch($attr)
+                    {
+                    	case 'subform':
+                            $fields[$f]['widget'][$attr] = array_merge_recursive($fields[$f]['widget'][$attr], $values);
+                    	    break;
+
+                    	default:
+                            $fields[$f]['widget'][$attr] = array_merge($fields[$f]['widget'][$attr], $values);
+                    }
                 }
             }
         }

@@ -132,6 +132,15 @@ class Querizer implements StorageQuerizerInterface
 
                                 switch($where)
                                 {
+                                	case "IN":
+                                	    $expr = $this->builder->expr()->in($condition_part, $param_value);
+                                        $this->builder->andWhere( $expr);
+                                	    break;
+
+                                    case "IN":
+                                        $this->builder->where($condition_part)->setParameter(1, array(1,2));
+                                	    break;
+
                                 	case "OR":
                                         $this->builder->orWhere($condition_part)->setParameter($param_name, $param_value);
                                 	    break;
