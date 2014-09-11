@@ -22,6 +22,6 @@ class FormMetaDataTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals("demo", $this->metaForm->getName());
         $this->assertEquals(0, sizeOf($this->metaForm->getOptions()));
-        $this->assertEquals(2, sizeOf($this->metaForm->getFields()));
+        $this->assertEquals(3, sizeOf($this->metaForm->getFields()));
     }
 }

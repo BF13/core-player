@@ -6,4 +6,18 @@ metadata:
         text: ~
     field2:
       widget:
-        textarea: ~
+        choice:
+            choices: [default]
+    field3:
+        widget:
+            subform:
+                required: false
+                metadata:
+                    name: pg_referentielbundle_numero_tel
+                    fields:
+                        format_numero:
+                            widget: { value_list: { required: false, multiple: false, expanded: false, source: format_numero_source } }
+                    options:
+                            label: null
+                            cascade_validation: true
+                            data_class: PG\Bundle\BusinessBundle\Entity\NumeroTel

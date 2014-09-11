@@ -149,24 +149,33 @@ class FormMetaData
     {
         if (array_key_exists('fields', $this->extended_metadata)) {
 
-            foreach($this->extended_metadata['fields'] as $f => $data)
+           $fields = $this->updateRecursiveFields($fields, $this->extended_metadata['fields']);
+        }
+
+        return $fields;
+    }
+
+    protected function updateRecursiveFields($fields, $extended_fields)
+    {
+        foreach($extended_fields as $f => $extended_field)
+        {
+            if(! isset($fields[$f]))
             {
-                if(! isset($fields[$f]))
-                {
-                    throw new \Exception(sprintf('Unexpected field "%s"', $f));
-                }
+                throw new \Exception(sprintf('Unexpected field "%s"', $f));
+            }
 
-                foreach($data as $attr => $values)
+            foreach($extended_field as $attr => $values)
+            {
+                switch($attr)
                 {
-                    switch($attr)
-                    {
-                    	case 'subform':
-                            $fields[$f]['widget'][$attr] = array_merge_recursive($fields[$f]['widget'][$attr], $values);
-                    	    break;
+                	case 'subform':
 
-                    	default:
-                            $fields[$f]['widget'][$attr] = array_merge($fields[$f]['widget'][$attr], $values);
-                    }
+                	    $fields[$f]['widget'][$attr]['metadata']['fields'] = $this->updateRecursiveFields($fields[$f]['widget']['subform']['metadata']['fields'], $extended_field['subform']['metadata']['fields']);
+                	    break;
+
+                	default:
+
+                	    $fields[$f]['widget'][$attr] = array_merge($fields[$f]['widget'][$attr], $values);
                 }
             }
         }
