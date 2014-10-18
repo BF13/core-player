@@ -538,12 +538,21 @@ EOT
         switch($release)
         {
         	case 'latest':
-                $api_call = '/main/api/export/last-release/' . $api_params['api_token'];
+                $api_action = '/export/exportlastrelease/{token}';
+                $api_data = array(
+                    '{token}' => $api_params['api_token']
+                );
                 break;
 
         	default:
-                $api_call = strtr('/main/api/export/release/{release}/{token}', array('{release}' => $release, '{token}' => $api_params['api_token']));
+                $api_action = '/export/exportrelease/{release}/{token}';
+                $api_data = array(
+                    '{token}' => $api_params['api_token'],
+                    '{release}' => $release
+                );
         }
+
+        $api_call = strtr($api_action, $api_data);
 
         $api_url = $api_params['api_url'] . $api_call;
 
