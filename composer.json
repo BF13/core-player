@@ -1,16 +1,15 @@
 {
-	"name" : "bf13/bf13",
+	"name" : "bf13/coreplayer",
 	"description" : "BF13 application",
 	"type" : "symfony-bundle",
 	"authors" : [{
 			"name" : "Fouad YAMANI",
-			"email" : "fyamani@free.fr"
+			"email" : "fyamani@acefy.fr"
 		}
 	],
 	"keywords" : [
 		"App core"
 	],
-	"homepage" : "http://bf13.github.com",
 	"license" : "MIT",
 	"require" : {
 		"symfony/symfony" : "2.5.*",
@@ -27,10 +26,5 @@
 			"BF13\\" : "src/"
 		}
 	},
-	"minimum-stability" : "dev",
-	"support" : {
-		"source" : "https://github.com/BF13/BF13/tree/master",
-		"issues" : "https://github.com/BF13/BF13/issues",
-		"wiki" : "https://github.com/BF13/BF13/wiki"
-	}
+	"minimum-stability" : "dev"
 }
