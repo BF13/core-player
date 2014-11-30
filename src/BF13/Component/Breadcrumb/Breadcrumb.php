@@ -26,15 +26,16 @@ class Breadcrumb
     {
         $this->root_node = $nodeName;
         
-        $this->setTitle();
+        $this->setOptions();
     }
 
-    public function setTitle()
+    public function setOptions()
     {
         $data = $this->data[$this->root_node];
         
         $options = array(
-        		'title' => '- default title -'
+        		'title' => '- default title -',
+        		'route' => '_welcome'
         );
         
         if(isset($data['_options']))
@@ -43,8 +44,8 @@ class Breadcrumb
         	
         	unset($this->data[$this->root_node]['_options']);
         }
-        
-        $this->title = $options['title'];
+
+        $this->options = $options;
     }
 
     public function setActiveRoute($route)

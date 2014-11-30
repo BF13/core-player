@@ -11,7 +11,7 @@ class BreadcrumbExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'titleBreadcrumb' => new \Twig_Function_Method($this, 'titleBreadcrumbFunction'),
+            'BreadcrumbOptions' => new \Twig_Function_Method($this, 'BreadcrumbOptionsFunction'),
             'rootBreadcrumb' => new \Twig_Function_Method($this, 'rootBreadcrumbFunction'),
             'childsBreadcrumb' => new \Twig_Function_Method($this, 'childsBreadcrumbFunction'),
             'activePathBreadcrumb' => new \Twig_Function_Method($this, 'activePathBreadcrumbFunction'),
@@ -21,9 +21,9 @@ class BreadcrumbExtension extends \Twig_Extension
     /**
      * afficher le titre
      */
-    public function titleBreadcrumbFunction()
+    public function BreadcrumbOptionsFunction()
     {
-    	return $this->breadcrumb->title;
+    	return $this->breadcrumb->options;
     }
     
     /**
