@@ -11,12 +11,21 @@ class BreadcrumbExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            'titleBreadcrumb' => new \Twig_Function_Method($this, 'titleBreadcrumbFunction'),
             'rootBreadcrumb' => new \Twig_Function_Method($this, 'rootBreadcrumbFunction'),
             'childsBreadcrumb' => new \Twig_Function_Method($this, 'childsBreadcrumbFunction'),
             'activePathBreadcrumb' => new \Twig_Function_Method($this, 'activePathBreadcrumbFunction'),
         );
     }
 
+    /**
+     * afficher le titre
+     */
+    public function titleBreadcrumbFunction()
+    {
+    	return $this->breadcrumb->title;
+    }
+    
     /**
      * retourner la liste des principales catégories
      */

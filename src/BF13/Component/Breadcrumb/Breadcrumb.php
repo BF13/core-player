@@ -25,6 +25,26 @@ class Breadcrumb
     public function setRootNode($nodeName)
     {
         $this->root_node = $nodeName;
+        
+        $this->setTitle();
+    }
+
+    public function setTitle()
+    {
+        $data = $this->data[$this->root_node];
+        
+        $options = array(
+        		'title' => '- default title -'
+        );
+        
+        if(isset($data['_options']))
+        {
+        	$options = $data['_options'];
+        	
+        	unset($this->data[$this->root_node]['_options']);
+        }
+        
+        $this->title = $options['title'];
     }
 
     public function setActiveRoute($route)
