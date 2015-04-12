@@ -44,10 +44,8 @@ class DatagridEntity extends DatagridObject
             // if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
             // {
 
-            if(isset($opt['label']) && '' != trim($opt['label']))
-            {
+            if (isset($opt['label']) && '' != trim($opt['label'])) {
                 $label = $opt['label'];
-
             } else {
 
                 $label = isset($opt['ref']) && '' != trim($opt['ref']) ? $opt['ref'] : $pos;
@@ -80,13 +78,16 @@ class DatagridEntity extends DatagridObject
 
     public function loadData($data, $pager = null)
     {
-        // $fields = array_map(function($item) {
-
-        // return $item['ref'];
-
-        // },$this->raw_columns);
         $fields = array();
+
+        $haveDerivedFields = false;
         foreach ($this->raw_columns as $pos => $col) {
+
+            if (isset($col['is_derived']) && $col['is_derived'] == true) {
+                $haveDerivedFields = true;
+                continue;
+            }
+
             switch ($col['type']) {
                 case 'attribute_entity':
                     $fields[] = $col['ref'] . '__' . $col['source'];
@@ -102,9 +103,16 @@ class DatagridEntity extends DatagridObject
             }
         }
 
-        $query = $this->DomainRepository->getQuerizer($this->config->getSource())
-            ->datafields(array_unique($fields));
+        $query = $this->DomainRepository->getQuerizer($this->config->getSource());
 
+//         if ($haveDerivedFields) {
+
+//             $query->datafields();
+//         } else {
+
+//             $query->datafields(array_unique($fields));
+//         }
+        $query->datafields();
         if ($data && $condition = $this->config->getCondition()) {
             $query->conditions(array(
                 $condition => $data
@@ -114,7 +122,13 @@ class DatagridEntity extends DatagridObject
         if (! is_null($pager)) {
             $this->offset = ($pager['page'] - 1) * $pager['max_items'];
 
-            $this->bind($query->resultsWithPager($this->offset, $pager['max_items']), true);
+                $this->bindEntityResult($query->resultsWithPager($this->offset, $pager['max_items']));
+//             if ($haveDerivedFields) {
+//                 $this->bindEntityResult($query->resultsWithPager($this->offset, $pager['max_items']));
+//             } else {
+
+//                 $this->bind($query->resultsWithPager($this->offset, $pager['max_items']), true);
+//             }
 
             $totalitems = $query->totalResults();
 
@@ -125,8 +139,66 @@ class DatagridEntity extends DatagridObject
             $this->current_page = ($this->offset / $pager['max_items']) + 1;
         } else {
 
-            $this->bind($query->results(), true);
+                $this->bindEntityResult($query->results());
+//             if ($haveDerivedFields) {
+//                 $this->bindEntityResult($query->results());
+//             } else {
+
+//                 $this->bind($query->results(), true);
+//             }
         }
+    }
+
+    protected function bindEntityResult($entityResult)
+    {
+        $values = array();
+        foreach ($entityResult as $dateEntity) {
+            $row = array();
+            foreach ($this->raw_columns as $pos => $col) {
+
+                switch ($col['type']) {
+                    case 'attribute_entity':
+                        $ref = $col['ref'] . '__' . $col['source'];
+                        $action1 = sprintf('get%s', $col['ref']);
+                        $action2 = sprintf('get%s', $this->makeAttributeName($col['source']));
+                        $row[$ref] = $dateEntity->$action1()->$action2();
+                        break;
+                    default:
+                        if (isset($col['ref'])) {
+                            $ref = $col['ref'];
+                        } else {
+
+                            // retro compatibilité
+                            $ref = $pos;
+                        }
+
+                        $action = sprintf('get%s', $this->makeAttributeName($ref));
+                        $row[$ref] = $dateEntity->$action();
+                }
+            }
+
+            $values[] = $row;
+        }
+
+        return $this->bind($values, true);
+    }
+
+    protected function makeAttributeName($var_data)
+    {
+        if (strpos($var_data, '__') > 0) {
+            return $var_data;
+        }
+
+        if (false === strpos($var_data, '_')) {
+            return $var_data;
+        }
+
+        $var_data = array_map(function ($item)
+        {
+            return ucfirst(strtolower($item));
+        }, explode('_', $var_data));
+
+        return implode('', $var_data);
     }
 
     public function updateConfig($config)
