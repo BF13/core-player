@@ -1,13 +1,14 @@
 <?php
 namespace BF13\Component\Datagrid\Model;
+
 /**
  *
  * @author FYAMANI
  *
  */
-
 class DatagridObject
 {
+
     public $column_headers = array();
 
     public $column_values = array();
@@ -35,13 +36,18 @@ class DatagridObject
 
         $labels = array();
 
-        foreach($columns as $key => $opt) {
+        foreach ($columns as $key => $opt) {
 
-            if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
-            {
-                $label = '' != array_key_exists('label', $opt) && trim($opt['label']) ? $opt['label'] : $key;
+            if (! array_key_exists('hidden', $opt) || true !== $opt['hidden']) {
 
-                $key = isset($opt['ref']) ? $opt['ref'] : $pos;
+                if (isset($opt['label']) && '' != trim($opt['label'])) {
+                    $label = $opt['label'];
+                } else {
+
+                    $label = isset($opt['ref']) && '' != trim($opt['ref']) ? $opt['ref'] : $key;
+                }
+
+                $key = isset($opt['ref']) ? $opt['ref'] : $key;
 
                 $labels[$key] = $label;
             }
@@ -50,12 +56,23 @@ class DatagridObject
         $this->column_headers = $labels;
     }
 
+    public function loadData($values)
+    {
+        return $this->bind($values, true);
+    }
+
+    public function updateConfig($config)
+    {
+        if (isset($config['formatter'])) {
+            $this->setFormatter($config['formatter']);
+        }
+    }
+
     public function bind($values, $format = false)
     {
         $this->column_values = $values;
 
-        if($format && $this->formatter)
-        {
+        if ($format && $this->formatter) {
             $this->formatter->format($this);
         }
     }

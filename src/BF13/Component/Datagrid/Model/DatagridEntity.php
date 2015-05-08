@@ -203,6 +203,8 @@ class DatagridEntity extends DatagridObject
 
     public function updateConfig($config)
     {
+        parent::updateConfig($config);
+
         if (isset($config['source'])) {
             $this->config->setSource($config['source']);
         }

@@ -32,7 +32,7 @@ class Controller extends baseController
 
             $msg = $form->getErrors();
 
-            if(sizeOf($msg)) {
+            if(is_array($msg)) {
 
                 $msg = array_map(function($message) {
 
