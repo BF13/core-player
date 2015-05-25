@@ -25,8 +25,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('api_url')->isRequired()->end()
                 ->scalarNode('api_token')->isRequired()->end()
                 ->scalarNode('api_auth')->end()
-                ->scalarNode('api_workdir')->defaultValue('%kernel.cache_dir%')->end()
-                ->scalarNode('api_extractdir')->defaultValue('%kernel.root_dir%/..')->end()
+                ->scalarNode('api_workdir')->defaultValue('%kernel.cache_dir%/bf13')->end()
+                ->scalarNode('api_targetdir')->defaultValue('%kernel.root_dir%/..')->end()
             ->end()
         ;
 

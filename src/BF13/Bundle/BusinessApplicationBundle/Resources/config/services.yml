@@ -1,3 +1,7 @@
+imports:
+    - { resource: services/sync-project.yml }
+    
+  
 parameters:
 #    bf13.dom.repository.class: BF13\Component\Storage\StorageConnector
     bf13.dom.repository.class: BF13\Component\Storage\DoctrineUnit\Connector
