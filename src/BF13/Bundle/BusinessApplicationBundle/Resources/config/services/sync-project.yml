@@ -1,0 +1,35 @@
+parameters:
+    bf13.sync_project.class: BF13\Bundle\BusinessApplicationBundle\Service\Sync\SyncProject
+    bf13.sync_project.apiconnect.class: BF13\Bundle\BusinessApplicationBundle\Service\Sync\ApiConnector
+    bf13.sync_project.http_transport.class: BF13\Bundle\BusinessApplicationBundle\Service\Sync\HttpTransport\CurlTransport
+    bf13.sync_project.filemanager.class: BF13\Bundle\BusinessApplicationBundle\Service\Sync\FileManager
+    bf13.sync_project.archiver.class: BF13\Bundle\BusinessApplicationBundle\Service\Sync\Package\Zip
+
+services:
+    bf13.sync_project.archiver:
+        class: "%bf13.sync_project.archiver.class%"
+
+    bf13.sync_project.filemanager:
+        class: "%bf13.sync_project.filemanager.class%"
+        arguments:
+            - Symfony\Component\Filesystem\Filesystem
+            - Symfony\Component\Finder\Finder
+
+    bf13.sync_project.http_transport:
+        class: "%bf13.sync_project.http_transport.class%"
+        arguments:
+            - %bf13_api_url%
+            - %bf13_api_auth%
+
+    bf13.sync_project.apiconnect:
+        class: "%bf13.sync_project.apiconnect.class%"
+        arguments:
+            - @bf13.sync_project.http_transport
+
+    bf13.sync_project:
+        class: "%bf13.sync_project.class%"
+        arguments:
+            - @bf13.sync_project.apiconnect
+            - @bf13.sync_project.filemanager
+            - @bf13.sync_project.archiver
+            - { token: %bf13_api_token% }
