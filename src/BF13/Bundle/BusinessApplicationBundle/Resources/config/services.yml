@@ -1,5 +1,6 @@
 imports:
     - { resource: services/sync-project.yml }
+    - { resource: services/form-document.yml }
     
   
 parameters:

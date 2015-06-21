@@ -1,0 +1,16 @@
+parameters:
+    bf13.form.document.type.class: BF13\Bundle\BusinessApplicationBundle\Form\Document\DocumentType
+    bf13.form.document.transformer.class: BF13\Bundle\BusinessApplicationBundle\Form\Document\DocumentTransformer
+
+services:
+    bf13.form.document.transformer:
+        class: %bf13.form.document.transformer.class%
+        arguments:
+            - %doc_dir%
+
+    bf13.form.document.type:
+        class: %bf13.form.document.type.class%
+        arguments:
+            - @bf13.form.document.transformer
+        tags:
+            - { name: form.type, alias: document }

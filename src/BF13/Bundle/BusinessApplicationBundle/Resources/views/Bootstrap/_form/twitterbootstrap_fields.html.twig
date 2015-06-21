@@ -2,12 +2,12 @@
 
 {% block form_widget_simple %}
     {{ parent() }}
-    
+
     {% if help is defined and help != '' %}
     &nbsp;<span id="{{ form.vars.id }}_help" class="badge label-info">?</span>
     <script>$('#{{ form.vars.id }}_help').tooltip({'html':true, 'title':'{{ help }}'})</script>
     {% endif %}
-    
+
 {% endblock %}
 
 {% block form_row %}
@@ -16,7 +16,7 @@
     {% if required %}
         {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
     {% endif %}
-    
+
     <div class="control-group {% if 0 < form.vars.errors | length %}error{% endif %} {% if container_attr is defined %}{{ container_attr.class }}{% endif %}">
         {{ form_label(form, label, {'label_attr': label_attr, 'required_parent': required}) }}
         <div class="controls">
@@ -52,7 +52,7 @@
 
 {% block form_label %}
 {% spaceless %}
-    
+
     {% if not compound %}
         {% set label_attr = label_attr|merge({'for': id}) %}
     {% endif %}
@@ -89,7 +89,7 @@
         {% endif %}
         {% if expanded %}
             <div class="control-group {% if 0 < form.vars.errors | length %}error{% endif %} {% if container_attr is defined %}{{ container_attr.class }}{% endif %}">
-                
+
                 <div class="row-fluid">
 				    <div class="span6">
 				    	{{ form_errors(form.ligne) }}
@@ -103,14 +103,14 @@
 				    	{{ form_label(form.pk_debut, null, {'label_attr': label_attr, 'required_parent': required}) }}
 				    	{{ form_widget(form.pk_debut, {'attr': {'class': 'input-mini', 'placeholder': 'PK début'}}) }}
 				    </div>
-				    
+
 				    <div class="span3">
 				    	{{ form_errors(form.pk_fin) }}
 				    	{{ form_label(form.pk_fin, null, {'label_attr': label_attr, 'required_parent': required}) }}
                     	{{ form_widget(form.pk_fin, {'attr': {'class': 'input-mini', 'placeholder': 'PK fin'}}) }}
 				    </div>
 				</div>
-                
+
             </div>
         {% else %}
             <div class="control-group {% if 0 < form.vars.errors | length %}error{% endif %} {% if container_attr is defined %}{{ container_attr.class }}{% endif %}">
@@ -121,5 +121,17 @@
                 </div>
             </div>
         {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block document_widget %}
+    {% spaceless %}
+
+    {% if form.vars.data != '' %}
+    	<a href="{{ form.vars.data.pathName }}">Show</a>&nbsp;
+    {% endif %}
+
+    {{ block('form_widget') }}
+
     {% endspaceless %}
 {% endblock %}
