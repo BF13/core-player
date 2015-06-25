@@ -66,6 +66,9 @@ class DatagridObject
         if (isset($config['formatter'])) {
             $this->setFormatter($config['formatter']);
         }
+        if (isset($config['row_actions'])) {
+            $this->setRowActions($config['row_actions']);
+        }
     }
 
     public function bind($values, $format = false)
@@ -75,6 +78,16 @@ class DatagridObject
         if ($format && $this->formatter) {
             $this->formatter->format($this);
         }
+    }
+
+    protected function setRowActions($rowActions)
+    {
+        $this->row_actions = $rowActions;
+    }
+
+    public function getRowActions()
+    {
+        return $this->row_actions;
     }
 
     public function setFormatter($formatter)
