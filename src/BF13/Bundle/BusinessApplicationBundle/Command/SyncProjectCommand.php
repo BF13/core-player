@@ -146,7 +146,9 @@ EOT
 
         $yaml = new Yaml();
 
-        $yaml_data = $yaml->parse($file);
+        $data = file_get_contents($file);
+
+        $yaml_data = $yaml->parse($data);
 
         foreach ($yaml_data['bundles'] as $bundle) {
             $target = $root_dir . '/src/' . $bundle;
@@ -267,7 +269,9 @@ EOT
 
         $yaml = new Yaml();
 
-        $yaml_data = $yaml->parse($file);
+        $data = file_get_contents($file);
+
+        $yaml_data = $yaml->parse($data);
 
         foreach ($yaml_data['bundles'] as $bundle) {
             if (false === strpos($bundle, 'BusinessBundle')) {
@@ -328,7 +332,10 @@ EOT
             $yaml = new Yaml();
 
             $this->output->writeln('+ ' . $file->getFilename());
-            $yaml_data = $yaml->parse($file->getRealpath());
+
+            $data = file_get_contents($file->getRealpath());
+
+            $yaml_data = $yaml->parse($data);
 
             $DataValueList = $this->insertValueList($yaml_data['value_list']);
         }

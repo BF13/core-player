@@ -21,7 +21,7 @@ class DocumentType extends AbstractType
         $builder->addModelTransformer($this->transformer);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selected file does not exist',

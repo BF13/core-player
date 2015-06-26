@@ -24,7 +24,10 @@ class YamlFileLoader implements LoaderInterface
     {
         try {
 
-            $data = Yaml::parse($this->file);
+            $data = file_get_contents($this->file);
+
+            $data = Yaml::parse($data);
+
         } catch (\Exception $e) {
 
             throw new FormException(sprintf('Ficher "%s" illisible !', $this->file));
@@ -56,7 +59,9 @@ class YamlFileLoader implements LoaderInterface
 
         $parent_file = dirname($this->file) . '/' . $data['extends'];
 
-        $parent_values = Yaml::parse($parent_file);
+        $data = file_get_contents($parent_file);
+
+        $parent_values = Yaml::parse($data);
 
         $parent_values = $parent_values['metadata'];
 

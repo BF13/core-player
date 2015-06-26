@@ -18,23 +18,25 @@ class YamlFileLoader implements LoaderInterface
 
     public function __construct($source)
     {
-        $this->source = Yaml::parse($source);
+        $data = file_get_contents($source);
+
+        $this->source = Yaml::parse($data);
     }
 
     public function loadSchemaData(Schema $schema)
     {
         $schema_name = key($this->source);
-        
+
         $schema_data = current($this->source);
-        
+
         $this->validSchema($schema_data);
-        
+
         $schema->setName($schema_name);
-        
+
         $schema->setAlias($schema_data['alias']);
-        
+
         $schema->setProperties($schema_data['properties']);
-        
+
         $schema->setConditions($schema_data['conditions']);
     }
 

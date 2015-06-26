@@ -19,29 +19,31 @@ class Breadcrumb
 
     public function __construct($settingsFile)
     {
-        $this->data = Yaml::parse($settingsFile);
+        $data = file_get_contents($settingsFile);
+
+        $this->data = Yaml::parse($data);
     }
 
     public function setRootNode($nodeName)
     {
         $this->root_node = $nodeName;
-        
+
         $this->setOptions();
     }
 
     public function setOptions()
     {
         $data = $this->data[$this->root_node];
-        
+
         $options = array(
         		'title' => '- default title -',
         		'route' => '_welcome'
         );
-        
+
         if(isset($data['_options']))
         {
         	$options = $data['_options'];
-        	
+
         	unset($this->data[$this->root_node]['_options']);
         }
 

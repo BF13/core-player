@@ -35,7 +35,9 @@ class DatagridGenerator
     {
         $path = $this->getDatagridPath($model);
 
-        $defaultConfig = Yaml::parse($path);
+        $data = file_get_contents($path);
+
+        $defaultConfig = Yaml::parse($data);
 
         list($bundle, $class) = explode(':', $model);
 

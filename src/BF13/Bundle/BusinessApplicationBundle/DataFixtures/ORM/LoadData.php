@@ -41,7 +41,9 @@ class LoadValueList extends AbstractFixture implements FixtureInterface, Ordered
 
     protected function generateEntities($filename, $file)
     {
-        $data = Yaml::parse($file);
+        $data = file_get_contents($file);
+
+        $data = Yaml::parse($data);
 
         if(! is_array($data)) {
 
