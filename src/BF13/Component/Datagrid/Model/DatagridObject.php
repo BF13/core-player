@@ -32,7 +32,7 @@ class DatagridObject
 
     protected function setColumnHeaders($columns)
     {
-        $this->raw_columns = $columns;
+        $raw_columns = array();
 
         $labels = array();
 
@@ -51,8 +51,13 @@ class DatagridObject
 
                 $labels[$key] = $label;
             }
+
+            $item_key = $opt['ref'];
+
+            $raw_columns[$item_key] = $opt;
         }
 
+        $this->raw_columns = $raw_columns;
         $this->column_headers = $labels;
     }
 
