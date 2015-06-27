@@ -52,9 +52,11 @@ class Controller extends baseController
         }
     }
 
-    protected function isGranted($role)
+    protected function isGranted($attributes, $object = null)
     {
-        return $this->get('security.context')->isGranted($role);
+        return parent::isGranted($attributes, $object);
+
+//         return $this->get('security.context')->isGranted($role);
     }
 
     protected function generateForm($model, $data = null, $options = array())
