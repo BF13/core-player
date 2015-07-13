@@ -57,7 +57,9 @@ class CurlTransport implements Transport
             case 5:
                 if (503 == $http_status) {
 
-                    throw new SyncException('! Erreur HTTP : La construction a généré une erreur !');
+                    echo $http_response;
+
+                    throw new SyncException('! Erreur HTTP : La construction a généré une erreur ! : ' . "\n" . $http_response);
                 }
 
                 throw new SyncException('! Erreur HTTP ' . $http_status . "\n" . $url . "\n " . curl_error($ch));
