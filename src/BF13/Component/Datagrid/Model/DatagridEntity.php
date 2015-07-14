@@ -2,6 +2,7 @@
 namespace BF13\Component\Datagrid\Model;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use BF13\Component\Datagrid\Pager\Pager;
 
 /**
  *
@@ -134,9 +135,21 @@ class DatagridEntity extends DatagridObject
 
             $total = isset($totalitems['total']) ? $totalitems['total'] : 0;
 
+            $this->total_items = $total;
+
             $this->total_pages = ceil($total / $pager['max_items']);
 
             $this->current_page = ($this->offset / $pager['max_items']) + 1;
+
+            $this->pager = new Pager(array(
+                'count_values' => count($this->column_values),
+                'offset' => ($pager['page'] - 1) * $pager['max_items'],
+                'total_items' => (int) $total,
+                'max_per_page' => (int) $pager['max_items'],
+                'total_pages' => (int) ceil($total / $pager['max_items']),
+                'current_page' => ($this->offset / $pager['max_items']) + 1,
+            ));
+
         } else {
 
                 $this->bindEntityResult($query->results());
