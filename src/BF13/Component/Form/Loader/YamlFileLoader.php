@@ -40,6 +40,11 @@ class YamlFileLoader implements LoaderInterface
 
     protected function setMetaData($formMetaData, $data)
     {
+        if($extended = $formMetaData->getExtended())
+        {
+            $data['extends'] = $extended;
+        }
+
         $data = $this->checkInheritance($data);
 
         $formMetaData->configure($data);
@@ -59,17 +64,29 @@ class YamlFileLoader implements LoaderInterface
 
         $parent_file = dirname($this->file) . '/' . $data['extends'];
 
-        $data = file_get_contents($parent_file);
+        if(! file_exists($parent_file))
+        {
+            throw new \Exception(sprintf('File "%s" not found !', $parent_file));
+        }
 
-        $parent_values = Yaml::parse($data);
+        $parentdata = file_get_contents($parent_file);
+
+        $parent_values = Yaml::parse($parentdata);
 
         $parent_values = $parent_values['metadata'];
 
-        foreach ($parent_values['fields'] as $key => $attributs) {
+        foreach ($parent_values['fields'] as $key => $field) {
 
-            foreach ($attributs['widget'] as $attr_name => $attr_value) {
+            foreach ($field['widget'] as $attr_name => $attr_value) {
 
                 if (! array_key_exists($key, $data['fields'])) {
+
+                    continue;
+                }
+
+                if ('subform' === $attr_name) {
+
+                    $field['widget']['subform'] = $this->mergeSubformData($data['fields'][$key]['widget']['subform'], $field['widget']['subform']);
 
                     continue;
                 }
@@ -79,11 +96,15 @@ class YamlFileLoader implements LoaderInterface
                     unset($parent_values['fields'][$key]['widget'][$attr_name]);
                 }
             }
+
+            $data['fields'][$key] = $field;
         }
 
-        $values_fields = array_merge_recursive($parent_values['fields'], $data['fields']);
+        unset($data['extends']);
 
-        $data['fields'] = $values_fields;
+        return $data;
+
+        $values_fields = array_merge_recursive($parent_values['fields'], $data['fields']);
 
         if (array_key_exists('subforms', $data)) {
 
@@ -103,6 +124,26 @@ class YamlFileLoader implements LoaderInterface
         }
 
         unset($data['extends']);
+
+        return $data;
+    }
+
+    protected function mergeSubformData($data, $parentfield)
+    {
+        foreach ($parentfield['metadata']['fields'] as $key => $property) {
+
+            if(! isset($data['metadata']['fields'][$key]))
+            {
+                $data['metadata']['fields'][$key] = $property;
+
+                continue;
+            }
+
+            foreach ($property['widget'] as $p => $v) {
+
+                $data['metadata']['fields'][$key]['widget'][$p] = array_merge($v, $data['metadata']['fields'][$key]['widget'][$p]);
+            }
+        }
 
         return $data;
     }

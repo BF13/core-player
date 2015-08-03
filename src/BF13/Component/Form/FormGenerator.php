@@ -27,7 +27,7 @@ class FormGenerator
     }
 
     /**
-     * Charge les métadonnées et les passe au formulaire
+     * Charge les métadonnées et les passer au formulaire
      *
      * @param unknown_type $file
      * @param unknown_type $format

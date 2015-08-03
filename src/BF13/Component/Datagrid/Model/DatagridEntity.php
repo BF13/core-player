@@ -45,21 +45,29 @@ class DatagridEntity extends DatagridObject
             // if(!array_key_exists('hidden', $opt) || true !== $opt['hidden'])
             // {
 
+            $refname = $opt['ref'];
+            if(is_array($refname))
+            {
+                $refname = $refname['name'];
+            }
+
             if (isset($opt['label']) && '' != trim($opt['label'])) {
                 $label = $opt['label'];
             } else {
 
-                $label = isset($opt['ref']) && '' != trim($opt['ref']) ? $opt['ref'] : $pos;
+                $label = isset($refname) && '' != trim($refname) ? $refname : $pos;
             }
 
-            switch ($opt['type']) {
-                case 'attribute_entity':
-                    $key = $opt['ref'] . '__' . $opt['source'];
+            $type = isset($opt['ref']['type']) ? $opt['ref']['type'] : 'default';
+            switch ($type) {
+                case 'MetaRelation':
+                case 'MetaObject':
+                    $key = $refname . '__' . $opt['ref']['attribute'];
                     break;
 
                 default:
-                    if (isset($opt['ref'])) {
-                        $key = $opt['ref'];
+                    if (isset($refname)) {
+                        $key = $refname;
                     } else {
 
                         // retro compatibilité
@@ -88,14 +96,21 @@ class DatagridEntity extends DatagridObject
                 $haveDerivedFields = true;
                 continue;
             }
+            $refname = $col['ref'];
+            if(is_array($refname))
+            {
+                $refname = $refname['name'];
+            }
 
-            switch ($col['type']) {
-                case 'attribute_entity':
-                    $fields[] = $col['ref'] . '__' . $col['source'];
+            $type = isset($col['ref']['type']) ? $col['ref']['type'] : 'default';
+            switch ($type) {
+                case 'MetaRelation':
+                case 'MetaObject':
+                    $fields[] = $refname . '__' . $col['ref']['attribute'];
                     break;
                 default:
-                    if (isset($opt['ref'])) {
-                        $fields[] = $col['ref'];
+                    if (isset($refname)) {
+                        $fields[] = $refname;
                     } else {
 
                         // retro compatibilité
@@ -165,20 +180,36 @@ class DatagridEntity extends DatagridObject
     protected function bindEntityResult($entityResult)
     {
         $values = array();
+
         foreach ($entityResult as $dateEntity) {
             $row = array();
             foreach ($this->raw_columns as $pos => $col) {
 
-                switch ($col['type']) {
-                    case 'attribute_entity':
-                        $ref = $col['ref'] . '__' . $col['source'];
-                        $action1 = sprintf('get%s', $col['ref']);
-                        $action2 = sprintf('get%s', $this->makeAttributeName($col['source']));
+                $refname = $col['ref'];
+                if(is_array($refname))
+                {
+                    $refname = $refname['name'];
+                }
+
+                $type = isset($col['ref']['type']) ? $col['ref']['type'] : 'default';
+                switch ($type) {
+                    case 'MetaRelation':
+                        $ref = $refname . '__' . $col['ref']['attribute'];
+                        $action1 = sprintf('get%s', $refname);
+                        $action2 = sprintf('get%s', $this->makeAttributeName($col['ref']['attribute']));
                         $row[$ref] = $dateEntity->$action1()->$action2();
                         break;
+
+                    case 'MetaObject':
+                        $ref = $refname . '__' . $col['ref']['attribute'];
+                        $action1 = sprintf('get%s', $refname);
+                        $action2 = sprintf('%s', $col['ref']['attribute']);
+                        $row[$ref] = $dateEntity->$action1()->$action2;
+                        break;
+
                     default:
-                        if (isset($col['ref'])) {
-                            $ref = $col['ref'];
+                        if (isset($refname)) {
+                            $ref = $refname;
                         } else {
 
                             // retro compatibilité

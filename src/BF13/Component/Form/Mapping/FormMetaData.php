@@ -34,6 +34,7 @@ class FormMetaData
             $this->setName($name);
         }
 
+
         $this->extended_metadata = $extended_metadata;
     }
 
@@ -98,6 +99,11 @@ class FormMetaData
 
             $this->setSubForms($subforms);
         }
+    }
+
+    public function getExtended()
+    {
+        return isset($this->extended_metadata['extends']) ? $this->extended_metadata['extends'] : false;
     }
 
     public function getName()
