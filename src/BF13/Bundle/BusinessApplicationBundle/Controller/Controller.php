@@ -65,6 +65,11 @@ class Controller extends baseController
 
         $file = $this->locateResource($model, 'form.yml');
 
+        if(isset($options['metadata']['extends']))
+        {
+            $options['metadata']['extends'] = $this->locateResource($options['metadata']['extends'], 'form.yml');
+        }
+
         $form = $generator->buildForm($file, $data, $options);
 
         return $form;

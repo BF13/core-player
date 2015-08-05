@@ -62,7 +62,7 @@ class YamlFileLoader implements LoaderInterface
             return $data;
         }
 
-        $parent_file = dirname($this->file) . '/' . $data['extends'];
+        $parent_file = $data['extends'];
 
         if(! file_exists($parent_file))
         {
