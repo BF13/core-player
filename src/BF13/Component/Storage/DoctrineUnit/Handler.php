@@ -21,11 +21,15 @@ class Handler implements StorageHandlerInterface
      * (non-PHPdoc)
      * @see \BF13\Component\Storage\StorageRepositoryInterface::retrieve()
      */
-    public function retrieve($index)
+    public function retrieve($index = null)
     {
         if (is_array($index)) {
 
             $item = $this->repository->findOneBy($index);
+
+        } else if (is_null($index)) {
+
+            $item = $this->repository->findAll($index);
 
         } else {
 
