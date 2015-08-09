@@ -38,23 +38,27 @@ class DatagridObject
 
         foreach ($columns as $key => $opt) {
 
+            $refname = $opt['ref'];
+            if(is_array($refname))
+            {
+                $refname = $refname['name'];
+            }
+
             if (! array_key_exists('hidden', $opt) || true !== $opt['hidden']) {
 
                 if (isset($opt['label']) && '' != trim($opt['label'])) {
                     $label = $opt['label'];
                 } else {
 
-                    $label = isset($opt['ref']) && '' != trim($opt['ref']) ? $opt['ref'] : $key;
+                    $label = '' != trim($refname) ? $refname : $key;
                 }
 
-                $key = isset($opt['ref']) ? $opt['ref'] : $key;
+                $key = isset($refname) ? $refname : $key;
 
                 $labels[$key] = $label;
             }
 
-            $item_key = $opt['ref'];
-
-            $raw_columns[$item_key] = $opt;
+            $raw_columns[$refname] = $opt;
         }
 
         $this->raw_columns = $raw_columns;
