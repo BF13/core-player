@@ -106,7 +106,7 @@ class Controller extends baseController
 
     protected function addErrorMessage($msg)
     {
-        $this->get('session')->getFlashBag()->add('error', $msg);
+        $this->get('session')->getFlashBag()->add('danger', $msg);
     }
 
     protected function getValidateActionForm()
