@@ -119,11 +119,24 @@ class Connector implements StorageConnectorInterface
      * (non-PHPdoc)
      * @see \BF13\Component\Storage\StorageRepositoryInterface::store()
      */
-    public function store($item)
+    public function store($item, $autoflush  = true)
     {
         $this->em->persist($item);
 
+        if($autoflush)
+        {
+            $this->flush();
+        }
+    }
+
+    public function flush($clear = false)
+    {
         $this->em->flush();
+
+        if($clear)
+        {
+            $this->em->clear();
+        }
     }
 
     /**
