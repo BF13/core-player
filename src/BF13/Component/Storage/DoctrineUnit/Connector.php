@@ -129,13 +129,13 @@ class Connector implements StorageConnectorInterface
         }
     }
 
-    public function flush($clear = false)
+    public function flush($detach = null)
     {
         $this->em->flush();
 
-        if($clear)
+        if($detach)
         {
-            $this->em->clear();
+            $this->em->detach($detach);
         }
     }
 
