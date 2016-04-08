@@ -15,6 +15,7 @@ class BreadcrumbExtension extends \Twig_Extension
             'rootBreadcrumb' => new \Twig_Function_Method($this, 'rootBreadcrumbFunction'),
             'childsBreadcrumb' => new \Twig_Function_Method($this, 'childsBreadcrumbFunction'),
             'activePathBreadcrumb' => new \Twig_Function_Method($this, 'activePathBreadcrumbFunction'),
+            'activeSearchPathBreadcrumb' => new \Twig_Function_Method($this, 'activeSearchPathBreadcrumbFunction'),
         );
     }
 
@@ -25,7 +26,7 @@ class BreadcrumbExtension extends \Twig_Extension
     {
     	return $this->breadcrumb->options;
     }
-    
+
     /**
      * retourner la liste des principales catégories
      */
@@ -41,6 +42,15 @@ class BreadcrumbExtension extends \Twig_Extension
     public function activePathBreadcrumbFunction()
     {
         return $this->breadcrumb->getActivePath();
+    }
+
+    /**
+     * retourner le chemin de recherche
+     *
+     */
+    public function activeSearchPathBreadcrumbFunction()
+    {
+        return $this->breadcrumb->getActiveSearchPath();
     }
 
     /**

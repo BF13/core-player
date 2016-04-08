@@ -204,21 +204,38 @@ class Breadcrumb
 
         $path = array();
 
-        $path[] = array('label' => $label_root, 'resume' => $resume, 'route' => $root, 'last' => false);
-
         $nodes = $this->data[$this->root_node][$root]['nodes'];
 
         foreach ($nodes as $route => $child) {
 
             if ($this->active_route == $route) {
 
-                $resume = isset($child['resume']) ? $child['resume'] : '';
-
                 $icon = isset($child['icon']) ? $child['icon'] : 'icon-caret-right';
 
-                $path[] = array('label' => $child['label'], 'resume' => $resume, 'route' => $route, 'icon' => $icon, 'last' => true);
+                $path[] = array_merge($child, array('icon' => $icon, 'last' => true));
 
                 return $path;
+            }
+        }
+    }
+
+    public function getActiveSearchPath()
+    {
+        $root = $this->getActiveRoot();
+
+        $resume = isset($this->roots[$root]['resume']) ? $this->roots[$root]['resume'] : '';
+
+        $label_root = $this->getRootName();
+
+        $path = array();
+
+        $nodes = $this->data[$this->root_node][$root]['nodes'];
+
+        foreach ($nodes as $route => $child) {
+
+            if ($this->active_route == $route && isset($child['search'])) {
+
+                return $child['search'];
             }
         }
     }
