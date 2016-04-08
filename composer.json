@@ -1,5 +1,5 @@
 {
-	"name" : "bf13/coreplayer",
+	"name" : "bf13/core-player",
 	"description" : "BF13 application",
 	"type" : "symfony-bundle",
 	"authors" : [{
