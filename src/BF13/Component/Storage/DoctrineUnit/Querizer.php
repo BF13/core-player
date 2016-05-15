@@ -107,6 +107,7 @@ class Querizer implements StorageQuerizerInterface
             switch ($mode) {
 
             case 'basic':
+
                 if (array_key_exists('items', $condition)) {
 
                     foreach ($condition['items'] as $param_name => $condition_part) {
@@ -162,6 +163,11 @@ class Querizer implements StorageQuerizerInterface
                 if (array_key_exists('joins', $condition)) {
 
                     $this->definition['joins'] = array_merge($this->definition['joins'], $condition['joins']);
+                }
+
+                if (array_key_exists('group_by', $condition)) {
+
+                    $this->builder->groupBy($condition['group_by']);
                 }
 
                 break;
