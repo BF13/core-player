@@ -7,6 +7,8 @@ use BF13\Component\Storage\StorageRepositoryInterface;
 
 class Repository extends EntityRepository implements StorageRepositoryInterface
 {
+    protected $_querizer;
+
     protected $from;
 
     protected $columns = array();
@@ -34,9 +36,14 @@ class Repository extends EntityRepository implements StorageRepositoryInterface
     public function createEntity($data)
     {
         $class_name = $this->getClassName();
-        
+
         $item = new $class_name;
-        
+
         return $item;
+    }
+
+    public function setQuerizer($querizer)
+    {
+        $this->_querizer = $querizer;
     }
 }

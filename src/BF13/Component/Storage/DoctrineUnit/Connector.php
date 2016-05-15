@@ -115,6 +115,17 @@ class Connector implements StorageConnectorInterface
         return $schema;
     }
 
+    public function getRepository($fqcn)
+    {
+        $querizer = $this->getQuerizer($fqcn);
+
+        $repository = $this->em->getRepository($fqcn);
+
+        $repository->setQuerizer($querizer);
+
+        return $repository;
+    }
+
     /**
      * (non-PHPdoc)
      * @see \BF13\Component\Storage\StorageRepositoryInterface::store()
