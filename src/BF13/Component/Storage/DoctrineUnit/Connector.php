@@ -146,7 +146,15 @@ class Connector implements StorageConnectorInterface
 
         if($detach)
         {
-            $this->em->detach($detach);
+            if(! is_array($detach))
+            {
+                $detach = array($detach);
+            }
+
+            foreach($detach as $entity)
+            {
+                $this->em->detach($entity);
+            }
         }
     }
 
