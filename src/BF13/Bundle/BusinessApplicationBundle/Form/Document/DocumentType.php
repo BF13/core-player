@@ -4,7 +4,7 @@ namespace BF13\Bundle\BusinessApplicationBundle\Form\Document;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentType extends AbstractType
 {
@@ -21,7 +21,7 @@ class DocumentType extends AbstractType
         $builder->addModelTransformer($this->transformer);
     }
 
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selected file does not exist',
