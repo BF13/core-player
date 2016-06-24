@@ -197,14 +197,37 @@ class DatagridEntity extends DatagridObject
                         $ref = $refname . '__' . $col['ref']['attribute'];
                         $action1 = sprintf('get%s', $refname);
                         $action2 = sprintf('get%s', $this->makeAttributeName($col['ref']['attribute']));
-                        $row[$ref] = $dateEntity->$action1()->$action2();
+
+                        if(is_null($dateEntity))
+                        {
+                            $row[$ref] = '<error entity not found !>';
+
+                        } else if(is_null($dateEntity->$action1()))
+                        {
+                            $row[$ref] = '<error entity not found !>';
+                        } else {
+
+                            $row[$ref] = $dateEntity->$action1()->$action2();
+                        }
                         break;
 
                     case 'MetaObject':
                         $ref = $refname . '__' . $col['ref']['attribute'];
                         $action1 = sprintf('get%s', $refname);
                         $action2 = sprintf('%s', $col['ref']['attribute']);
-                        $row[$ref] = $dateEntity->$action1()->$action2;
+
+
+                        if(is_null($dateEntity))
+                        {
+                            $row[$ref] = '<error object not found !>';
+
+                        } else if(is_null($dateEntity->$action1()))
+                        {
+                            $row[$ref] = '<error object not found !>';
+                        } else {
+
+                            $row[$ref] = $dateEntity->$action1()->$action2();
+                        }
                         break;
 
                     default:
