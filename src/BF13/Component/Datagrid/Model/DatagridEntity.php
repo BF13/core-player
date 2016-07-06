@@ -163,6 +163,7 @@ class DatagridEntity extends DatagridObject
                 'max_per_page' => (int) $pager['max_items'],
                 'total_pages' => (int) ceil($total / $pager['max_items']),
                 'current_page' => ($this->offset / $pager['max_items']) + 1,
+                'query_string' => isset($pager['query_string']) ? $pager['query_string'] : null
             ));
 
         } else {
