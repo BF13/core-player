@@ -215,8 +215,7 @@ class DatagridEntity extends DatagridObject
                     case 'MetaObject':
                         $ref = $refname . '__' . $col['ref']['attribute'];
                         $action1 = sprintf('get%s', $refname);
-                        $action2 = sprintf('%s', $col['ref']['attribute']);
-
+                        $attribute = sprintf('%s', $col['ref']['attribute']);
 
                         if(is_null($dateEntity))
                         {
@@ -227,7 +226,7 @@ class DatagridEntity extends DatagridObject
                             $row[$ref] = '<error object not found !>';
                         } else {
 
-                            $row[$ref] = $dateEntity->$action1()->$action2();
+                            $row[$ref] = $dateEntity->$action1()->$attribute;
                         }
                         break;
 
