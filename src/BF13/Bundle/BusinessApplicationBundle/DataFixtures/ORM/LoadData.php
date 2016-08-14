@@ -12,7 +12,7 @@ use Symfony\Component\Finder\Finder;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadValueList extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
+class LoadValueList //extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
     protected $manager;
 
@@ -22,9 +22,9 @@ class LoadValueList extends AbstractFixture implements FixtureInterface, Ordered
     {
         $this->manager = $manager;
 
-        $this->loadSource(__DIR__ . '/LabelList/%s.fixture.yml');
+//         $this->loadSource(__DIR__ . '/LabelList/%s.fixture.yml');
 
-        $this->loadSource(__DIR__ . '/ValueList/%s.fixture.yml');
+//         $this->loadSource(__DIR__ . '/ValueList/%s.fixture.yml');
     }
 
     public function loadSource($path_pattern)
