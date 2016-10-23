@@ -40,6 +40,15 @@ class FormGenerator
 
         unset($options['metadata']);
 
+        $event_listener = [];
+
+        if(isset($options['event_listener']))
+        {
+            $event_listener = $options['event_listener'];
+
+            unset($options['event_listener']);
+        }
+
         if (!$metaData = $this->loadMetaData($file, $opt)) {
 
             throw new FormException('Métadonnées incorrecte !');
@@ -47,9 +56,14 @@ class FormGenerator
 
         $type = new Type\Form($metaData);
 
-        $form = $this->formFactory->create($type, $data, $options);
+        $formBuilder = $this->formFactory->createBuilder($type, $data, $options);
 
-        return $form;
+        foreach($event_listener as $event)
+        {
+            $formBuilder->addEventListener($event[0], $event[1]);
+        }
+
+        return $formBuilder->getForm();
     }
 
     protected function loadMetaData($file, $options = array())
