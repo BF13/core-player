@@ -11,9 +11,14 @@ class ApiConnector
         $this->transport = $transport;
     }
 
-    public function getLastRelease($token)
+    public function getLastRelease($token, $params = '')
     {
-        $api_action = '/export/exportlastrelease/{token}';
+        if($params)
+        {
+            $params = '?' . $params;
+        }
+
+        $api_action = '/export/exportlastrelease/{token}' . $params;
         $api_data = array(
             '{token}' => $token
         );
@@ -23,9 +28,14 @@ class ApiConnector
         return $this->transport->request($api_call);
     }
 
-    public function getRelease($release = null, $token)
+    public function getRelease($release = null, $token, $params = '')
     {
-        $api_action = '/export/exportrelease/{release}/{token}';
+        if($params)
+        {
+            $params = '?' . $params;
+        }
+
+        $api_action = '/export/exportrelease/{release}/{token}' . $params;
         $api_data = array(
             '{token}' => $token,
             '{release}' => $release

@@ -70,13 +70,22 @@ class SyncProject
 
         $this->message('- Connexion & téléchargement');
 
-        if('latest' === $arguments['release'])
+        if($arguments['business-only'])
         {
-            $filecontent = $this->ApiConnector->getLastRelease($this->options['token']);
+            $params = 'business-only';
 
         } else {
 
-            $filecontent = $this->ApiConnector->getRelease($arguments['release'], $this->options['token']);
+            $params = '';
+        }
+
+        if('latest' === $arguments['release'])
+        {
+            $filecontent = $this->ApiConnector->getLastRelease($this->options['token'], $params);
+
+        } else {
+
+            $filecontent = $this->ApiConnector->getRelease($arguments['release'], $this->options['token'], $params);
         }
 
         $this->filemanager->saveFile($filename, $filecontent);

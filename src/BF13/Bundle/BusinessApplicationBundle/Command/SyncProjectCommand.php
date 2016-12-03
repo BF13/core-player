@@ -25,6 +25,7 @@ class SyncProjectCommand extends ContainerAwareCommand
             new InputOption('bypass-sync', 'by', InputOption::VALUE_NONE, 'Bypass synchronisation (for prod action)'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('init-bundles', 'ib', InputOption::VALUE_NONE, 'Generate bundles'),
+            new InputOption('business-only', 'bo', InputOption::VALUE_NONE, 'Generate Business data only'),
             new InputOption('init-db', 'id', InputOption::VALUE_NONE, 'Create the database'),
             new InputOption('update-db', 'ud', InputOption::VALUE_NONE, 'Update the database schema'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
@@ -56,6 +57,7 @@ EOT
         $make_scope = $input->getOption('make-scope');
         $scope = $input->getOption('scope');
         $bypass = $input->getOption('bypass-sync');
+        $business_only = $input->getOption('business-only');
 
         $release = $this->defineSelectedRelease($input);
 
@@ -65,6 +67,16 @@ EOT
 
         $arguments['release'] = $release;
         $arguments['scope'] = $scope;
+        $arguments['business-only'] = $business_only;
+
+        if($business_only)
+        {
+            $manageBundles = false;
+
+        } else {
+
+            $manageBundles = true;
+        }
 
         if ($make_scope) {} else {
 
@@ -84,7 +96,10 @@ EOT
 
                 $SynService->prepare($arguments);
 
-                $this->checkBundlesExists($SynService->getExtractDir(), $SynService->getTargetDir(), $input->getOption('init-bundles'));
+                if (true === $manageBundles) {
+
+                    $this->checkBundlesExists($SynService->getExtractDir(), $SynService->getTargetDir(), $input->getOption('init-bundles'));
+                }
 
                 $SynService->execute();
             }
