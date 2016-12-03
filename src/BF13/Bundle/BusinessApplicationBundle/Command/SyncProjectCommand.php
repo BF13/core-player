@@ -68,9 +68,13 @@ EOT
 
         if ($make_scope) {} else {
 
+            $api = [
+                'api_workdir' => $this->getContainer()->getParameter('bf13_api_workdir'),
+                'api_targetdir' => $this->getContainer()->getParameter('bf13_api_targetdir')
+            ];
+
             $SynService->setParams(array(
-                'api' => $this->getContainer()
-                    ->getParameter('bf13_business_application'),
+                'api' => $api,
                 'cli' => function ($message) use($output) {
                     $output->writeln($message);
                 }
@@ -185,7 +189,7 @@ EOT
             '--bundle-name' => $bundle_sections[0] . end($bundle_sections),
             '--dir' => 'src',
             '--format' => 'yml',
-            '--structure' => false,
+//             '--structure' => false,
             '--no-interaction' => true
         );
 
