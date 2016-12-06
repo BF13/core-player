@@ -22,7 +22,12 @@ class BF13BusinessApplicationExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('bf13_business_application', $config);
+        foreach($config['api'] as $key => $value)
+        {
+            $container->setParameter('bf13_api_' . $key, $value);
+        }
+
+        $container->setParameter('bf13_docdir', $config['docdir']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

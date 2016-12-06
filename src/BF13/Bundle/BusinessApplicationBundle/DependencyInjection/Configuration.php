@@ -22,11 +22,16 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('bf13_business_application');
         $rootNode
             ->children()
-                ->scalarNode('api_url')->isRequired()->end()
-                ->scalarNode('api_token')->isRequired()->end()
-                ->scalarNode('api_auth')->end()
-                ->scalarNode('api_workdir')->defaultValue('%kernel.cache_dir%/bf13')->end()
-                ->scalarNode('api_targetdir')->defaultValue('%kernel.root_dir%/..')->end()
+                ->arrayNode('api')
+                    ->children()
+                        ->scalarNode('url')->isRequired()->end()
+                        ->scalarNode('token')->isRequired()->end()
+                        ->scalarNode('auth')->defaultValue('')->end()
+                        ->scalarNode('workdir')->defaultValue('%kernel.cache_dir%/bf13')->end()
+                        ->scalarNode('targetdir')->defaultValue('%kernel.root_dir%/..')->end()
+                    ->end()
+                ->end()
+                ->scalarNode('docdir')->defaultValue('%kernel.cache_dir%/documents')->end()
             ->end()
         ;
 

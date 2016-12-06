@@ -12,24 +12,24 @@ services:
     bf13.sync_project.filemanager:
         class: "%bf13.sync_project.filemanager.class%"
         arguments:
-            - Symfony\Component\Filesystem\Filesystem
-            - Symfony\Component\Finder\Finder
+            - "Symfony\\Component\\Filesystem\\Filesystem"
+            - "Symfony\\Component\\Finder\\Finder"
 
     bf13.sync_project.http_transport:
         class: "%bf13.sync_project.http_transport.class%"
         arguments:
-            - %bf13_api_url%
-            - %bf13_api_auth%
+            - "%bf13_api_url%"
+            - "%bf13_api_auth%"
 
     bf13.sync_project.apiconnect:
         class: "%bf13.sync_project.apiconnect.class%"
         arguments:
-            - @bf13.sync_project.http_transport
+            - "@bf13.sync_project.http_transport"
 
     bf13.sync_project:
         class: "%bf13.sync_project.class%"
         arguments:
-            - @bf13.sync_project.apiconnect
-            - @bf13.sync_project.filemanager
-            - @bf13.sync_project.archiver
+            - "@bf13.sync_project.apiconnect"
+            - "@bf13.sync_project.filemanager"
+            - "@bf13.sync_project.archiver"
             - { token: %bf13_api_token% }

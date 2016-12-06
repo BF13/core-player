@@ -35,17 +35,12 @@ services:
           - "@kernel"
           - "%bf13.dom.repository.inspector.class%"
 
-#    bf13.dom.repository:
-#        class: %bf13.dom.repository.class%
-#        arguments:
-#          - "@bf13.dom.repository_manager"
-#          
     bf13.app.notification :
         class: "%bf13.app.notification.class%"
         arguments: 
           - "@session"
           - "@bf13.dom.repository"
-          - "@security.context"
+          - "@security.authorization_checker"
 
     bf13.app.breadcrumb :
         class: "%bf13.app.breadcrumb.class%"

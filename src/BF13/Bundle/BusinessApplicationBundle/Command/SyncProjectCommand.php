@@ -25,6 +25,7 @@ class SyncProjectCommand extends ContainerAwareCommand
             new InputOption('bypass-sync', 'by', InputOption::VALUE_NONE, 'Bypass synchronisation (for prod action)'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
             new InputOption('init-bundles', 'ib', InputOption::VALUE_NONE, 'Generate bundles'),
+            new InputOption('business-only', 'bo', InputOption::VALUE_NONE, 'Generate Business data only'),
             new InputOption('init-db', 'id', InputOption::VALUE_NONE, 'Create the database'),
             new InputOption('update-db', 'ud', InputOption::VALUE_NONE, 'Update the database schema'),
             new InputOption('data-load', 'dl', InputOption::VALUE_NONE, 'Load value list'),
@@ -56,6 +57,7 @@ EOT
         $make_scope = $input->getOption('make-scope');
         $scope = $input->getOption('scope');
         $bypass = $input->getOption('bypass-sync');
+        $business_only = $input->getOption('business-only');
 
         $release = $this->defineSelectedRelease($input);
 
@@ -65,12 +67,26 @@ EOT
 
         $arguments['release'] = $release;
         $arguments['scope'] = $scope;
+        $arguments['business-only'] = $business_only;
+
+        if($business_only)
+        {
+            $manageBundles = false;
+
+        } else {
+
+            $manageBundles = true;
+        }
 
         if ($make_scope) {} else {
 
+            $api = [
+                'api_workdir' => $this->getContainer()->getParameter('bf13_api_workdir'),
+                'api_targetdir' => $this->getContainer()->getParameter('bf13_api_targetdir')
+            ];
+
             $SynService->setParams(array(
-                'api' => $this->getContainer()
-                    ->getParameter('bf13_business_application'),
+                'api' => $api,
                 'cli' => function ($message) use($output) {
                     $output->writeln($message);
                 }
@@ -80,7 +96,10 @@ EOT
 
                 $SynService->prepare($arguments);
 
-                $this->checkBundlesExists($SynService->getExtractDir(), $SynService->getTargetDir(), $input->getOption('init-bundles'));
+                if (true === $manageBundles) {
+
+                    $this->checkBundlesExists($SynService->getExtractDir(), $SynService->getTargetDir(), $input->getOption('init-bundles'));
+                }
 
                 $SynService->execute();
             }
@@ -185,7 +204,7 @@ EOT
             '--bundle-name' => $bundle_sections[0] . end($bundle_sections),
             '--dir' => 'src',
             '--format' => 'yml',
-            '--structure' => false,
+//             '--structure' => false,
             '--no-interaction' => true
         );
 
